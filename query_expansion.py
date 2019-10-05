@@ -1,12 +1,13 @@
 import math
-import numpy as np
+import math_tool
 
 alpha = 0.8
 beta = 0.1
 gamma = 0.1
 
-avg_time_difference = 0
+average_time_difference = 0
 average_shortest_length = 0
+average_augmentation_coefficient = 0
 
 
 # TODO 统计word在词袋bow中出现的次数
@@ -49,32 +50,11 @@ def cal_vector_multiply_tfidf(word, vector_for_word, bow):
     return 0
 
 
-# TODO
-def max_pooling_for_bow(vec_tfidf_list):
-    return
-
-
 # TODO 在方法级别上计算doc
 def cal_doc_vector():
     # for all word in method : do cal_vector_multiply_tfidf() and get vec_tfidf_list
-    # return max_pooling_for_bow(vec_tfidf_list)
+    # return max_pooling(vec_tfidf_list)
     return
-
-
-# TODO 正确性
-def cal_cosine_similarity(vec_1, vec_2):
-    vector_1 = np.mat(vec_1)
-    vector_2 = np.mat(vec_2)
-    num = float(vector_1 * vector_2.T)
-    denom = np.linalg.norm(vector_1) * np.linalg.norm(vector_1)
-    cos = num / denom
-    return cos
-
-
-# sigmoid函数
-def sigmoid(x):
-    s = 1 / (1 + np.exp(-x))
-    return s
 
 
 # TODO 计算方法之间的平均修改长度
@@ -83,12 +63,12 @@ def cal_average_time_difference():
 
 
 def semantic_similarity(doc_1, doc_2):
-    return cal_cosine_similarity(vec_1 = doc_1, vec_2 = doc_2)
+    return math_tool.cal_cosine_similarity(vec_1 = doc_1, vec_2 = doc_2)
 
 
 def temporal_proximity(last_modified_time_for_m1, last_modified_time_for_m2):
     time_diff = abs(last_modified_time_for_m1 - last_modified_time_for_m2)
-    return sigmoid(time_diff / avg_time_difference)
+    return math_tool.sigmoid(time_diff / average_time_difference)
 
 
 def cal_average_shortest_length():
@@ -105,16 +85,32 @@ def call_dependency(method_1, method_2):
     if lp == 0:
         return 0
     else:
-        return sigmoid(1-lp/average_shortest_length)
+        return math_tool.sigmoid(1-lp/average_shortest_length)
 
 
 # TODO 是否需要定义类表示method，method包含其doc_vector, last_modify_time, 但还要另外计算call_dependency
-def method_augmentation(method_1, method_2):
+def augmentation_coefficient(method_1, method_2):
     # return alpha * semantic_similarity() + beta * temporal_proximity() + gamma * call_dependency()
     return
 
+
+# TODO 计算平均值
+def cal_average_augmentation_coefficient():
+    return 0
+
+
+# TODO 所有的方法扩展需要保存吗？如何保存
+def method_augmentation():
+    return
+
+
 if __name__ == '__main__':
+
     # 定义 alpha, beta, gamma
 
-    avg_time_difference = cal_average_time_difference()
+    average_time_difference = cal_average_time_difference()
     average_shortest_length = cal_average_shortest_length()
+    average_augmentation_coefficient = cal_average_augmentation_coefficient()
+
+
+
