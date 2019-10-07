@@ -62,6 +62,21 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.2</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jdt/org.eclipse.jdt.core -->
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.core</artifactId>
+            <version>3.16.0</version>
+        </dependency>
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/de.defmacro/eclipse-astparser &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>de.defmacro</groupId>-->
+            <!--<artifactId>eclipse-astparser</artifactId>-->
+            <!--<version>8.1</version>-->
+        <!--</dependency>-->
+
     </dependencies>
 
 

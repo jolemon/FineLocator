@@ -28,7 +28,9 @@ public class Word2VecModel {
 
         log.info("Load & Vectorize Sentences....");
         // Strip white space before and after for each line
-        SentenceIterator iter = new BasicLineIterator(filePath);
+//        SentenceIterator iter = new BasicLineIterator(filePath);
+        SentenceIterator iter = new BasicLineIterator(new File("raw_sentences.txt"));
+
         // Split on white spaces in the line to get words
         TokenizerFactory t = new DefaultTokenizerFactory();
 
@@ -40,11 +42,13 @@ public class Word2VecModel {
         t.setTokenPreProcessor(new CommonPreprocessor());
 
         log.info("Building model....");
+
+        //using 'Skip-gram' model
         Word2Vec vec = new Word2Vec.Builder()
-                .minWordFrequency(5)
-                .iterations(1)
-                .layerSize(100)
-                .seed(42)
+                .minWordFrequency(1)
+                .iterations(1)   // ?
+                .layerSize(300)  // 200-500 is acceptable
+//                .seed(42)      // ?
                 .windowSize(5)
                 .iterate(iter)
                 .tokenizerFactory(t)
@@ -65,8 +69,8 @@ public class Word2VecModel {
          */
         Word2Vec word2Vec = WordVectorSerializer.readWord2VecModel("pathToSaveModel.txt");
 
-        INDArray wordVectorMatrix = word2Vec.getWordVectorMatrix("day");
-        double[] wordVector = word2Vec.getWordVector("day");
+        INDArray wordVectorMatrix = word2Vec.getWordVectorMatrix("compile");
+        double[] wordVector = word2Vec.getWordVector("compile");
         System.out.println(wordVectorMatrix);
         for(double d:wordVector){
             System.out.print(d+" ");
