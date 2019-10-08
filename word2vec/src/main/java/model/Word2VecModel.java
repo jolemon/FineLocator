@@ -54,6 +54,7 @@ public class Word2VecModel {
                 .tokenizerFactory(t)
                 .build();
 
+
         log.info("Fitting Word2Vec model....");
         vec.fit();
 
