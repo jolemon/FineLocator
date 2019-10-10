@@ -1,4 +1,4 @@
-package extractor;
+package util;
 
 import common.Common;
 import org.eclipse.jdt.core.dom.*;
@@ -138,26 +138,6 @@ public class MethodExtractor {
      * @return
      */
     public String getMethodSignature(MethodDeclaration methodDeclaration){
-//        String res = "" ;
-//        SimpleName methodName = methodDeclaration.getName();
-//        if(methodDeclaration.isConstructor()) {
-//            res = res.concat(methodName.toString()) ;
-//        } else {
-//            Type returnType = methodDeclaration.getReturnType2();
-//            res = returnType + " " + methodName.toString();
-//        }
-//        res = res.concat("(");
-//        List parameters = methodDeclaration.parameters();
-//        if(parameters.size()==0) {
-//            res = res.concat(")");
-//            return res;
-//        }
-//        for(int i=0;i<parameters.size()-1;i++){
-//            res = res.concat(parameters.get(i).toString()).concat(", ") ;
-//        }
-//        res = res.concat(parameters.get(parameters.size()-1).toString()).concat(")");
-//        return res ;
-
         String res = getMethod(methodDeclaration) ;
         return res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
     }

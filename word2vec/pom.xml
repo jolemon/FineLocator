@@ -34,6 +34,8 @@
         <arbiter.version>1.0.0-beta5</arbiter.version>
         <rl4j.version>1.0.0-beta5</rl4j.version>
 
+        <slf4j.version>1.7.25</slf4j.version>
+
         <!-- Scala binary version: DL4J's Spark and UI functionality are released with both Scala 2.10 and 2.11 support -->
         <scala.binary.version>2.11</scala.binary.version>
         <spark.version>2.4.3</spark.version>
@@ -71,8 +73,14 @@
 
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <version>1.7.2</version>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/args4j/args4j -->

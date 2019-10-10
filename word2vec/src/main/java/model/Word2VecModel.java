@@ -3,6 +3,7 @@ package model;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
+import org.deeplearning4j.text.sentenceiterator.FileSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
@@ -15,29 +16,16 @@ import java.io.File;
 
 public class Word2VecModel {
 
+
+
     private static Logger log = LoggerFactory.getLogger(Word2VecModel.class);
 
-//    public static String dataLocalPath;
 
-
-    public static void main(String[] args) throws Exception {
-
-//        dataLocalPath = DownloaderUtility.NLPDATA.Download();
-        // Gets Path to Text file
-//        String filePath = new File(dataLocalPath,"raw_sentences.txt").getAbsolutePath();
-
+    public static void main(String[] args) {
         log.info("Load & Vectorize Sentences....");
-        // Strip white space before and after for each line
-//        SentenceIterator iter = new BasicLineIterator(filePath);
-        SentenceIterator iter = new BasicLineIterator(new File("raw_br.txt")); 
+        SentenceIterator iter = new FileSentenceIterator(new File("/Users/lienming/FineLocator/expRes"));
         // Split on white spaces in the line to get words
         TokenizerFactory t = new DefaultTokenizerFactory();
-
-        /*
-            CommonPreprocessor will apply the following regex to each token: [\d\.:,"'\(\)\[\]|/?!;]+
-            So, effectively all numbers, punctuation symbols and some special symbols are stripped off.
-            Additionally it forces lower case for all tokens.
-         */
         t.setTokenPreProcessor(new CommonPreprocessor());
 
         log.info("Building model....");
@@ -47,7 +35,6 @@ public class Word2VecModel {
                 .minWordFrequency(1)
                 .iterations(1)   // ?
                 .layerSize(300)  // 200-500 is acceptable
-//                .seed(42)      // ?
                 .windowSize(5)
                 .iterate(iter)
                 .tokenizerFactory(t)
@@ -58,23 +45,40 @@ public class Word2VecModel {
         vec.fit();
 
         log.info("Writing word vectors to text file....");
-        /*
-            at this moment we're supposed to have model built, and it can be saved for future use.
-         */
-        WordVectorSerializer.writeWord2VecModel(vec, "pathToSaveModel.txt");
 
-        /*
-            Let's assume that some time passed, and now we have new corpus to be used to weights update.
-            Instead of building new model over joint corpus, we can use weights update mode.
-         */
-        Word2Vec word2Vec = WordVectorSerializer.readWord2VecModel("pathToSaveModel.txt");
+        WordVectorSerializer.writeWord2VecModel(vec, "word2vec.model");
 
-        INDArray wordVectorMatrix = word2Vec.getWordVectorMatrix("compile");
-        double[] wordVector = word2Vec.getWordVector("compile");
+
+        Word2Vec word2Vec = WordVectorSerializer.readWord2VecModel("word2vec.model");
+        INDArray wordVectorMatrix = word2Vec.getWordVectorMatrix("compil");
         System.out.println(wordVectorMatrix);
-        for(double d:wordVector){
-            System.out.print(d+" ");
-        }
-
     }
+
+    //Word2Vec Demo and Comment
+    private void demo() throws Exception{
+        String dataLocalPath = DownloaderUtility.NLPDATA.Download();
+        // Gets Path to Text file
+        String filePath = new File(dataLocalPath,"raw_sentences.txt").getAbsolutePath();
+        SentenceIterator iter = new BasicLineIterator(filePath);
+//        SentenceIterator iter = new BasicLineIterator(new File("raw_br.txt"));
+        TokenizerFactory t = new DefaultTokenizerFactory();
+
+         /*
+            CommonPreprocessor will apply the following regex to each token: [\d\.:,"'\(\)\[\]|/?!;]+
+            So, effectively all numbers, punctuation symbols and some special symbols are stripped off.
+            Additionally it forces lower case for all tokens.
+         */
+        t.setTokenPreProcessor(new CommonPreprocessor());
+        Word2Vec vec = new Word2Vec.Builder()
+                .minWordFrequency(1)
+                .iterations(1)
+                .layerSize(300)
+                .seed(42)
+                .windowSize(5)
+                .iterate(iter)
+                .tokenizerFactory(t)
+                .build();
+        vec.fit();
+    }
+
 }
