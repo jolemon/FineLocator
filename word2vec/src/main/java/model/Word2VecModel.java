@@ -17,20 +17,19 @@ public class Word2VecModel {
 
     private static Logger log = LoggerFactory.getLogger(Word2VecModel.class);
 
-    public static String dataLocalPath;
+//    public static String dataLocalPath;
 
 
     public static void main(String[] args) throws Exception {
 
-        dataLocalPath = DownloaderUtility.NLPDATA.Download();
+//        dataLocalPath = DownloaderUtility.NLPDATA.Download();
         // Gets Path to Text file
-        String filePath = new File(dataLocalPath,"raw_sentences.txt").getAbsolutePath();
+//        String filePath = new File(dataLocalPath,"raw_sentences.txt").getAbsolutePath();
 
         log.info("Load & Vectorize Sentences....");
         // Strip white space before and after for each line
 //        SentenceIterator iter = new BasicLineIterator(filePath);
-        SentenceIterator iter = new BasicLineIterator(new File("raw_sentences.txt"));
-
+        SentenceIterator iter = new BasicLineIterator(new File("raw_br.txt")); 
         // Split on white spaces in the line to get words
         TokenizerFactory t = new DefaultTokenizerFactory();
 
