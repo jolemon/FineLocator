@@ -2,7 +2,6 @@ package model;
 
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
-import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
 import org.deeplearning4j.text.sentenceiterator.FileSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
@@ -16,10 +15,7 @@ import java.io.File;
 
 public class Word2VecModel {
 
-
-
     private static Logger log = LoggerFactory.getLogger(Word2VecModel.class);
-
 
     public static void main(String[] args) {
         log.info("Load & Vectorize Sentences....");
@@ -54,31 +50,6 @@ public class Word2VecModel {
         System.out.println(wordVectorMatrix);
     }
 
-    //Word2Vec Demo and Comment
-    private void demo() throws Exception{
-        String dataLocalPath = DownloaderUtility.NLPDATA.Download();
-        // Gets Path to Text file
-        String filePath = new File(dataLocalPath,"raw_sentences.txt").getAbsolutePath();
-        SentenceIterator iter = new BasicLineIterator(filePath);
-//        SentenceIterator iter = new BasicLineIterator(new File("raw_br.txt"));
-        TokenizerFactory t = new DefaultTokenizerFactory();
 
-         /*
-            CommonPreprocessor will apply the following regex to each token: [\d\.:,"'\(\)\[\]|/?!;]+
-            So, effectively all numbers, punctuation symbols and some special symbols are stripped off.
-            Additionally it forces lower case for all tokens.
-         */
-        t.setTokenPreProcessor(new CommonPreprocessor());
-        Word2Vec vec = new Word2Vec.Builder()
-                .minWordFrequency(1)
-                .iterations(1)
-                .layerSize(300)
-                .seed(42)
-                .windowSize(5)
-                .iterate(iter)
-                .tokenizerFactory(t)
-                .build();
-        vec.fit();
-    }
 
 }
