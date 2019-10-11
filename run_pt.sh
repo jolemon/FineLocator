@@ -7,6 +7,10 @@ pt_output_preprocessedBRDir=$3 #the output dir of preprocessed bug reports.
 pt_output_preprocessedCodeDir=$4
 
 function runPT(){
+    rm -rf ${pt_output_preprocessedBRDir}
+    rm -rf ${pt_output_preprocessedCodeDir}
+    mkdir -p ${pt_output_preprocessedBRDir}
+    mkdir -p ${pt_output_preprocessedCodeDir}
     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_BRDir}    -target ${pt_output_preprocessedBRDir}   -type br
     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}  -target ${pt_output_preprocessedCodeDir} -type code
 }

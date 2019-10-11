@@ -7,8 +7,13 @@ brVecDir=$3
 codeVecDir=$4
 
 function runWord2Vec(){
-    java -cp word2vec.jar org.gajnineteen.App  -source ${brAfterPTDir}    -target ${brVecDir}   -type br
-    java -cp word2vec.jar org.gajnineteen.App  -source ${codeAfterPTDir}  -target ${codeVecDir} -type code
+    rm -rf ${brVecDir}
+    rm -rf ${codeVecDir}
+    mkdir -p ${brVecDir}
+    mkdir -p ${codeVecDir}
+    
+    java -cp word2vec.jar App  -source ${brAfterPTDir}    -target ${brVecDir}   
+    java -cp word2vec.jar App  -source ${codeAfterPTDir}  -target ${codeVecDir} 
 }
 
 runWord2Vec

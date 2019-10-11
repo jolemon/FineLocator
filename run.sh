@@ -10,14 +10,18 @@ linkedBugMethodsDir=${defects4jDatRootDir}/linked-bugMethods
 deeplearning4jdir=${scriptRootDir}/word2vec
 
 expResDir=${scriptRootDir}/expRes
-codeExpResDir=${expResDir}/code
-brExpResDir=${expResDir}/br
 
-brAfterPTRootDir=${brExpResDir}/afterPT
-codeAfterPTRootDir=${codeExpResDir}/afterPT
+afterPTRootDir=${expResDir}/afterPT
+brAfterPTDir=${afterPTRootDir}/br
+codeAfterPTDir=${afterPTRootDir}/code
 
-brVecRootDir=${brExpResDir}/vec
-codeVecRootDir=${codeExpResDir}/vec
+vecRootDir=${expResDir}/vec
+brVecRootDir=${vecRootDir}/br
+codeVecRootDir=${vecRootDir}/code
+
+vecAfterPoolingDir=${expResDir}/vecAfterPooling
+brVecAfterPoolingDir=${vecAfterPoolingDir}/br
+codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 
 python=python3.7
 
@@ -27,11 +31,11 @@ do
     echo "handle project "${proj}"..."
 
     # step 1 : preprocessing for bug report and method
-    ./run_pt.sh ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} ${brAfterPTRootDir}/${proj}  ${codeAfterPTRootDir}/${proj}
+    ./run_pt.sh ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}
 
 
     # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
-    ./run_word2vec.sh ${brAfterPTRootDir}/${proj}  ${codeAfterPTRootDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
+    ./run_word2vec.sh ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
 
     # step 3 : query expansion for methods
     ./query_expansion.py

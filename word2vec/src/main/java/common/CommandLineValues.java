@@ -2,20 +2,21 @@ package common;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 public class CommandLineValues {
 
-//    @Option(name = "-source")
-//    public String source_dir ;
-//
-//    @Option(name = "-target")
-//    public String target_dir ;
-//
-//    @Option(name = "-type")
-//    public String type ;
-//
-//    @Option(name = "--num_threads", required = false)
-//    public int NumThreads = 32;
+    @Option(name = "-source", required = true)
+    public String source_dir ;
+
+    @Option(name = "-target")
+    public String target_dir ;
+
+    @Option(name = "--fit")
+    public int fit = 0;
+
+    @Option(name = "--num_threads")
+    public int NumThreads = 32;
 
 
     public CommandLineValues(String... args) throws CmdLineException {
