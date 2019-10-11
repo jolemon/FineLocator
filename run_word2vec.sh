@@ -1,10 +1,11 @@
 #!/bin/bash
 
-brAfterPTDir=$1
-codeAfterPTDir=$2
+deeplearning4jdir=$1
+brAfterPTDir=$2
+codeAfterPTDir=$3
 
-brVecDir=$3
-codeVecDir=$4
+brVecDir=$4
+codeVecDir=$5
 
 function runWord2Vec(){
     rm -rf ${brVecDir}
@@ -13,8 +14,9 @@ function runWord2Vec(){
     mkdir -p ${codeVecDir}
     
     java -cp word2vec.jar App  -source ${brAfterPTDir}    -target ${brVecDir}   
-    java -cp word2vec.jar App  -source ${codeAfterPTDir}  -target ${codeVecDir} 
+    # java -cp word2vec.jar App  -source ${codeAfterPTDir}  -target ${codeVecDir} 
 }
 
+cd ${deeplearning4jdir}
 runWord2Vec
 

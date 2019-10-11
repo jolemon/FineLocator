@@ -7,6 +7,7 @@ bugReport4VectorDir=${defects4jDatRootDir}/bugReport4Vector
 allMethodsDir=${defects4jDatRootDir}/allMethods
 linkedBugMethodsDir=${defects4jDatRootDir}/linked-bugMethods
 
+ptdir=${scriptRootDir}/pt
 deeplearning4jdir=${scriptRootDir}/word2vec
 
 expResDir=${scriptRootDir}/expRes
@@ -31,18 +32,19 @@ do
     echo "handle project "${proj}"..."
 
     # step 1 : preprocessing for bug report and method
-    ./run_pt.sh ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}
-
+    # ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}
+    cd ${scriptRootDir}
 
     # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
-    ./run_word2vec.sh ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
+    ./run_word2vec.sh ${deeplearning4jdir} ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
+    cd ${scriptRootDir}
 
     # step 3 : query expansion for methods
-    ./query_expansion.py
+    # ./query_expansion.py
 
 
     # step 4 : retrieve methods by similarity ranking on bug reports and augmented methods
-    ./rank.py
+    # ./rank.py
 
 
 done

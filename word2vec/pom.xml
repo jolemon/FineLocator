@@ -7,7 +7,9 @@
     <groupId>ibug</groupId>
     <artifactId>word2vec</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <build>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -17,8 +19,36 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
+
 
     <properties>
         <!-- Change the nd4j.backend property to nd4j-cuda-9.2-platform,nd4j-cuda-10.0-platform or nd4j-cuda-10.1-platform to use CUDA GPUs -->
@@ -96,13 +126,6 @@
             <artifactId>org.eclipse.jdt.core</artifactId>
             <version>3.16.0</version>
         </dependency>
-
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/de.defmacro/eclipse-astparser &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>de.defmacro</groupId>-->
-            <!--<artifactId>eclipse-astparser</artifactId>-->
-            <!--<version>8.1</version>-->
-        <!--</dependency>-->
 
     </dependencies>
 
