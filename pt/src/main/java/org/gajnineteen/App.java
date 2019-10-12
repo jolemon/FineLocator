@@ -25,9 +25,9 @@ public class App {
 
         if (s_CommandLineValues.type.equals("br")) {
             extractDir(Common.bugReport);
-        } else if (s_CommandLineValues.type.equals("code")) {
-            extractDir(Common.code);
         } else if (s_CommandLineValues.type.equals("extract")) {
+            extractDir(Common.extract);
+        } else if (s_CommandLineValues.type.equals("code")) {
             extractDir(Common.code);
         }
     }
@@ -42,7 +42,7 @@ public class App {
                     PreprocessTask task = new PreprocessTask(s_CommandLineValues, f);
                     tasks.add(task);
                 });
-            } else if(type.equals(Common.code)) {
+            } else if (type.equals(Common.extract) || type.equals(Common.code)) {
                 Files.walk(Paths.get(s_CommandLineValues.source_dir)).filter(Files::isRegularFile)
                         .filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(f -> {
                     PreprocessTask task = new PreprocessTask(s_CommandLineValues, f);

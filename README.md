@@ -3,14 +3,9 @@
 #### Description
 Baseline method implementation FineLocator for iBug.
 
-#### Software Architecture
-Software architecture description
-
 #### Installation
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. install GCC@8 (8.3) to use deeplearning4j.
 
 #### Instructions
 

@@ -3,7 +3,6 @@ package org.gajnineteen.extractor;
 import org.eclipse.jdt.core.dom.*;
 import org.gajnineteen.common.Common;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,11 +36,10 @@ public class MethodExtractor {
 
         List types = compilationUnit.types();
         if(types.size()==0){
-            System.out.println("ASTParser.createAST().types().size()=0. Extract Failed.");
+//            System.out.println(filePath.toString() + " ASTParser.createAST().types().size()=0. Extract Failed.");
             return null;
         }
         TypeDeclaration typeDec = (TypeDeclaration) types.get(0);
-//        System.out.println("className: " + typeDec.getName());
 
         List<Method> methodList = new ArrayList<>();
 
@@ -61,11 +59,9 @@ public class MethodExtractor {
             String methodSignature = getMethodSignature(methodDeclaration) ;
             String methodStr = getMethod(methodDeclaration) ;
             Method method = new Method(methodSignature, startLineNum, endLineNum, methodStr) ;
-//            method.print();
 
             methodList.add(method);
         }
-
         return methodList;
     }
 
@@ -136,11 +132,6 @@ public class MethodExtractor {
 //        return methodDeclaration.toString().trim();
     }
 
-    public static void main(String[] args) {
-        File file = new File("src/main/java/model/Word2VecModel.java") ;
-        MethodExtractor methodExtractor = new MethodExtractor() ;
-        List<Method> methods = methodExtractor.extract(file.toPath());
-    }
 
 
 }

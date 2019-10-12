@@ -6,5 +6,6 @@ public class Common {
 
     public static final String bugReport = "br" ;
     public static final String code = "code" ;
+    public static final String extract = "extract";
 
 }

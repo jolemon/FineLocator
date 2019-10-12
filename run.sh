@@ -28,13 +28,13 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 python=python3.7
 
 
-for proj in  "Time" # "Mockito" "Lang"  "Math" "Closure" 
+for proj in "Lang"  "Math" "Closure"  # "Time" "Mockito" 
 do
     echo "handle project "${proj}"..."
 
     # step 1 : preprocessing for bug report and method
     ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} \
-                         ${brAfterPTDir}/${proj} ${extractAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}
+                ${brAfterPTDir}/${proj} ${extractAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}
     cd ${scriptRootDir}
 
     # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods

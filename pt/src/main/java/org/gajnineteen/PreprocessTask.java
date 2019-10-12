@@ -33,6 +33,7 @@ public class PreprocessTask implements Callable<Void> {
     @Override
     public Void call() throws IOException{
         if (this.commandLineValues.type.equals("br")){
+
             processFile(new LRProcessor());
         } else if (this.commandLineValues.type.equals("code")) {
             processFile(new CodeProcessor());
@@ -95,6 +96,7 @@ public class PreprocessTask implements Callable<Void> {
         Path toSavePath = null;
 
         List<Method> list = methodExtractor.extract(this.filePath);
+
         toSavePath = createSavePath();
         if (toSavePath == null) {
             System.out.println("toSavePath is null.");
