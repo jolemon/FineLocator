@@ -27,6 +27,8 @@ public class App {
             extractDir(Common.bugReport);
         } else if (s_CommandLineValues.type.equals("code")) {
             extractDir(Common.code);
+        } else if (s_CommandLineValues.type.equals("extract")) {
+            extractDir(Common.code);
         }
     }
 

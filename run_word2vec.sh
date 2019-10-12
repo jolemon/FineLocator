@@ -13,8 +13,8 @@ function runWord2Vec(){
     mkdir -p ${brVecDir}
     mkdir -p ${codeVecDir}
     
-    java -cp word2vec.jar App  -source ${brAfterPTDir}    -target ${brVecDir}   
-    # java -cp word2vec.jar App  -source ${codeAfterPTDir}  -target ${codeVecDir} 
+    # java -cp word2vec.jar App  -source ${brAfterPTDir}    -target ${brVecDir}   
+    java -cp word2vec.jar App  -source ${codeAfterPTDir}  -target ${codeVecDir} 
 }
 
 cd ${deeplearning4jdir}

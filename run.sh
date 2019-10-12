@@ -15,6 +15,7 @@ expResDir=${scriptRootDir}/expRes
 afterPTRootDir=${expResDir}/afterPT
 brAfterPTDir=${afterPTRootDir}/br
 codeAfterPTDir=${afterPTRootDir}/code
+extractAfterPTDir=${afterPTRootDir}/extract
 
 vecRootDir=${expResDir}/vec
 brVecRootDir=${vecRootDir}/br
@@ -27,16 +28,17 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 python=python3.7
 
 
-for proj in  "Time" "Mockito" "Lang"  "Math" "Closure" 
+for proj in  "Time" # "Mockito" "Lang"  "Math" "Closure" 
 do
     echo "handle project "${proj}"..."
 
     # step 1 : preprocessing for bug report and method
-    # ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}
+    ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} \
+                         ${brAfterPTDir}/${proj} ${extractAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}
     cd ${scriptRootDir}
 
     # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
-    ./run_word2vec.sh ${deeplearning4jdir} ${brAfterPTDir}/${proj}  ${codeAfterPTDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
+    # ./run_word2vec.sh ${deeplearning4jdir} ${brAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
     cd ${scriptRootDir}
 
     # step 3 : query expansion for methods
