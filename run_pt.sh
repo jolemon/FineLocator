@@ -6,7 +6,8 @@ ori_codeDir=$3
 
 pt_output_preprocessedBRDir=$4 #the output dir of preprocessed bug reports.
 pt_output_extractMethodDir=$5
-pt_output_preprocessedCodeDir=$6
+pt_output_correspondDir=$6
+pt_output_preprocessedCodeDir=$7
 
 function runPT(){
     # rm -rf ${pt_output_preprocessedBRDir}
@@ -15,7 +16,8 @@ function runPT(){
 
     rm -rf ${pt_output_extractMethodDir}
     mkdir -p ${pt_output_extractMethodDir}
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}  -target ${pt_output_extractMethodDir}  -type extract
+    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}  -target ${pt_output_extractMethodDir} \
+                                                   -correspond ${pt_output_correspondDir} -type extract
 
     # rm -rf ${pt_output_preprocessedCodeDir}
     # mkdir -p ${pt_output_preprocessedCodeDir}

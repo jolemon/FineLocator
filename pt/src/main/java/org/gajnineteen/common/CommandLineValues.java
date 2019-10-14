@@ -12,10 +12,13 @@ public class CommandLineValues {
     @Option(name = "-target")
     public String target_dir ;
 
+    @Option(name = "-correspond")
+    public String correspond_dir ;
+
     @Option(name = "-type")
     public String type ;
 
-    @Option(name = "--num_threads", required = false)
+    @Option(name = "--num_threads")
     public int NumThreads = 32;
 
 

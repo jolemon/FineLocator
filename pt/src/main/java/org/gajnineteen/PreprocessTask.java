@@ -33,7 +33,6 @@ public class PreprocessTask implements Callable<Void> {
     @Override
     public Void call() throws IOException{
         if (this.commandLineValues.type.equals("br")){
-
             processFile(new LRProcessor());
         } else if (this.commandLineValues.type.equals("code")) {
             processFile(new CodeProcessor());
@@ -44,10 +43,10 @@ public class PreprocessTask implements Callable<Void> {
         return null;
     }
 
-    private Path createSavePath() throws IOException {
+    private Path createSavePath(String fromDirPath, String toDirPath) throws IOException {
         String filePathStr = filePath.toString() ;
         if (filePathStr.contains(commandLineValues.source_dir)) {
-            filePathStr = filePathStr.replace(commandLineValues.source_dir, commandLineValues.target_dir) ;
+            filePathStr = filePathStr.replace(fromDirPath, toDirPath) ;
         }
 
         Path toSavePath = Paths.get(filePathStr) ;
@@ -66,7 +65,7 @@ public class PreprocessTask implements Callable<Void> {
         String content ;
 
         Path toSavePath = null;
-        toSavePath = createSavePath();
+        toSavePath = createSavePath(commandLineValues.source_dir, commandLineValues.target_dir);
         // read original code
 
         try {
@@ -92,26 +91,39 @@ public class PreprocessTask implements Callable<Void> {
     }
 
     public void extractMethod() throws IOException {
-        BufferedWriter out= null ;
-        Path toSavePath = null;
+        BufferedWriter extractOut= null ;
+        Path toSaveExtractPath = null ;
+        BufferedWriter correspondOut = null;
+        Path toSaveCorrespondPath = null ;
 
         List<Method> list = methodExtractor.extract(this.filePath);
 
-        toSavePath = createSavePath();
-        if (toSavePath == null) {
-            System.out.println("toSavePath is null.");
+        toSaveExtractPath    = createSavePath(commandLineValues.source_dir, commandLineValues.target_dir);
+        toSaveCorrespondPath = createSavePath(commandLineValues.source_dir, commandLineValues.correspond_dir);
+
+        if (toSaveExtractPath == null) {
+            System.out.println("toSaveExtractPath is null.");
+            return ;
+        } else if (toSaveCorrespondPath == null) {
+            System.out.println("toSaveCorrespondPath is null.");
             return ;
         } else {
-            out = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(toSavePath.toString()), "utf-8"));
+            extractOut = new BufferedWriter(new OutputStreamWriter
+                    (new FileOutputStream(toSaveExtractPath.toString()), "utf-8"));
+            correspondOut = new BufferedWriter(new OutputStreamWriter
+                    (new FileOutputStream(toSaveCorrespondPath.toString()), "utf-8"));
         }
 
         for (Method method : list) {
-            out.write(method.methodStr);
-            out.newLine();
+            extractOut.write(method.methodStr);
+            extractOut.newLine();
+            correspondOut.write(method.signature+","+method.startLineNum+","+method.endLineNum);
+            correspondOut.newLine();
         }
-        out.flush();
-        out.close();
+        extractOut.flush();
+        extractOut.close();
+        correspondOut.flush();
+        correspondOut.close();
     }
 
 }

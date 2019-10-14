@@ -75,7 +75,7 @@ public class MethodExtractor {
         } else {
             int javaDocStartPosition = javaDoc.getStartPosition();
             int methodStartPosition = javaDocStartPosition + javaDoc.getLength() + 1 ;
-            System.out.println(compilationUnit.getLineNumber(methodStartPosition));
+//            System.out.println(compilationUnit.getLineNumber(methodStartPosition));
             return compilationUnit.getLineNumber(methodStartPosition) ;
         }
     }

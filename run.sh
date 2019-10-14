@@ -16,6 +16,7 @@ afterPTRootDir=${expResDir}/afterPT
 brAfterPTDir=${afterPTRootDir}/br
 codeAfterPTDir=${afterPTRootDir}/code
 extractAfterPTDir=${afterPTRootDir}/extract
+correspondAfterPTDir=${afterPTRootDir}/correspond
 
 vecRootDir=${expResDir}/vec
 brVecRootDir=${vecRootDir}/br
@@ -34,7 +35,7 @@ do
 
     # step 1 : preprocessing for bug report and method
     ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} \
-                ${brAfterPTDir}/${proj} ${extractAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}
+                ${brAfterPTDir}/${proj} ${extractAfterPTDir}/${proj} ${correspondAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}
     cd ${scriptRootDir}
 
     # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
