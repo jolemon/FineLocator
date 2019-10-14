@@ -47,17 +47,11 @@ public class MethodExtractor {
         MethodDeclaration[] methodDeclarations = typeDec.getMethods();
 
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
-            int nameStartPosition = methodDeclaration.getName().getStartPosition();
-            int startLineNum = compilationUnit.getLineNumber(nameStartPosition) ;
-            int methodLength = getMethodLengthWithoutJavadoc(methodDeclaration) ;
-            int modifierLength = getModifierLength(methodDeclaration);
-            int returnStrLength = getReturnStrLength(methodDeclaration);
-
-            int methodEndPosition = computeEndLinePosition(nameStartPosition, modifierLength, returnStrLength, methodLength) ;
-            int endLineNum = compilationUnit.getLineNumber(methodEndPosition) ;
+            int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration) ;
+            int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
 
             String methodSignature = getMethodSignature(methodDeclaration) ;
-            String methodStr = getMethod(methodDeclaration) ;
+            String methodStr = getMethodWithoutJavadoc(methodDeclaration) ;
             Method method = new Method(methodSignature, startLineNum, endLineNum, methodStr) ;
 
             methodList.add(method);
@@ -65,54 +59,52 @@ public class MethodExtractor {
         return methodList;
     }
 
-    int computeEndLinePosition(int nameStartPosition, int modifierLength, int returnStrLength, int methodLength) {
-        int methodEndPosition = nameStartPosition ;
-        if (modifierLength > 0) {
-            methodEndPosition = methodEndPosition - modifierLength - 1 ;
-        }
-        if (returnStrLength > 0 ) {
-            methodEndPosition = methodEndPosition - returnStrLength - 1 ;
-        }
-        return methodEndPosition + methodLength ;
-    }
-
-    int getMethodLengthWithoutJavadoc(MethodDeclaration methodDeclaration){
-        Javadoc javadoc = methodDeclaration.getJavadoc();
-        if (javadoc == null) {
-            return methodDeclaration.getLength() ;
-        }
-        return methodDeclaration.getLength() - javadoc.getLength() - 5 ;  // Note : line.separator + 4 * blank space
-    }
-
-    int getReturnStrLength(MethodDeclaration methodDeclaration){
-        Type returnType = methodDeclaration.getReturnType2();
-        return returnType != null ? returnType.toString().length() : 0 ;
-    }
-
-
-    int getModifierLength(MethodDeclaration methodDeclaration){
-        int length = 0 ;
-        List modifiers = methodDeclaration.modifiers() ;
-
-        if(modifiers == null) {
-            return 0 ;
-        } else {
-            for (Object o : modifiers) {
-                if (o instanceof Modifier) {
-                    String keyWord = ((Modifier) o).getKeyword().toString();
-                    length += keyWord.length() + 1 ;  //Note : default blank space length always == 1
-                }
-            }
-            return length - 1 ;
-        }
-    }
 
     /**
+     * get start line of method without comment
+     * TODO  : the blank lines between javadoc and methodSignature(if have) are not
+     * included in methodDeclaration. So it will cause problem if there are such blank lines!
+     * @param compilationUnit
      * @param methodDeclaration
      * @return
      */
-    public String getMethodSignature(MethodDeclaration methodDeclaration){
-        String res = getMethod(methodDeclaration) ;
+    int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
+        Javadoc javaDoc = methodDeclaration.getJavadoc();
+        if (javaDoc == null) {
+            return compilationUnit.getLineNumber(methodDeclaration.getStartPosition());
+        } else {
+            int javaDocStartPosition = javaDoc.getStartPosition();
+            int methodStartPosition = javaDocStartPosition + javaDoc.getLength() + 1 ;
+            System.out.println(compilationUnit.getLineNumber(methodStartPosition));
+            return compilationUnit.getLineNumber(methodStartPosition) ;
+        }
+    }
+
+    public int lstripLength(String value) {
+        int len = value.length();
+        int st = 0;
+        char[] val = value.toCharArray();    /* avoid getfield opcode */
+
+        while ((st < len) && (val[st] <= ' ')) {
+            st++;
+        }
+        return st ;
+    }
+
+
+    int getMethodEndLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
+        return compilationUnit.getLineNumber(
+                methodDeclaration.getStartPosition() + methodDeclaration.getLength());
+    }
+
+    List getModifiers(MethodDeclaration methodDeclaration){
+        return methodDeclaration.modifiers() ;
+        // methodDeclaration.getModifiers() returns a flag of int type
+    }
+
+
+    public String getMethodSignature(MethodDeclaration methodDeclaration) {
+        String res = getMethodWithoutJavadoc(methodDeclaration) ;
         return res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
     }
 
@@ -121,17 +113,25 @@ public class MethodExtractor {
      * @param methodDeclaration
      * @return
      */
-    public String getMethod(MethodDeclaration methodDeclaration) {
-        if (methodDeclaration.getJavadoc() !=null) {
+    public String getMethodWithoutJavadoc(MethodDeclaration methodDeclaration) {
+        if (methodDeclaration.getJavadoc() !=null ) {
             String docStr = methodDeclaration.getJavadoc().toString();
-            String str = methodDeclaration.toString().replace(docStr, "");
-//            str = str.trim();
-            return str;
+            return methodDeclaration.toString().replace(docStr, "");
         }
         return methodDeclaration.toString();
 //        return methodDeclaration.toString().trim();
     }
 
+//    public static void main(String[] args) {
+//        MethodExtractor methodExtractor = new MethodExtractor();
+//        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
+//
+//        List<Method> list = methodExtractor.extract(file.toPath());
+//        for (Method method:list) {
+//            method.print();
+//        }
+//
+//    }
 
 
 }
