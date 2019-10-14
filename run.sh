@@ -17,6 +17,7 @@ brAfterPTDir=${afterPTRootDir}/br
 codeAfterPTDir=${afterPTRootDir}/code
 extractAfterPTDir=${afterPTRootDir}/extract
 correspondAfterPTDir=${afterPTRootDir}/correspond
+gitRootDir=~/Downloads/bugcode
 
 vecRootDir=${expResDir}/vec
 brVecRootDir=${vecRootDir}/br
@@ -29,25 +30,30 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 python=python3.7
 
 
-for proj in "Lang"  "Math" "Closure"  # "Time" "Mockito" 
+for proj_name in "Time"  # "Lang"  "Math" "Closure" "Mockito"  #  
 do
-    echo "handle project "${proj}"..."
+    echo "handle project "${proj_name}"..."
+    for proj_id in "Time_3" #`ls ${allMethodsDir}/${proj_name}`
+    do
+        echo "handle project "${proj_id}"..."
+        # step 1 : preprocessing for bug report and method
+        ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj_name}/${proj_id} ${allMethodsDir}/${proj_name}/${proj_id} \
+                    ${gitRootDir}/${proj_id}/.git \
+                    ${brAfterPTDir}/${proj_name}/${proj_id} ${extractAfterPTDir}/${proj_name}/${proj_id} \
+                    ${correspondAfterPTDir}/${proj_name}/${proj_id} ${codeAfterPTDir}/${proj_name}/${proj_id} 
+        cd ${scriptRootDir}
 
-    # step 1 : preprocessing for bug report and method
-    ./run_pt.sh ${ptdir} ${bugReport4VectorDir}/${proj} ${allMethodsDir}/${proj} \
-                ${brAfterPTDir}/${proj} ${extractAfterPTDir}/${proj} ${correspondAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}
-    cd ${scriptRootDir}
+        # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
+        # ./run_word2vec.sh ${deeplearning4jdir} ${brAfterPTDir}/${proj_name}/${proj} ${codeAfterPTDir}/${proj_name}/${proj} \
+        #                   ${brVecRootDir}/${proj_name}/${proj}  ${codeVecRootDir}/${proj_name}/${proj}
+        # cd ${scriptRootDir}
 
-    # step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
-    # ./run_word2vec.sh ${deeplearning4jdir} ${brAfterPTDir}/${proj} ${codeAfterPTDir}/${proj}  ${brVecRootDir}/${proj}  ${codeVecRootDir}/${proj}
-    cd ${scriptRootDir}
-
-    # step 3 : query expansion for methods
-    # ./query_expansion.py
+        # step 3 : query expansion for methods
+        # ./query_expansion.py
 
 
-    # step 4 : retrieve methods by similarity ranking on bug reports and augmented methods
-    # ./rank.py
-
-
+        # step 4 : retrieve methods by similarity ranking on bug reports and augmented methods
+        # ./rank.py
+        done
 done
+

@@ -1,9 +1,11 @@
 package org.gajnineteen;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.gajnineteen.common.CommandLineValues;
 import org.gajnineteen.common.Common;
 import org.gajnineteen.extractor.Method;
 import org.gajnineteen.extractor.MethodExtractor;
+import org.gajnineteen.extractor.TimeExtractor;
 import org.gajnineteen.processor.Processor;
 import org.gajnineteen.processor.impl.CodeProcessor;
 import org.gajnineteen.processor.impl.LRProcessor;
@@ -15,23 +17,25 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public class PreprocessTask implements Callable<Void> {
 
     public static MethodExtractor methodExtractor = new MethodExtractor() ;
+    public TimeExtractor timeExtractor ;
 
     private CommandLineValues commandLineValues;
     private Path filePath;
 
-    public PreprocessTask(CommandLineValues commandLineValues, Path filePath){
+    public PreprocessTask(CommandLineValues commandLineValues, Path filePath) {
         this.commandLineValues = commandLineValues ;
         this.filePath = filePath ;
     }
 
     @Override
-    public Void call() throws IOException{
+    public Void call() throws IOException, GitAPIException {
         if (this.commandLineValues.type.equals("br")){
             processFile(new LRProcessor());
         } else if (this.commandLineValues.type.equals("code")) {
@@ -50,13 +54,15 @@ public class PreprocessTask implements Callable<Void> {
         }
 
         Path toSavePath = Paths.get(filePathStr) ;
-
         if (!Files.exists(toSavePath)) {
             if (!Files.exists(toSavePath.getParent())) {
                 Files.createDirectories(toSavePath.getParent());
             }
             Files.createFile(toSavePath) ;
+        } else if (Files.isDirectory(toSavePath)){
+            System.out.println(toSavePath.toString() + " has been created but it is a directory.");
         }
+
         return toSavePath;
     }
 
@@ -90,10 +96,10 @@ public class PreprocessTask implements Callable<Void> {
         out.close() ;
     }
 
-    public void extractMethod() throws IOException {
-        BufferedWriter extractOut= null ;
+    public void extractMethod() throws IOException, GitAPIException {
+        BufferedWriter extractOut = null ;
         Path toSaveExtractPath = null ;
-        BufferedWriter correspondOut = null;
+        BufferedWriter correspondOut = null ;
         Path toSaveCorrespondPath = null ;
 
         List<Method> list = methodExtractor.extract(this.filePath);
@@ -114,10 +120,16 @@ public class PreprocessTask implements Callable<Void> {
                     (new FileOutputStream(toSaveCorrespondPath.toString()), "utf-8"));
         }
 
+        this.timeExtractor = new TimeExtractor(commandLineValues.git_dir,
+                                filePath.toString().replace(commandLineValues.source_dir+"/", "")) ;
+
         for (Method method : list) {
             extractOut.write(method.methodStr);
             extractOut.newLine();
-            correspondOut.write(method.signature+","+method.startLineNum+","+method.endLineNum);
+
+            Date latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum) ;
+            correspondOut.write(method.signature + "," + method.startLineNum
+                    + "," + method.endLineNum + "," + latestModifyTime);
             correspondOut.newLine();
         }
         extractOut.flush();

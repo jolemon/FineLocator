@@ -15,6 +15,9 @@ public class CommandLineValues {
     @Option(name = "-correspond")
     public String correspond_dir ;
 
+    @Option(name = "-git")
+    public String git_dir ;
+
     @Option(name = "-type")
     public String type ;
 
