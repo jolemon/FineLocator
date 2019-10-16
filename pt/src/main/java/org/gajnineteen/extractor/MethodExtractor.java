@@ -2,7 +2,10 @@ package org.gajnineteen.extractor;
 
 import org.eclipse.jdt.core.dom.*;
 import org.gajnineteen.common.Common;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ import java.util.List;
  *          including method declaration and body.
  */
 public class MethodExtractor {
+
+    private static Logger log = LoggerFactory.getLogger(MethodExtractor.class);
 
     public MethodExtractor(){ }
 
@@ -47,7 +52,7 @@ public class MethodExtractor {
         MethodDeclaration[] methodDeclarations = typeDec.getMethods();
 
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
-            int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration) ;
+            int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration, filePath) ;
             int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
 
             String methodSignature = getMethodSignature(methodDeclaration) ;
@@ -62,21 +67,31 @@ public class MethodExtractor {
 
     /**
      * get start line of method without comment
-     * TODO  : the blank lines between javadoc and methodSignature(if have) are not
+     * the blank lines between javadoc and methodSignature(if have) are not
      * included in methodDeclaration. So it will cause problem if there are such blank lines!
+     * Solution : compare returnTypeLineNum with the JavadocNextLineNum
      * @param compilationUnit
      * @param methodDeclaration
      * @return
      */
-    int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
+    int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration, Path filePath) {
         Javadoc javaDoc = methodDeclaration.getJavadoc();
         if (javaDoc == null) {
             return compilationUnit.getLineNumber(methodDeclaration.getStartPosition());
         } else {
             int javaDocStartPosition = javaDoc.getStartPosition();
             int methodStartPosition = javaDocStartPosition + javaDoc.getLength() + 1 ;
-//            System.out.println(compilationUnit.getLineNumber(methodStartPosition));
-            return compilationUnit.getLineNumber(methodStartPosition) ;
+            int javadocNextLineNum = compilationUnit.getLineNumber(methodStartPosition) ;
+            int returnTypeLineNum = compilationUnit.getLineNumber(methodDeclaration.getReturnType2().getStartPosition()) ;
+            if (javadocNextLineNum == returnTypeLineNum) {
+                return javadocNextLineNum;
+            } else {
+                String warningInfo = filePath.toString() + " "
+                        + methodDeclaration.getName()
+                        + ", choose the former line of (" + javadocNextLineNum +"," + returnTypeLineNum +") as start line.";
+                System.out.println(warningInfo);
+                return javadocNextLineNum ;
+            }
         }
     }
 
@@ -105,7 +120,14 @@ public class MethodExtractor {
 
     public String getMethodSignature(MethodDeclaration methodDeclaration) {
         String res = getMethodWithoutJavadoc(methodDeclaration) ;
-        return res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
+        res = res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
+        String lineSeparator = System.getProperty("line.separator");
+        if (res.contains(lineSeparator)) {
+            System.out.println(methodDeclaration.getName() + " contains line separator. remove it.");
+            res = res.replace(lineSeparator, "");
+        }
+
+        return res ;
     }
 
     /**
@@ -122,16 +144,16 @@ public class MethodExtractor {
 //        return methodDeclaration.toString().trim();
     }
 
-//    public static void main(String[] args) {
-//        MethodExtractor methodExtractor = new MethodExtractor();
-//        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
-//
-//        List<Method> list = methodExtractor.extract(file.toPath());
-//        for (Method method:list) {
-//            method.print();
-//        }
-//
-//    }
+    public static void main(String[] args) {
+        MethodExtractor methodExtractor = new MethodExtractor();
+        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
+
+        List<Method> list = methodExtractor.extract(file.toPath());
+        for (Method method:list) {
+            method.print();
+        }
+
+    }
 
 
 }

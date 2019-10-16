@@ -1,7 +1,7 @@
 #!/bin/bash
 
-defects4jDatRootDir=$1
-scriptRootDir=$2
+defects4jDatRootDir=~/Downloads/final_defects4j #$1
+scriptRootDir=~/FineLocator #$2
 
 bugReport4VectorDir=${defects4jDatRootDir}/bugReport4Vector
 allMethodsDir=${defects4jDatRootDir}/allMethods
@@ -30,10 +30,10 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 python=python3.7
 
 
-for proj_name in "Time"  # "Lang"  "Math" "Closure" "Mockito"  #  
+for proj_name in "Mockito"  "Lang"  "Math" "Closure" "Mockito"   #  "Time" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Time_3" #`ls ${allMethodsDir}/${proj_name}`
+    for proj_id in `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         # step 1 : preprocessing for bug report and method
