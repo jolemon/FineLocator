@@ -48,7 +48,7 @@ do
         # cd ${scriptRootDir}
 
         # step 2 : call Java Understand to extract Call Dependency for method
-        ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${callDependencyDir}  ${udbRootDir}\
+        ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${callDependencyDir}  ${udbRootDir}/${proj_name}\
                  ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
         cd ${scriptRootDir}
 
