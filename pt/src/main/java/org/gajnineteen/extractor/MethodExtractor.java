@@ -2,10 +2,7 @@ package org.gajnineteen.extractor;
 
 import org.eclipse.jdt.core.dom.*;
 import org.gajnineteen.common.Common;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,8 +15,6 @@ import java.util.List;
  *          including method declaration and body.
  */
 public class MethodExtractor {
-
-    private static Logger log = LoggerFactory.getLogger(MethodExtractor.class);
 
     public MethodExtractor(){ }
 
@@ -144,16 +139,16 @@ public class MethodExtractor {
 //        return methodDeclaration.toString().trim();
     }
 
-    public static void main(String[] args) {
-        MethodExtractor methodExtractor = new MethodExtractor();
-        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
-
-        List<Method> list = methodExtractor.extract(file.toPath());
-        for (Method method:list) {
-            method.print();
-        }
-
-    }
+//    public static void main(String[] args) {
+//        MethodExtractor methodExtractor = new MethodExtractor();
+//        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
+//
+//        List<Method> list = methodExtractor.extract(file.toPath());
+//        for (Method method:list) {
+//            method.print();
+//        }
+//
+//    }
 
 
 }
