@@ -18,10 +18,13 @@ function runPT(){
     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}  -target ${pt_output_extractMethodDir} \
                                                    -correspond ${pt_output_correspondDir} -type extract \
                                                    -git ${gitDir}
+
     # rm -rf ${pt_output_preprocessedCodeDir}
     # mkdir -p ${pt_output_preprocessedCodeDir}
     # java -cp preprocessor.jar org.gajnineteen.App  -source ${pt_output_extractMethodDir}  -target ${pt_output_preprocessedCodeDir} -type code	
 }
+
+
 
 cd ${ptdir}
 runPT

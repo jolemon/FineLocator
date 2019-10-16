@@ -2,6 +2,7 @@
 import sys
 sys.path.append('/Applications/Understand.app/Contents/MacOS/Python')
 import understand as us
+from argparse import ArgumentParser
 
 
 def add_paras_for_method(method_name, paras):
@@ -11,10 +12,12 @@ def add_paras_for_method(method_name, paras):
         return str(method_name) + "(" + str(paras) + ")"
 
 
-def get_cd(db, filter_file_type = ".java", filter_ref_type = "Call"):
-    for f in db.ents("File"):
-        fromFileName = f.longname()
-        if not str(fromFileName).endswith(filter_file_type):
+def get_cd(udb, save_path, filter_file_type = ".java", filter_ref_type = "Call"):
+    save_file = open(save_path, 'w')
+
+    for f in udb.ents("File"):
+        from_file_name = f.longname(True) # get abs path
+        if not str(from_file_name).endswith(filter_file_type):
             continue
 
         # print("filename : " + fromFileName)
@@ -22,30 +25,45 @@ def get_cd(db, filter_file_type = ".java", filter_ref_type = "Call"):
             dic = f.depends()
         else:
             dic = f.dependsby()
+
+
         for entKey in dic:
-            refList = dic[entKey]
-            toFileName = entKey.longname()
-            for ref in refList:
+            ref_list = dic[entKey]
+            to_file_name = entKey.longname(True)  # get abs path
+            for ref in ref_list:
                 kindname = ref.kindname()
                 if kindname == "Call":   # no matter "Call" or "Callby"
-                    lineNum = ref.line()
+                    line_num = ref.line()
 
-                    fromEnt = ref.scope()
-                    fromMethodParas = fromEnt.parameters()
-                    fromMethodName = add_paras_for_method(method_name = fromEnt.simplename(), paras = fromMethodParas)
+                    from_ent = ref.scope()
+                    from_method_paras = from_ent.parameters()
+                    from_method_name = add_paras_for_method(method_name = from_ent.simplename(), paras = from_method_paras)
 
-                    toEnt = ref.ent()
-                    toMethodParas = toEnt.parameters()
-                    toMethodName = add_paras_for_method(method_name = toEnt.simplename(), paras = toMethodParas)
+                    to_ent = ref.ent()
+                    to_method_paras = to_ent.parameters()
+                    to_method_name = add_paras_for_method(method_name = to_ent.simplename(), paras = to_method_paras)
                     if filter_ref_type == "Call":
-                        print(fromFileName, '内', fromMethodName, '调用', toFileName, '内', toMethodName, '行', lineNum)
+                        line = from_file_name + '内' + from_method_name + '调用' + to_file_name + '内' + to_method_name + '行' + str(line_num)
+                        save_file.write(line+'\n')
+                        # print(from_file_name, '内', from_method_name, '调用', to_file_name, '内', to_method_name, '行', line_num)
                     else:
-                        print(fromFileName, '内', fromMethodName, '被调', toFileName, '内', toMethodName, '行', lineNum)
+                        line = from_file_name + '内' + from_method_name + '被调' + to_file_name + '内' + to_method_name + '行' + str(line_num)
+                        save_file.write(line + '\n')
+                        # print(from_file_name, '内', from_method_name, '被调', to_file_name, '内', to_method_name, '行', line_num)
+
+    save_file.close()
     return
 
 
 if __name__ == "__main__":
-    db = us.open('Time_3.udb')
-    get_cd(db, filter_ref_type = "Call")
-    # get_cd(db, filter_ref_type = "Callby")
+    parser = ArgumentParser()
+    parser.add_argument("-u", "--udb_path", dest = "udb_path", required = True)
+    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
+    args = parser.parse_args()
+    udb_path = args.udb_path
+    save_path = args.save_path
+    print(udb_path)
+    db = us.open(udb_path)
+    get_cd(udb = db, filter_ref_type = "Call", save_path = save_path)
+    # get_cd(udb = db, filter_ref_type = "Callby")
     db.close()
