@@ -76,6 +76,11 @@ def build_graph(dic):
     graph = Graph(dic)
 
 
+def build_cd_matrix(graph):
+
+    return
+
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-u", "--udb_path", dest = "udb_path", required = True)
@@ -84,8 +89,7 @@ if __name__ == "__main__":
     udb_path = args.udb_path
     save_path = args.save_path
     db = us.open(udb_path)
-    cd_dic = get_cd(udb = db, filter_ref_type = "Call", save_path = save_path)
-    # get_cd(udb = db, filter_ref_type = "Callby")
+    cd_dic = get_cd(udb = db, filter_ref_type = "Call", save_path = save_path)   # or filter_ref_type = "Callby")
     db.close()
     build_graph(cd_dic)
 

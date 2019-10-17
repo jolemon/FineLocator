@@ -79,23 +79,24 @@ class Graph(object):
                 isolated += [vertex]
         return isolated
 
-    def find_path(self, start_vertex, end_vertex, path=[]):
-        """ find a path from start_vertex to end_vertex 
-            in graph """
-        graph = self.__graph_dict
-        path = path + [start_vertex]
-        if start_vertex == end_vertex:
-            return path
-        if start_vertex not in graph:
-            return None
-        for vertex in graph[start_vertex]:
-            if vertex not in path:
-                extended_path = self.find_path(vertex, 
-                                               end_vertex, 
-                                               path)
-                if extended_path: 
-                    return extended_path
-        return None
+
+    # def find_path(self, start_vertex, end_vertex, path=[]):
+    #     """ find a path from start_vertex to end_vertex
+    #         in graph """
+    #     graph = self.__graph_dict
+    #     path = path + [start_vertex]
+    #     if start_vertex == end_vertex:
+    #         return path
+    #     if start_vertex not in graph:
+    #         return None
+    #     for vertex in graph[start_vertex]:
+    #         if vertex not in path:
+    #             extended_path = self.find_path(vertex,
+    #                                            end_vertex,
+    #                                            path)
+    #             if extended_path:
+    #                 return extended_path
+    #     return None
     
 
     def find_all_paths(self, start_vertex, end_vertex, path=[]):
@@ -116,6 +117,25 @@ class Graph(object):
                 for p in extended_paths: 
                     paths.append(p)
         return paths
+
+
+    # https://www.python.org/doc/essays/graphs/
+    def find_shortest_path(self, start, end, path = []):
+        path = path + [start]
+        if start == end:
+            return path
+        # if not self.__graph_dict.has_key():
+        if start not in self.__graph_dict:
+            return None
+        shortest = None
+        for node in self.__graph_dict[start]:
+            if node not in path:
+                newpath = self.find_shortest_path(node, end, path)
+                if newpath:
+                    if not shortest or len(newpath) < len(shortest):
+                        shortest = newpath
+        return shortest
+
 
     def is_connected(self, 
                      vertices_encountered = None, 
@@ -230,64 +250,64 @@ class Graph(object):
    
 
 
-if __name__ == "__main__":
-
-    g = { "a" : ["d"],
-          "b" : ["c"],
-          "c" : ["b", "c", "d", "e"],
-          "d" : ["a", "c"],
-          "e" : ["c"],
-          "f" : []
-        }
-
-    graph = Graph(g)
-    print(graph)
-
-    for node in graph.vertices():
-        print(graph.vertex_degree(node))
-
-    print("List of isolated vertices:")
-    print(graph.find_isolated_vertices())
-
-    print("""A path from "a" to "e":""")
-    print(graph.find_path("a", "e"))
-
-    print("""All pathes from "a" to "e":""")
-    print(graph.find_all_paths("a", "e"))
-
-    print("The maximum degree of the graph is:")
-    print(graph.Delta())
-
-    print("The minimum degree of the graph is:")
-    print(graph.delta())
-
-    print("Edges:")
-    print(graph.edges())
-
-    print("Degree Sequence: ")
-    ds = graph.degree_sequence()
-    print(ds)
-
-    fullfilling = [ [2, 2, 2, 2, 1, 1], 
-                         [3, 3, 3, 3, 3, 3],
-                         [3, 3, 2, 1, 1]
-                       ] 
-    non_fullfilling = [ [4, 3, 2, 2, 2, 1, 1],
-                        [6, 6, 5, 4, 4, 2, 1],
-                        [3, 3, 3, 1] ]
-
-    for sequence in fullfilling + non_fullfilling :
-        print(sequence, Graph.erdoes_gallai(sequence))
-
-    print("Add vertex 'z':")
-    graph.add_vertex("z")
-    print(graph)
-
-    print("Add edge ('x','y'): ")
-    graph.add_edge(('x', 'y'))
-    print(graph)
-
-    print("Add edge ('a','d'): ")
-    graph.add_edge(('a', 'd'))
-    print(graph)
+# if __name__ == "__main__":
+#
+#     g = { "a" : ["d"],
+#           "b" : ["c"],
+#           "c" : ["b", "c", "d", "e"],
+#           "d" : ["a", "c"],
+#           "e" : ["c"],
+#           "f" : []
+#         }
+#
+#     graph = Graph(g)
+#     print(graph)
+#
+#     for node in graph.vertices():
+#         print(graph.vertex_degree(node))
+#
+#     print("List of isolated vertices:")
+#     print(graph.find_isolated_vertices())
+#
+#     print("""A path from "a" to "e":""")
+#     print(graph.find_path("a", "e"))
+#
+#     print("""All pathes from "a" to "e":""")
+#     print(graph.find_all_paths("a", "e"))
+#
+#     print("The maximum degree of the graph is:")
+#     print(graph.Delta())
+#
+#     print("The minimum degree of the graph is:")
+#     print(graph.delta())
+#
+#     print("Edges:")
+#     print(graph.edges())
+#
+#     print("Degree Sequence: ")
+#     ds = graph.degree_sequence()
+#     print(ds)
+#
+#     fullfilling = [ [2, 2, 2, 2, 1, 1],
+#                          [3, 3, 3, 3, 3, 3],
+#                          [3, 3, 2, 1, 1]
+#                        ]
+#     non_fullfilling = [ [4, 3, 2, 2, 2, 1, 1],
+#                         [6, 6, 5, 4, 4, 2, 1],
+#                         [3, 3, 3, 1] ]
+#
+#     for sequence in fullfilling + non_fullfilling :
+#         print(sequence, Graph.erdoes_gallai(sequence))
+#
+#     print("Add vertex 'z':")
+#     graph.add_vertex("z")
+#     print(graph)
+#
+#     print("Add edge ('x','y'): ")
+#     graph.add_edge(('x', 'y'))
+#     print(graph)
+#
+#     print("Add edge ('a','d'): ")
+#     graph.add_edge(('a', 'd'))
+#     print(graph)
 
