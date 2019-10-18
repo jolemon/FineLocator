@@ -4,6 +4,7 @@ sys.path.append('/Applications/Understand.app/Contents/MacOS/Python')
 import understand as us
 from argparse import ArgumentParser
 from graph import Graph
+from itertools import permutations
 
 
 def add_paras_for_method(method_name, paras):
@@ -73,26 +74,36 @@ def add_to_dic(dic, key, value):
 
 
 def build_graph(dic):
-    graph = Graph(dic)
+    return Graph(dic)
 
 
 def build_cd_matrix(graph):
+    vertices = graph.vertices()
+    permutations_list = list(permutations(vertices, 2))
+    for tp in permutations_list:
+        start_vertice = tp[0]
+        end_vertice = tp[1]
+        path = graph.find_shortest_path(start = start_vertice, end = end_vertice)
+        if path is not None:
+            print(path)
+            print(len(path))
 
     return
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("-u", "--udb_path", dest = "udb_path", required = True)
-    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
-    args = parser.parse_args()
-    udb_path = args.udb_path
-    save_path = args.save_path
-    db = us.open(udb_path)
-    cd_dic = get_cd(udb = db, filter_ref_type = "Call", save_path = save_path)   # or filter_ref_type = "Callby")
-    db.close()
-    build_graph(cd_dic)
-
-    # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
-    # cd_dic = get_cd(dub, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
+    # parser = ArgumentParser()
+    # parser.add_argument("-u", "--udb_path", dest = "udb_path", required = True)
+    # parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
+    # args = parser.parse_args()
+    # udb_path = args.udb_path
+    # save_path = args.save_path
+    # db = us.open(udb_path)
+    # cd_dic = get_cd(udb = db, filter_ref_type = "Call", save_path = save_path)   # or filter_ref_type = "Callby")
+    # db.close()
     # build_graph(cd_dic)
+
+    dub = us.open("/Users/lienming/Time_3/Time_3.udb")
+    cd_dic = get_cd(dub, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
+    cd_graph = build_graph(cd_dic)
+    build_cd_matrix(graph = cd_graph)
