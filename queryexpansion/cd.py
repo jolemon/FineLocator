@@ -106,4 +106,4 @@ if __name__ == "__main__":
     dub = us.open("/Users/lienming/Time_3/Time_3.udb")
     cd_dic = get_cd(dub, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
     cd_graph = build_graph(cd_dic)
-    build_cd_dic(graph = cd_graph)
+    # build_cd_dic(graph = cd_graph)
