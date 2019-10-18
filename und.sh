@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 ori_code_dir=$1   # ~/Downloads/final_defects4j/allMethods/Time/Time_3
-cd_script_dir=$2  # ~/FineLocator/calldependency
+cd_script_dir=$2  # ~/FineLocator/queryexpansion
 udb_dir=$3        # ~/FineLocator/expRes/udb/Time
 cd_dir=$4         # ~/FineLocator/expRes/cd/Time
 proj=$5           # Time_3

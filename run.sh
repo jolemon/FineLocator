@@ -12,7 +12,7 @@ undDir=/Applications/Understand.app/Contents/MacOS
 
 ptDir=${scriptRootDir}/pt
 deeplearning4jDir=${scriptRootDir}/word2vec
-callDependencyDir=${scriptRootDir}/calldependency
+queryExpansionDir=${scriptRootDir}/queryexpansion
 expResDir=${scriptRootDir}/expRes
 
 afterPTRootDir=${expResDir}/afterPT
@@ -48,7 +48,7 @@ do
         # cd ${scriptRootDir}
 
         # step 2 : call Java Understand to extract Call Dependency for method
-        ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${callDependencyDir}  ${udbRootDir}/${proj_name}\
+        ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir}  ${udbRootDir}/${proj_name}\
                  ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
         cd ${scriptRootDir}
 
