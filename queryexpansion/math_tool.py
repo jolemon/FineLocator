@@ -1,5 +1,17 @@
 import numpy as np
 
+
+# calculate average number in list
+def average(list, size):
+
+    import sys
+    sys.setrecursionlimit(100000)
+
+    if size == 1:
+        return list[0]
+    return average(list, size-1)*(size-1)/size + list[size-1]/size
+
+
 # TODO
 def max_pooling():
     return
