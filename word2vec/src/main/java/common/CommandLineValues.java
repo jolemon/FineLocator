@@ -9,7 +9,7 @@ public class CommandLineValues {
     @Option(name = "-source", required = true)
     public String source_dir ;
 
-    @Option(name = "-target")
+    @Option(name = "-target", required = true)
     public String target_dir ;
 
     @Option(name = "--fit")

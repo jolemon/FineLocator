@@ -53,15 +53,15 @@ public class TimeExtractor {
         return latestDate;
     }
 
-    public static void main(String[] args) {
-        try {
-            Date date = new TimeExtractor("/Users/lienming/Downloads/bugcode/Time_3/.git", "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java")
-                    .extract(101, 103) ;
-            System.out.println(date);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            Date date = new TimeExtractor("/Users/lienming/Downloads/bugcode/Time_3/.git", "src/main/java/org/joda/time/format/PeriodFormatterBuilder.java")
+//                    .extract(101, 103) ;
+//            System.out.println(date);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (GitAPIException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -1,6 +1,7 @@
 import common.CommandLineValues;
 import common.Common;
 import model.Word2VecModel;
+import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.kohsuke.args4j.CmdLineException;
 
 import java.io.IOException;
@@ -23,8 +24,10 @@ public class App {
         }
 
         if (s_CommandLineValues.fit == 1) {
-            // denote `source_dir` as `dataDir`
-            Word2VecModel.initModel(s_CommandLineValues.source_dir, Common.modelSavePath);
+            // treat `source_dir` as `code.dataDir` , `target_dir` as `bugReport.dataDir`
+            Word2Vec model = Word2VecModel.initModel(s_CommandLineValues.source_dir);
+            Word2VecModel.continueFit(model, s_CommandLineValues.target_dir);
+            Word2VecModel.saveModel(model, Common.modelSavePath);
         } else {
             extractDir();
         }

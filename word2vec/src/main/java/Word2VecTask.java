@@ -54,15 +54,32 @@ public class Word2VecTask implements Callable<Void> {
 
             out = new BufferedWriter(new OutputStreamWriter
                     (new FileOutputStream(filePathStr), "utf-8"));
-            for (String word : content.split(" ")) {
-                INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase()) ;
-                if (wordVectorMatrix == null) {
-                    System.out.println(word + " not in the vocabulary.");
-                } else {
-                    out.write(wordVectorMatrix.toString());
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            System.out.println(filePath.toString());
+            for (String method : content.split("分")) {
+                method = method.trim();
+                if (method.length() == 0) {
+                    continue;
                 }
+
+                for (String word : method.split(" ")) {
+                    if (word.length() == 0) {
+                        continue;
+                    }
+                    INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase()) ;
+                    if (wordVectorMatrix == null) {
+                        System.out.println(word + " not in the vocabulary.");
+                    } else {
+                        stringBuilder.append(wordVectorMatrix.toString()).append(System.getProperty("line.separator"));
+//                        out.write(wordVectorMatrix.toString());
+                    }
+                }
+
+                stringBuilder.append("分").append(System.getProperty("line.separator"));
             }
-            out.flush();
+            out.write(stringBuilder.toString());
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
