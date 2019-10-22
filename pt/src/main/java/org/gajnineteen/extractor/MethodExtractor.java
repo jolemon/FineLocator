@@ -77,16 +77,19 @@ public class MethodExtractor {
             int javaDocStartPosition = javaDoc.getStartPosition();
             int methodStartPosition = javaDocStartPosition + javaDoc.getLength() + 1 ;
             int javadocNextLineNum = compilationUnit.getLineNumber(methodStartPosition) ;
-            int returnTypeLineNum = compilationUnit.getLineNumber(methodDeclaration.getReturnType2().getStartPosition()) ;
-            if (javadocNextLineNum == returnTypeLineNum) {
-                return javadocNextLineNum;
-            } else {
-                String warningInfo = filePath.toString() + " "
-                        + methodDeclaration.getName()
-                        + ", choose the former line of (" + javadocNextLineNum +"," + returnTypeLineNum +") as start line.";
-                System.out.println(warningInfo);
-                return javadocNextLineNum ;
-            }
+            return javadocNextLineNum;
+
+            // the following code is buggy!
+//            int returnTypeLineNum = compilationUnit.getLineNumber(methodDeclaration.getReturnType2().getStartPosition()) ;
+//            if (javadocNextLineNum == returnTypeLineNum) {
+//                return javadocNextLineNum;
+//            } else {
+//                String warningInfo = filePath.toString() + " "
+//                        + methodDeclaration.getName()
+//                        + ", choose the former line of (" + javadocNextLineNum +"," + returnTypeLineNum +") as start line.";
+//                System.out.println(warningInfo);
+//                return javadocNextLineNum ;
+//            }
         }
     }
 
