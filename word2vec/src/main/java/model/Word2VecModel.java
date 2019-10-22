@@ -1,5 +1,6 @@
 package model;
 
+import common.Common;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.FileSentenceIterator;
@@ -39,7 +40,7 @@ public class Word2VecModel {
         Word2Vec vec = new Word2Vec.Builder()
                 .minWordFrequency(1)
                 .iterations(1)   // ?
-                .layerSize(300)  // 200-500 is acceptable
+                .layerSize(Common.dimension)  // 200-500 is acceptable
                 .windowSize(5)
                 .iterate(iter)
                 .tokenizerFactory(t)
