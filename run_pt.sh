@@ -15,6 +15,7 @@ function runPT(){
     # java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_BRDir}    -target ${pt_output_preprocessedBRDir}   -type br
 
     rm -rf ${pt_output_extractMethodDir} 
+    rm -rf ${pt_output_correspondDir} 
     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}  -target ${pt_output_extractMethodDir} \
                                                    -correspond ${pt_output_correspondDir} -type extract \
                                                    -git ${gitDir}

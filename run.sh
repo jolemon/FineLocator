@@ -41,16 +41,16 @@ do
     do
         echo "handle project "${proj_id}"..."
         # step 1 : preprocessing for bug report and method
-        # ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name}/${proj_id} ${allMethodsDir}/${proj_name}/${proj_id} \
-        #             ${gitRootDir}/${proj_id}/.git \
-        #             ${brAfterPTDir}/${proj_name}/${proj_id} ${extractAfterPTDir}/${proj_name}/${proj_id} \
-        #             ${correspondAfterPTDir}/${proj_name}/${proj_id} ${codeAfterPTDir}/${proj_name}/${proj_id} 
-        # cd ${scriptRootDir}
+        ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name}/${proj_id} ${allMethodsDir}/${proj_name}/${proj_id} \
+                    ${gitRootDir}/${proj_id}/.git \
+                    ${brAfterPTDir}/${proj_name}/${proj_id} ${extractAfterPTDir}/${proj_name}/${proj_id} \
+                    ${correspondAfterPTDir}/${proj_name}/${proj_id} ${codeAfterPTDir}/${proj_name}/${proj_id} 
+        cd ${scriptRootDir}
 
         # step 2 : call Java Understand to extract Call Dependency for method
-        ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir}  ${udbRootDir}/${proj_name}\
-                 ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
-        cd ${scriptRootDir}
+        # ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir}  ${udbRootDir}/${proj_name}\
+        #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
+        # cd ${scriptRootDir}
 
         # step 3 : use deeplearning4j(word2vec) to get vectors of bug reports and methods
         # ./run_word2vec.sh ${deeplearning4jDir} ${brAfterPTDir}/${proj_name}/${proj} ${codeAfterPTDir}/${proj_name}/${proj} \

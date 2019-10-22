@@ -67,12 +67,10 @@ public class PreprocessTask implements Callable<Void> {
     }
 
     public void processFile(Processor processor) throws IOException {
-        BufferedWriter out= null ;
-        String content ;
-
-        Path toSavePath = null;
+        BufferedWriter out ;
+        String content     ;
+        Path toSavePath    ;
         toSavePath = createSavePath(commandLineValues.source_dir, commandLineValues.target_dir);
-        // read original code
 
         try {
             content = new String(Files.readAllBytes(this.filePath)) ;
@@ -89,18 +87,32 @@ public class PreprocessTask implements Callable<Void> {
                     (new FileOutputStream(toSavePath.toString()), "utf-8"));
         }
 
-        processor.setText(content);
-        String result = processor.process() ;
+        if (processor instanceof CodeProcessor) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String[] methods = content.split("分"+System.getProperty("line.separator"));
+            for (String method : methods) {
+                if (method.length() == 0) {
+                    continue;
+                }
+                processor.setText(method);
+                String result = processor.process() ;
+                stringBuilder.append(result).append("分"+System.getProperty("line.separator"));
+            }
+            out.write(stringBuilder.toString());
+        } else {
+            processor.setText(content);
+            String result = processor.process() ;
+            out.write(result);
+        }
 
-        out.write(result);
         out.close() ;
     }
 
     public void extractMethod() throws IOException, GitAPIException {
-        BufferedWriter extractOut = null ;
-        Path toSaveExtractPath = null ;
-        BufferedWriter correspondOut = null ;
-        Path toSaveCorrespondPath = null ;
+        BufferedWriter extractOut ;
+        Path toSaveExtractPath    ;
+        BufferedWriter correspondOut  ;
+        Path toSaveCorrespondPath     ;
 
         List<Method> list = methodExtractor.extract(this.filePath);
 
@@ -125,6 +137,7 @@ public class PreprocessTask implements Callable<Void> {
 
         for (Method method : list) {
             extractOut.write(method.methodStr);
+            extractOut.write("分");
             extractOut.newLine();
 
             Date latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum) ;
