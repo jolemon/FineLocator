@@ -6,6 +6,7 @@ import org.kohsuke.args4j.CmdLineException;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
@@ -26,12 +27,18 @@ public class App {
         if (s_CommandLineValues.fit == 1) {
             // treat `source_dir` as `code.dataDir` , `target_dir` as `bugReport.dataDir`
             Word2Vec model = Word2VecModel.initModel(s_CommandLineValues.source_dir);
-            Word2VecModel.continueFit(model, s_CommandLineValues.target_dir);
+//            Word2VecModel.continueFit(model, s_CommandLineValues.target_dir);
             Word2VecModel.saveModel(model, Common.modelSavePath);
         } else {
-            extractDir();
-        }
+            Path path = Paths.get(s_CommandLineValues.source_dir) ;
+            if (Files.isDirectory(path)) {
+                extractDir();
+            } else {
+                Word2VecTask task = new Word2VecTask(s_CommandLineValues, path);
+                task.call();
+            }
 
+        }
     }
 
     public static void extractDir() {
