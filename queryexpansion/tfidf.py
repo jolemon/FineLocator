@@ -21,19 +21,20 @@ def load_code(proj_path, correspond_path, save_dic):
             if file.endswith(".java"):
                 file_path = os.path.join(root, file) 
                 correspond_file_path = file_path.replace(proj_path, correspond_path)
-                f = open(file_path, 'r')
+                rf = open(file_path, 'r')
                 cf = open(correspond_file_path, 'r')
-                lines = f.readlines()
+                lines = rf.readlines()
                 clines = cf.readlines()
                 for j in range(len(lines)):
                     line = lines[j]
                     if line is not None:
                         line = line.replace('分', '')
                         line = line.strip().split()
-                        method_signature = clines[j].split(',')[0]
-                        key = file_path + '#' + method_signature
+                        method_signature = clines[j].split(',')[:-3]
+                        key = file_path + '#' + ''.join(method_signature)
                         save_dic[key] = Counter(line)
-                f.close()
+                rf.close()
+                cf.close()
     return save_dic
 
 
@@ -41,7 +42,8 @@ def load_code(proj_path, correspond_path, save_dic):
 # count可以通过countlist得到， word可以通过count得到
 # count[word]可以得到每个单词的词频， sum(count.values())得到整个doc的单词总数
 def tf(word, count):
-    return math.log(count[word] / sum(count.values()) ) + 1
+    return math.log(count[word]) + 1
+    # return math.log(count[word] / sum(count.values()) ) + 1
 
 
 # 统计的是含有该单词的句子数
@@ -64,27 +66,60 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument("-br", "--bug_report_path", dest = "bug_report_path", required = True)
-    parser.add_argument("-co", "--code_path", dest = "code_path", required = True)
+    parser.add_argument("-co", "--code_path",       dest = "code_path",       required = True)
     parser.add_argument("-cr", "--correspond_path", dest = "correspond_path", required = True)
+    parser.add_argument("-bs", "--br_save_path",    dest = "br_save_path",    required = True)
+    parser.add_argument("-cs", "--code_save_path",  dest = "code_save_path",  required = True)
     args = parser.parse_args() 
     bug_report_path = args.bug_report_path
     code_path = args.code_path
     correspond_path = args.correspond_path
+    code_save_path = args.code_save_path
+    br_save_path = args.br_save_path
 
     corpus_dic = {}
 
     corpus_dic = load_bug_report(file_path = bug_report_path, save_dic = corpus_dic)
     corpus_dic = load_code(proj_path = code_path, correspond_path = correspond_path, save_dic = corpus_dic)
 
-    countlist = list(corpus_dic.values())
+    counter_list = list(corpus_dic.values())
 
+
+    # save br
+    if bug_report_path in corpus_dic:
+        counter = corpus_dic[bug_report_path]
+        pair = [str(word) + '$' + str(tfidf(word, counter, counter_list)) for word in counter]
+        f = open(br_save_path, 'w')
+        f.write('\n'.join(pair))
+        f.close()
+        print('finished calculate tfidf for br.')
+        del corpus_dic[bug_report_path]
+
+    # save method
     for doc in corpus_dic:
+        doc_parts = doc.split('#')
+        file_path = doc_parts[0]
+        method = doc_parts[1]
+        write_path = ''
+        if code_path not in file_path:
+            print('can not find', code_path, 'in', file_path)
+            continue
+        write_path = file_path.replace(code_path, code_save_path)
+
+        # create dirs
+        write_dir = os.path.split(write_path)[0]
+        if not os.path.isdir(write_dir):
+            os.makedirs(write_dir)
+
+        f = open(write_path, 'a')
+        f.write(method + '分')
         counter = corpus_dic[doc]
-        print("Top words in document {}".format(doc))
-        scores = {word: tfidf(word, counter, countlist) for word in counter}
-        sorted_words = sorted(scores.items(), key = lambda x: x[1], reverse = True)
-        for word, score in sorted_words[:]:
-            print("\tWord: {}, TF-IDF: {}".format(word, round(score, 5)))
+        pair = [str(word) + '$' + str(tfidf(word, counter, counter_list) ) for word in counter]
+        f.write('内'.join(pair))
+        f.write('\n')
+        f.close()
+
+    print('finished calculate tfidf for method.')
 
 
 

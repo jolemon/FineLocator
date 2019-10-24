@@ -22,10 +22,14 @@ extractAfterPTDir=${afterPTRootDir}/extract
 correspondAfterPTDir=${afterPTRootDir}/correspond
 udbRootDir=${expResDir}/udb
 cdRootDir=${expResDir}/cd
+tfidfRootDir=${expResDir}/tfidf
 
 vecRootDir=${expResDir}/vec
 brVecRootDir=${vecRootDir}/br
 codeVecRootDir=${vecRootDir}/code
+
+brTfidfDir=${tfidfRootDir}/br
+codeTfidfDir=${tfidfRootDir}/code
 
 vecAfterPoolingDir=${expResDir}/vecAfterPooling
 brVecAfterPoolingDir=${vecAfterPoolingDir}/br
@@ -37,24 +41,27 @@ PYTHON=python3.7
 for proj_name in "Time"  #"Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Time_5" # `ls ${allMethodsDir}/${proj_name}`
+    for proj_id in "Time_3" # `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
-        echo "step 1 : preprocessing for bug report and method"
-        ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name}/${proj_id} ${allMethodsDir}/${proj_name}/${proj_id} \
-                    ${gitRootDir}/${proj_id}/.git \
-                    ${brAfterPTDir}/${proj_name}/${proj_id} ${extractAfterPTDir}/${proj_name}/${proj_id} \
-                    ${correspondAfterPTDir}/${proj_name}/${proj_id} ${codeAfterPTDir}/${proj_name}/${proj_id} 
-        cd ${scriptRootDir}
+        # echo "step 1 : preprocessing for bug report and method"
+        # ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name}/${proj_id} ${allMethodsDir}/${proj_name}/${proj_id} \
+        #             ${gitRootDir}/${proj_id}/.git \
+        #             ${brAfterPTDir}/${proj_name}/${proj_id} ${extractAfterPTDir}/${proj_name}/${proj_id} \
+        #             ${correspondAfterPTDir}/${proj_name}/${proj_id} ${codeAfterPTDir}/${proj_name}/${proj_id} 
+        # cd ${scriptRootDir}
 
-        echo "step 2 : call Java Understand to extract Call Dependency for method"
+        # echo "step 2 : call Java Understand to extract Call Dependency for method"
         # ./und.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir}  ${udbRootDir}/${proj_name}\
         #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
         # cd ${scriptRootDir}
 
         echo "step 3 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
-        ./run_word2vec.sh ${deeplearning4jDir} ${brAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
-                          ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} ${proj_id}
+        ./run_word2vec.sh ${deeplearning4jDir} ${queryExpansionDir} ${PYTHON} ${proj_id}\
+                          ${brAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
+                          ${correspondAfterPTDir}/${proj_name} \
+                          ${brTfidfDir}/${proj_name} ${codeTfidfDir}/${proj_name} \
+                          ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} 
         cd ${scriptRootDir}
 
         # step 4 : query expansion for methods
