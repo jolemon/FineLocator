@@ -30,6 +30,7 @@ def load_dic_lmt(proj_path):
                         last_modify_time = parts[-1]
                         key = file_path + '#' + method_signature
                         dic[key] = last_modify_time
+                f.close()
     return dic
 
 

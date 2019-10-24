@@ -6,6 +6,7 @@ brVecDir=$4
 codeVecDir=$5
 proj_id=$6
 
+
 function runWord2Vec(){
     rm -rf ${brVecDir}/${proj_id}
     rm -rf ${codeVecDir}/${proj_id}
@@ -13,6 +14,9 @@ function runWord2Vec(){
     mkdir -p ${codeVecDir}/${proj_id}
      
     echo "train word2vec model.."
+
+    # for convenience, copy bug report files to code dir to pack input for training model.
+    # after training, bug reports must be deleted, or will be exported as vector when running next step.
     copyBrBeforeFit
     java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} --fit 1
     clearTmpDir
@@ -50,7 +54,6 @@ function clearTmpDir(){
 
 cd ${deeplearning4jdir}
 
-runWord2Vec
-# clearTmpDir
+runWord2Vec 
 
 

@@ -80,6 +80,9 @@ public class Word2VecTask implements Callable<Void> {
                     if (wordVectorMatrix == null) {
                         System.out.println(word + " not in the vocabulary.");
                     } else {
+                        // query dictionary for tf*idf of word.
+                        // and multiply vector
+                        
                         vecList.add(wordVectorMatrix);
                     }
                 }
