@@ -31,7 +31,7 @@ def load_code(proj_path, correspond_path, save_dic):
                         line = line.replace('分', '')
                         line = line.strip().split()
                         method_signature = clines[j].split(',')[:-3]
-                        key = file_path + '#' + ''.join(method_signature)
+                        key = file_path + '#' + ','.join(method_signature)
                         save_dic[key] = Counter(line)
                 rf.close()
                 cf.close()

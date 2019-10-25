@@ -36,17 +36,20 @@ function runWord2Vec(){
     # for convenience, copy bug report files to code dir to pack input for training model.
     # after training, bug reports must be deleted, or will be exported as vector when running next step.
     copyBrBeforeFit 
-    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} --fit 1
+    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} -fit 1
     clearTmpDir
     echo "train word2vec model finished."
     
 
     echo "export br vector..."
-    java -cp word2vec.jar App -source ${brAfterPTDir}/${proj_id}   -target ${brVecDir}/${proj_id}   
+    java -cp word2vec.jar App -source ${brAfterPTDir}/${proj_id}  \
+         -target ${brVecDir}/${proj_id}  -tfidf ${brTfidfDir}/${proj_id}  -type br
     echo "export br vector finished."
 
     echo "export code vector..."
-    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} -target ${codeVecDir}/${proj_id}
+    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} \
+         -correspond ${correspondAfterPTDir}/${proj_id} \
+         -target ${codeVecDir}/${proj_id} -tfidf ${codeTfidfDir}/${proj_id} -type code
     echo "export code vector finished."
 }
 

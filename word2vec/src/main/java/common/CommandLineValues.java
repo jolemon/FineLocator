@@ -12,7 +12,16 @@ public class CommandLineValues {
     @Option(name = "-target")
     public String target_dir ;
 
-    @Option(name = "--fit")
+    @Option(name = "-tfidf")
+    public String tfidf_dir ;
+
+    @Option(name = "-correspond")
+    public String correspond_dir ;
+
+    @Option(name = "-type", required = true)
+    public String type ;
+
+    @Option(name = "-fit")
     public int fit = 0;
 
     @Option(name = "--num_threads")
