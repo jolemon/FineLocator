@@ -146,6 +146,8 @@ public class Word2VecTask implements Callable<Void> {
                 continue;
             }
             Map<String, Double> methodDictionary = methodsDictionary.get(signature) ;
+
+            // vec multiply tfidf value
             for (String word : methodDoc.split(" ")) {
                 word = word.trim() ;
                 if (word.length() == 0) {
@@ -160,7 +162,7 @@ public class Word2VecTask implements Callable<Void> {
                 INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase()) ;
 
                 if (wordVectorMatrix == null) {
-                    System.out.println(word + " not in the vocabulary.");
+                    System.out.println(word + " not in the word2vec model's vocabulary.");
                     continue;
                 } else {
                     // query dictionary for tf*idf of word and multiply vector
@@ -179,7 +181,7 @@ public class Word2VecTask implements Callable<Void> {
             }
 
             stringBuilder.append(array1).append(System.getProperty("line.separator")) ;
-            stringBuilder.append("分").append(System.getProperty("line.separator"));
+            stringBuilder.append("#").append(signature).append("分").append(System.getProperty("line.separator"));
         }
 
         return stringBuilder ;
