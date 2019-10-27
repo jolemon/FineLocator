@@ -14,8 +14,8 @@ def add_paras_for_method(method_name, paras):
         return str(method_name) + "(" + str(paras) + ")"
 
 
-def get_cd(udb, save_path, filter_file_type = ".java", filter_ref_type = "Call"):
-    save_file = open(save_path, 'w')
+def get_cd(udb, filter_file_type = ".java", filter_ref_type = "Call"):
+    # save_file = open(save_path, 'w')
 
     cd_dic = {}
 
@@ -58,8 +58,8 @@ def get_cd(udb, save_path, filter_file_type = ".java", filter_ref_type = "Call")
                         dic_value = from_file_name + '#' + from_method_name
                         add_to_dic(cd_dic, dic_key, dic_value)
 
-    save_file.write(str(cd_dic))
-    save_file.close()
+    # save_file.write(str(cd_dic))
+    # save_file.close()
     return cd_dic
 
 
@@ -77,18 +77,22 @@ def build_graph(dic):
     return Graph(dic)
 
 
-def build_cd_dic(graph):
+def build_cd_dic(graph, save_path):
+    save_file = open(save_path, 'w')
     vertices = graph.vertices()
     permutations_list = list(permutations(vertices, 2))
     # print(len(permutations_list))
+    write_list = []
     for tp in permutations_list:
         start_vertice = tp[0]
         end_vertice = tp[1]
         path = graph.find_shortest_path(start = start_vertice, end = end_vertice)
         if path is not None:
-            print(path)
-            print(len(path))
-
+            write_list.append(start_vertice + '分' + end_vertice + '分' + str(len(path)))
+            # print(path)
+            # print(len(path))
+    save_file.write("\n".join(write_list))
+    save_file.close()
     return
 
 
@@ -105,6 +109,7 @@ if __name__ == "__main__":
     # build_graph(cd_dic)
 
     dub = us.open("/Users/lienming/Time_3/Time_3.udb")
-    cd_dic = get_cd(dub, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
+    # cd_dic = get_cd(dub, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
+    cd_dic = get_cd(dub)
     cd_graph = build_graph(cd_dic)
-    build_cd_dic(graph = cd_graph)
+    build_cd_dic(graph = cd_graph, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")

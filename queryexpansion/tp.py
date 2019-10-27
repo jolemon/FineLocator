@@ -34,7 +34,7 @@ def load_dic_lmt(proj_path):
     return dic
 
 
-def cal_time_diff_for_dic(dic):
+def cal_time_diff_for_dic(dic, save_path):
     comb_list = list(combinations(dic.keys(), 2))
     list_size = len(comb_list)
     print(list_size)
@@ -43,28 +43,34 @@ def cal_time_diff_for_dic(dic):
     del td_list
 
     result_dic = {}
-    for tp in comb_list:
-        m1 = tp[0]
-        m2 = tp[1]
-        time_str1 = dic[m1]
-        time_str2 = dic[m2]
-        if (time_str1+'#'+time_str2) in result_dic:
-            print('catch 1', time_str1 + '#' + time_str2, result_dic[time_str1 + '#' + time_str2])
-        # elif (time_str2+'#'+time_str1) in result_dic:
-        #     print('catch 2', time_str2 + '#' + time_str1, result_dic[time_str2 + '#' + time_str1])
-        else:
-            diff = cal_time_diff_by_second(time_str1, time_str2)
-            sig_time_diff = sigmoid(diff/avg_td)
-            print(sig_time_diff)
-            result_dic[time_str1+'#'+time_str2]=sig_time_diff
-            result_dic[time_str2+'#'+time_str1]=sig_time_diff
+    with open(save_path, 'w') as f:
+        for tp in comb_list:
+            m1 = tp[0]
+            m2 = tp[1]
+            time_str1 = dic[m1]
+            time_str2 = dic[m2]
+            # if t1#t2 in result_dic, t2#t1 is in result_dic
+            if (time_str1 + '#' + time_str2) in result_dic:
+                f.write(m1 + "分"+ m2 + "分" + str(result_dic[time_str1 + '#' + time_str2]) + "\n")
+                # print(result_dic[time_str1 + '#' + time_str2])
+            else:
+                diff = cal_time_diff_by_second(time_str1, time_str2)
+                sig_time_diff = sigmoid(diff / avg_td)
+                # print(sig_time_diff)
+                result_dic[time_str1 + '#' + time_str2] = sig_time_diff
+                result_dic[time_str2 + '#' + time_str1] = sig_time_diff
+                f.write(m1 + "分"+ m2 + "分" + str(sig_time_diff) + "\n")
+
     return
 
-start = time.process_time()
 
-time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Closure/Closure_176")
-# time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Time/Time_4")
-cal_time_diff_for_dic(time_dic)
+if __name__ == '__main__':
+    start = time.process_time()
+    save_path = "/Users/lienming/FineLocator/expRes/tp/Time/Time_3"
 
-elapsed = time.process_time() - start
-print("Time used:", elapsed)
+    # time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Closure/Closure_176")
+    time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Time/Time_3")
+    cal_time_diff_for_dic(time_dic, save_path = save_path)
+
+    elapsed = time.process_time() - start
+    print("Calculate Temporal Proximity - Time used : ", elapsed)
