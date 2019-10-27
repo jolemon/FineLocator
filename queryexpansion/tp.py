@@ -2,6 +2,7 @@ import time
 import os
 from itertools import combinations
 from math_tool import average, sigmoid
+from argparse import ArgumentParser
 
 time_format = "%a %b %d %H:%M:%S %Z %Y"
 
@@ -37,7 +38,7 @@ def load_dic_lmt(proj_path):
 def cal_time_diff_for_dic(dic, save_path):
     comb_list = list(combinations(dic.keys(), 2))
     list_size = len(comb_list)
-    print(list_size)
+    print("Calculate combinations size :", list_size)
     td_list = [int(time.mktime(time.strptime(dic[key], time_format))) for key in dic]
     avg_td = average(td_list, len(td_list))
     del td_list
@@ -65,12 +66,20 @@ def cal_time_diff_for_dic(dic, save_path):
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument("-c", "--correspond_path", dest = "correspond_path", required = True)
+    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
+    args = parser.parse_args()
+    correspond_path = args.correspond_path
+    save_path = args.save_path
+
     start = time.process_time()
-    save_path = "/Users/lienming/FineLocator/expRes/tp/Time/Time_3"
-
+    print("Start Calculate Temporal Proximity...")
+    # save_path = "/Users/lienming/FineLocator/expRes/tp/Time/Time_3"
     # time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Closure/Closure_176")
-    time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Time/Time_3")
+    time_dic = load_dic_lmt(correspond_path)
     cal_time_diff_for_dic(time_dic, save_path = save_path)
-
-    elapsed = time.process_time() - start
-    print("Calculate Temporal Proximity - Time used : ", elapsed)
+    elapsed = round(time.process_time() - start, 2)
+    print("Finished Calculate Temporal Proximity. Time used : ", elapsed, "s.")
+    print("Save to File :", save_path)
+    print("File size is around : ", str(round(os.path.getsize(save_path) / (1024 * 1024 * 1024), 2)), "G.")

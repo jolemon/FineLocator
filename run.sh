@@ -23,6 +23,7 @@ correspondAfterPTDir=${afterPTRootDir}/correspond
 udbRootDir=${expResDir}/udb
 cdRootDir=${expResDir}/cd
 tfidfRootDir=${expResDir}/tfidf
+tpRootDir=${expResDir}/tp
 
 vecRootDir=${expResDir}/vec
 brVecRootDir=${vecRootDir}/br
@@ -56,13 +57,17 @@ do
         #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
         # cd ${scriptRootDir}
 
-        echo "step 3 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
-        ./run_word2vec.sh ${deeplearning4jDir} ${queryExpansionDir} ${PYTHON} ${proj_id}\
-                          ${brAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
-                          ${correspondAfterPTDir}/${proj_name} \
-                          ${brTfidfDir}/${proj_name} ${codeTfidfDir}/${proj_name} \
-                          ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} 
-        cd ${scriptRootDir}
+        echo "step 3 : Calculate temporal proximity for all method"
+        ./tp.sh  ${correspondAfterPTDir}/${proj_name}  ${queryExpansionDir} ${tpRootDir}/${proj_name} \
+                 ${proj_id} ${PYTHON}
+
+        # echo "step 3 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
+        # ./run_word2vec.sh ${deeplearning4jDir} ${queryExpansionDir} ${PYTHON} ${proj_id}\
+        #                   ${brAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
+        #                   ${correspondAfterPTDir}/${proj_name} \
+        #                   ${brTfidfDir}/${proj_name} ${codeTfidfDir}/${proj_name} \
+        #                   ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} 
+        # cd ${scriptRootDir}
 
         # step 4 : query expansion for methods
         # ./query_expansion.py
