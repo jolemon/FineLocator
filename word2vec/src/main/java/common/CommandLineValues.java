@@ -22,7 +22,10 @@ public class CommandLineValues {
     public String type ;
 
     @Option(name = "-fit")
-    public int fit = 0;
+    public int fit = 0 ;
+
+    @Option(name = "-dim")
+    public int dim = 300 ;
 
     @Option(name = "--num_threads")
     public int NumThreads = 32;

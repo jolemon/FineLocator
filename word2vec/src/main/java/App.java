@@ -26,6 +26,7 @@ public class App {
 
         if (s_CommandLineValues.fit == 1) {
             // treat `source_dir` as `code.dataDir` , `target_dir` as `bugReport.dataDir`
+            Common.dimension = s_CommandLineValues.dim > 0 ? s_CommandLineValues.dim : Common.dimension ;
             Word2Vec model = Word2VecModel.initModel(s_CommandLineValues.source_dir);
 //            Word2VecModel.continueFit(model, s_CommandLineValues.target_dir);
             Word2VecModel.saveModel(model, Common.modelSavePath);
