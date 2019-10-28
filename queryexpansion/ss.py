@@ -4,6 +4,8 @@ import os
 from argparse import ArgumentParser
 from itertools import combinations
 import time
+from math_tool import cosine_similarity
+import json
 
 # delete blank space, "[[    " from head and "]]" from tail
 def trim_text(string):
@@ -48,11 +50,6 @@ def load_cv(dir_path):
     return methods_dic
 
 
-# Calculate cosine similarity between two [line] vector
-def cosine_similarity(vec1, vec2):
-    return float(np.dot(vec1, vec2.T) / (np.linalg.norm(vec1) * np.linalg.norm(vec2)))
-
-
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-c" , "--code_vector_dir", dest = "code_vector_dir", required = True)
@@ -81,9 +78,9 @@ if __name__ == '__main__':
         vec1 = methods_dic[m1]
         vec2 = methods_dic[m2]
         cs = cosine_similarity(vec1 = vec1, vec2 = vec2)
-        ss_dic[m1+'#'+m2] = cs
+        ss_dic[m1+"#"+m2] = cs
 
     with open(save_path, 'w') as save_file:
-        save_file.write(str(ss_dic))
+        save_file.write(json.dumps(ss_dic))
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Semantic Similarity. Time used : ", elapsed, "s.")

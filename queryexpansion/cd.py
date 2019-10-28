@@ -2,14 +2,15 @@
 
 # Call Dependency
 
-
 import sys
 sys.path.append('/Applications/Understand.app/Contents/MacOS/Python')
 import understand as us
 from argparse import ArgumentParser
 from graph import Graph
 from itertools import permutations
-
+from math_tool import average, sigmoid
+import time
+import json
 
 def add_paras_for_method(method_name, paras):
     if paras is None:
@@ -85,35 +86,51 @@ def build_cd_dic(graph, save_path):
     save_file = open(save_path, 'w')
     vertices = graph.vertices()
     permutations_list = list(permutations(vertices, 2))
-    # print(len(permutations_list))
-    write_list = []
-    for tp in permutations_list:
-        start_vertice = tp[0]
-        end_vertice = tp[1]
+
+    cd_dic = dict()
+    sigmoid_cd_dic = dict()
+    length_list = []
+    for cd_pair in permutations_list:
+        start_vertice = cd_pair[0]
+        end_vertice   = cd_pair[1]
         path = graph.find_shortest_path(start = start_vertice, end = end_vertice)
         if path is not None:
-            write_list.append(start_vertice + '分' + end_vertice + '分' + str(len(path)))
-            # print(path)
-            # print(len(path))
-    save_file.write("\n".join(write_list))
+            path_length = len(path)
+            cd_dic[cd_pair] = path_length
+            length_list.append(path_length)
+        else:
+            sigmoid_cd_dic[start_vertice+'#'+end_vertice] = 0
+
+    size = len(length_list)
+    avg_shortest_length = average(length_list, size)
+    for cd_pair in cd_dic:
+        sigmoid_cd_dic[cd_pair[0]+'#'+cd_pair[1]] = sigmoid(1 - cd_dic[cd_pair] / avg_shortest_length)
+        # print(cd_pair)
+        # print(sigmoid_cd_dic[cd_pair])
+
+    save_file.write(json.dumps(sigmoid_cd_dic))
     save_file.close()
     return
 
 
 if __name__ == "__main__":
-    # parser = ArgumentParser()
-    # parser.add_argument("-u", "--udb_path", dest = "udb_path", required = True)
-    # parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
-    # args = parser.parse_args()
-    # udb_path = args.udb_path
-    # save_path = args.save_path
-    # db = us.open(udb_path)
-    # cd_dic = get_cd(udb = db, filter_ref_type = "Call", save_path = save_path)   # or filter_ref_type = "Callby")
-    # db.close()
-    # build_graph(cd_dic)
+    parser = ArgumentParser()
+    parser.add_argument("-u", "--udb_path", dest = "udb_path", required = True)
+    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
+    args = parser.parse_args()
+    udb_path = args.udb_path
+    save_path = args.save_path
 
-    dub = us.open("/Users/lienming/Time_3/Time_3.udb")
-    # cd_dic = get_cd(dub, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
-    cd_dic = get_cd(dub)
+    start = time.process_time()
+    print("Start Calculate Call Dependency...")
+    db = us.open(udb_path)
+    cd_dic = get_cd(udb = db)
+    db.close()
     cd_graph = build_graph(cd_dic)
-    build_cd_dic(graph = cd_graph, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
+    build_cd_dic(graph = cd_graph, save_path = save_path)
+    elapsed = round(time.process_time() - start, 2)
+    print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
+    # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
+    # cd_dic = get_cd(dub)
+    # cd_graph = build_graph(cd_dic)
+    # build_cd_dic(graph = cd_graph, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")

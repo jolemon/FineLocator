@@ -5,6 +5,7 @@ import os
 from itertools import combinations
 from math_tool import average, sigmoid
 from argparse import ArgumentParser
+import json
 
 time_format = "%a %b %d %H:%M:%S %Z %Y"
 
@@ -45,7 +46,8 @@ def cal_time_diff_for_dic(dic, save_path):
     avg_td = average(td_list, len(td_list))
     del td_list
 
-    result_dic = {}
+    cache_dic = dict()
+    tp_dic = dict()
     with open(save_path, 'w') as f:
         for tp in comb_list:
             m1 = tp[0]
@@ -53,17 +55,17 @@ def cal_time_diff_for_dic(dic, save_path):
             time_str1 = dic[m1]
             time_str2 = dic[m2]
             # if t1#t2 in result_dic, t2#t1 is in result_dic
-            if (time_str1 + '#' + time_str2) in result_dic:
-                f.write(m1 + "分"+ m2 + "分" + str(result_dic[time_str1 + '#' + time_str2]) + "\n")
-                # print(result_dic[time_str1 + '#' + time_str2])
+            if (time_str1 + '#' + time_str2) in cache_dic:
+                tp_dic[m1 + "#" + m2] = cache_dic[time_str1 + '#' + time_str2]
+                # f.write(m1 + "分"+ m2 + "分" + str(cache_dic[time_str1 + '#' + time_str2]) + "\n")
             else:
                 diff = cal_time_diff_by_second(time_str1, time_str2)
                 sig_time_diff = sigmoid(diff / avg_td)
-                # print(sig_time_diff)
-                result_dic[time_str1 + '#' + time_str2] = sig_time_diff
-                result_dic[time_str2 + '#' + time_str1] = sig_time_diff
-                f.write(m1 + "分"+ m2 + "分" + str(sig_time_diff) + "\n")
-
+                cache_dic[time_str1 + '#' + time_str2] = sig_time_diff
+                cache_dic[time_str2 + '#' + time_str1] = sig_time_diff
+                tp_dic[m1 + "#" + m2] = sig_time_diff
+                # f.write(m1 + "分"+ m2 + "分" + str(sig_time_diff) + "\n")
+        f.write(json.dumps(tp_dic))
     return
 
 

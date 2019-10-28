@@ -1,116 +1,85 @@
-import math
-import math_tool
+from argparse import ArgumentParser
+import json
+import time
 
 alpha = 0.8
 beta = 0.1
 gamma = 0.1
-
-average_time_difference = 0
-average_shortest_length = 0
-average_augmentation_coefficient = 0
-
-
-# TODO 统计word在词袋bow中出现的次数
-def cal_word_frequency(word, bow):
-    return 0
-
-
-# TODO |M| : 代表项目中所有的方法数
-def cal_num_of_methods():
-    return 0
-
-
-# TODO 统计项目中包含word的方法数
-def cal_num_of_methods_containing_word(word):
-    return 0
-
-
-# The term frequency
-def tf(word, bow):
-    word_frequency = cal_word_frequency(word = word, bow = bow)
-    return math.log(word_frequency) + 1
-
-
-# the inverse document frequency
-def idf(word):
-    big_m = cal_num_of_methods()
-    n_wj = cal_num_of_methods_containing_word(word)
-    return math.log(big_m / n_wj)
-
-
-def cal_tfidf(word, bow):
-    return tf(word, bow) * idf(word)
-
-
-# TODO
-def cal_vector_multiply_tfidf(word, vector_for_word, bow):
-    tfidf_for_word = cal_tfidf(word, bow)
-    # vector_for_word是什么类型，如何乘以一个浮点数
-    # vector_for_word.multiply(tfidf_for_word)
-    return 0
-
-
-# TODO 在方法级别上计算doc
-def cal_doc_vector():
-    # for all word in method : do cal_vector_multiply_tfidf() and get vec_tfidf_list
-    # return max_pooling(vec_tfidf_list)
-    return
-
-
-# TODO 计算方法之间的平均修改长度
-def cal_average_time_difference():
-    return 0
-
-
-def semantic_similarity(doc_1, doc_2):
-    return math_tool.cal_cosine_similarity(vec_1 = doc_1, vec_2 = doc_2)
-
-
-def temporal_proximity(last_modified_time_for_m1, last_modified_time_for_m2):
-    time_diff = abs(last_modified_time_for_m1 - last_modified_time_for_m2)
-    return math_tool.sigmoid(time_diff / average_time_difference)
-
-
-def cal_average_shortest_length():
-    return 0
-
-
-# TODO JavaUnderstand. 两个方法之间是否有依赖关系，无则返回0，有则返回最短调用长度lp
-def find_link_for_methods(method_1, method_2):
-    return 0
-
-
-def call_dependency(method_1, method_2):
-    lp = find_link_for_methods(method_1 = method_1, method_2 = method_2)
-    if lp == 0:
-        return 0
-    else:
-        return math_tool.sigmoid(1-lp/average_shortest_length)
-
-
-# TODO 是否需要定义类表示method，method包含其doc_vector, last_modify_time, 但还要另外计算call_dependency
-def augmentation_coefficient(method_1, method_2):
-    # return alpha * semantic_similarity() + beta * temporal_proximity() + gamma * call_dependency()
-    return
-
 
 # TODO 计算平均值
 def cal_average_augmentation_coefficient():
     return 0
 
 
-# TODO 所有的方法扩展需要保存吗？如何保存
-def method_augmentation():
+# ss, tp key = ${method1}"#"${method2}, cd key = turple(method1, method2)
+def method_augmentation(ss_path, tp_path, cd_path):
+    ac_dic = dict()
+    with open(ss_path, 'r') as ss_file, open(tp_path, 'r') as tp_file, open(cd_path, 'r') as cd_file:
+        ss_dic = json.loads(ss_file.read())
+        tp_dic = json.loads(tp_file.read())
+        cd_dic = json.loads(cd_file.read())
+        for tp_key in tp_dic:
+            tp_value = tp_dic[tp_key]
+            ss_value = find_v_by_sharp_k(tp_key, ss_dic)
+            if ss_value is None:
+                print("failed to find semantic similarity for", tp_key)
+                continue
+            cd_value = find_v_by_sharp_k(tp_key, cd_dic)
+            if cd_value is None:
+                print("failed to find call dependency for", tp_key)
+                continue
+            ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
+            ac_dic[tp_key] = ac_value
+            print(tp_key, ac_value)
+    print(len(ac_dic))
     return
 
 
+# key = m1#m2
+def find_v_by_sharp_k(key, dic):
+    if key in dic:
+        return dic[key]
+    else:
+        parts = key.split('#')
+        switch_key = parts[1] + '#' + parts[0]
+        if switch_key not in dic:
+            print(key, 'is unavailable in sharp dic.')
+            return
+        else:
+            return dic[switch_key]
+
+
+# def find_v_by_tuple_k(key, dic):
+#     parts = key.split('#')
+#     ele1 = parts[0]
+#     ele2 = parts[1]
+#     t1 = (ele1, ele2)
+#     if t1 in dic:
+#         return dic[t1]
+#     else:
+#         t2 = (ele2, ele1)
+#         if t2 in dic:
+#             return dic[t2]
+#         else:
+#             print(key, 'is unavailable in tuple dic.')
+#             return
+
+
 if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument("-ss", "--ss_path", dest = "ss_path", required = True)
+    parser.add_argument("-tp", "--tp_path", dest = "tp_path", required = True)
+    parser.add_argument("-cd", "--cd_path", dest = "cd_path", required = True)
+    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
 
-    # 定义 alpha, beta, gamma
+    args = parser.parse_args()
+    ss_path = args.ss_path
+    tp_path = args.tp_path
+    cd_path = args.cd_path
+    save_path = args.save_path
 
-    average_time_difference = cal_average_time_difference()
-    average_shortest_length = cal_average_shortest_length()
-    average_augmentation_coefficient = cal_average_augmentation_coefficient()
-
-
-
+    start = time.process_time()
+    print("Finally, Start Calculate Query Expansion...")
+    method_augmentation(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path)
+    elapsed = round(time.process_time() - start, 2)
+    print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")
