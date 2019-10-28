@@ -24,6 +24,7 @@ udbRootDir=${expResDir}/udb
 cdRootDir=${expResDir}/cd
 tfidfRootDir=${expResDir}/tfidf
 tpRootDir=${expResDir}/tp
+ssRootDir=${expResDir}/ss
 
 vecRootDir=${expResDir}/vec
 brVecRootDir=${vecRootDir}/br
@@ -58,25 +59,33 @@ do
         #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
         # cd ${scriptRootDir}
 
-        echo "step 3 : Calculate temporal proximity for all methods"
-        ./tp.sh  ${correspondAfterPTDir}/${proj_name}  ${queryExpansionDir} ${tpRootDir}/${proj_name} \
-                 ${proj_id} ${PYTHON}
+        # echo "step 3 : Calculate temporal proximity for all methods"
+        # ./tp.sh  ${queryExpansionDir} ${correspondAfterPTDir}/${proj_name} ${tpRootDir}/${proj_name} \
+        #          ${proj_id} ${PYTHON}
+        # cd ${scriptRootDir}
 
-        echo "step 4 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
-        ./run_word2vec.sh ${deeplearning4jDir} ${queryExpansionDir} ${PYTHON} ${proj_id}\
-                          ${brAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
-                          ${correspondAfterPTDir}/${proj_name} \
-                          ${brTfidfDir}/${proj_name} ${codeTfidfDir}/${proj_name} \
-                          ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} \
-                          ${word2vec_model_dimension}
+        echo "step 4 : Calculate semantic similarity for all methods"
+        ./ss.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name} ${brVecRootDir}/${proj_name} \
+                ${ssRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension} ${PYTHON} 
         cd ${scriptRootDir}
 
-        # echo "step 5 : query expansion for methods"
+        # echo "step 5 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
+        # ./run_word2vec.sh ${deeplearning4jDir} ${queryExpansionDir} ${PYTHON} ${proj_id}\
+        #                   ${brAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
+        #                   ${correspondAfterPTDir}/${proj_name} \
+        #                   ${brTfidfDir}/${proj_name} ${codeTfidfDir}/${proj_name} \
+        #                   ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} \
+        #                   ${word2vec_model_dimension}
+        # cd ${scriptRootDir}
+
+        # echo "step 6 : query expansion for methods"
         # ./query_expansion.py
+        # cd ${scriptRootDir}
 
 
-        # echo "step 6 : retrieve methods by similarity ranking on bug reports and augmented methods"
+        # echo "step 7 : retrieve methods by similarity ranking on bug reports and augmented methods"
         # ./rank.py 
+        # cd ${scriptRootDir}
     done
 
     break 

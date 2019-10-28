@@ -1,7 +1,7 @@
 #!/bin/bash 
 
-correspond_dir=$1   # ~/FineLocator/expRes/afterPT/correspond/${proj}
-tp_script_dir=$2    # ~/FineLocator/queryexpansion
+tp_script_dir=$1    # ~/FineLocator/queryexpansion
+correspond_dir=$2   # ~/FineLocator/expRes/afterPT/correspond/${proj}
 tp_dir=$3           # ~/FineLocator/expRes/tp/${proj}
 proj_id=$4          # ${proj_id}
 PYTHON=$5           # python3.7
