@@ -12,12 +12,13 @@ def cal_average_augmentation_coefficient():
 
 
 # ss, tp key = ${method1}"#"${method2}, cd key = turple(method1, method2)
-def method_augmentation(ss_path, tp_path, cd_path):
+def method_augmentation(ss_path, tp_path, cd_path, save_path):
     ac_dic = dict()
     with open(ss_path, 'r') as ss_file, open(tp_path, 'r') as tp_file, open(cd_path, 'r') as cd_file:
         ss_dic = json.loads(ss_file.read())
         tp_dic = json.loads(tp_file.read())
         cd_dic = json.loads(cd_file.read())
+        print("load ss, tp, cd dictionary ready.")
         for tp_key in tp_dic:
             tp_value = tp_dic[tp_key]
             ss_value = find_v_by_sharp_k(tp_key, ss_dic)
@@ -40,29 +41,13 @@ def find_v_by_sharp_k(key, dic):
     if key in dic:
         return dic[key]
     else:
-        parts = key.split('#')
-        switch_key = parts[1] + '#' + parts[0]
+        parts = key.split('分')
+        switch_key = parts[1] + '分' + parts[0]
         if switch_key not in dic:
-            print(key, 'is unavailable in sharp dic.')
             return
         else:
             return dic[switch_key]
 
-
-# def find_v_by_tuple_k(key, dic):
-#     parts = key.split('#')
-#     ele1 = parts[0]
-#     ele2 = parts[1]
-#     t1 = (ele1, ele2)
-#     if t1 in dic:
-#         return dic[t1]
-#     else:
-#         t2 = (ele2, ele1)
-#         if t2 in dic:
-#             return dic[t2]
-#         else:
-#             print(key, 'is unavailable in tuple dic.')
-#             return
 
 
 if __name__ == '__main__':
@@ -79,7 +64,7 @@ if __name__ == '__main__':
     save_path = args.save_path
 
     start = time.process_time()
-    print("Finally, Start Calculate Query Expansion...")
-    method_augmentation(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path)
+    print("Finally, Start to Calculate Query Expansion...")
+    method_augmentation(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")

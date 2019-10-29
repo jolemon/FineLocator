@@ -30,9 +30,11 @@ def load_dic_lmt(proj_path):
                     if line is not None:
                         line = line.strip()
                         parts = line.split(',')
-                        method_signature = parts[0]
+                        method_signature = parts[:-3]
                         last_modify_time = parts[-1]
-                        key = file_path + '#' + method_signature
+                        # use relative path
+                        relative_path = file_path.replace(proj_path, "")
+                        key = relative_path + '#' + ','.join(method_signature)
                         dic[key] = last_modify_time
                 f.close()
     return dic
@@ -56,14 +58,14 @@ def cal_time_diff_for_dic(dic, save_path):
             time_str2 = dic[m2]
             # if t1#t2 in result_dic, t2#t1 is in result_dic
             if (time_str1 + '#' + time_str2) in cache_dic:
-                tp_dic[m1 + "#" + m2] = cache_dic[time_str1 + '#' + time_str2]
+                tp_dic[m1 + "分" + m2] = cache_dic[time_str1 + '#' + time_str2]
                 # f.write(m1 + "分"+ m2 + "分" + str(cache_dic[time_str1 + '#' + time_str2]) + "\n")
             else:
                 diff = cal_time_diff_by_second(time_str1, time_str2)
                 sig_time_diff = sigmoid(diff / avg_td)
                 cache_dic[time_str1 + '#' + time_str2] = sig_time_diff
                 cache_dic[time_str2 + '#' + time_str1] = sig_time_diff
-                tp_dic[m1 + "#" + m2] = sig_time_diff
+                tp_dic[m1 + "分" + m2] = sig_time_diff
                 # f.write(m1 + "分"+ m2 + "分" + str(sig_time_diff) + "\n")
         f.write(json.dumps(tp_dic))
     return
