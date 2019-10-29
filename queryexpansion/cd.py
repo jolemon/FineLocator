@@ -95,7 +95,6 @@ def build_cd_dic(graph, save_path):
     save_file = open(save_path, 'w')
     vertices = graph.vertices()
     permutations_list = list(permutations(vertices, 2))
-
     cd_dic = dict()
     sigmoid_cd_dic = dict()
     length_list = []
@@ -109,13 +108,11 @@ def build_cd_dic(graph, save_path):
             length_list.append(path_length)
         else:
             sigmoid_cd_dic[start_vertice+'分'+end_vertice] = 0
-            print(start_vertice+'分'+end_vertice)
 
     size = len(length_list)
     avg_shortest_length = average(length_list, size)
     for cd_pair in cd_dic:
         sigmoid_cd_dic[cd_pair[0]+'分'+cd_pair[1]] = sigmoid(1 - cd_dic[cd_pair] / avg_shortest_length)
-        print(cd_pair[0]+'分'+cd_pair[1])
         # print(cd_pair)
         # print(sigmoid_cd_dic[cd_pair])
 
