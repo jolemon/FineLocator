@@ -94,6 +94,7 @@ def build_graph(dic):
 def build_cd_dic(graph, save_path):
     save_file = open(save_path, 'w')
     vertices = graph.vertices()
+    print("Calculate shortest path for methods of size :", str(len(vertices)))
     permutations_list = list(permutations(vertices, 2))
     cd_dic = dict()
     sigmoid_cd_dic = dict()
@@ -106,8 +107,8 @@ def build_cd_dic(graph, save_path):
             path_length = len(path)
             cd_dic[cd_pair] = path_length
             length_list.append(path_length)
-        else:
-            sigmoid_cd_dic[start_vertice+'分'+end_vertice] = 0
+        # else:
+        #     sigmoid_cd_dic[start_vertice+'分'+end_vertice] = 0
 
     size = len(length_list)
     avg_shortest_length = average(length_list, size)
@@ -115,7 +116,7 @@ def build_cd_dic(graph, save_path):
         sigmoid_cd_dic[cd_pair[0]+'分'+cd_pair[1]] = sigmoid(1 - cd_dic[cd_pair] / avg_shortest_length)
         # print(cd_pair)
         # print(sigmoid_cd_dic[cd_pair])
-
+    print("Call dictionary size:", str(len(sigmoid_cd_dic)))
     save_file.write(json.dumps(sigmoid_cd_dic))
     save_file.close()
     return
@@ -140,7 +141,7 @@ if __name__ == "__main__":
     build_cd_dic(graph = cd_graph, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
-    print("File size is around : ", str(round(os.path.getsize(save_path) / (1024 * 1024 * 1024), 2)), "G.")
+    print("File size is around : ", str(round(os.path.getsize(save_path) / 1024, 2)), "K.")
     # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
     # cd_dic = get_cd(dub)
     # cd_graph = build_graph(cd_dic)

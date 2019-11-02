@@ -72,7 +72,9 @@ if __name__ == '__main__':
 
 
     methods_dic = load_cv(dir_path = code_vector_dir)
-    comb_list = list(combinations(methods_dic.keys(), 2))
+    keys = methods_dic.keys()
+    print("Calculate methods of size :", str(len(keys)))
+    comb_list = list(combinations(keys, 2))
     start = time.process_time()
     print("Start Calculate Semantic Similarity...")
     ss_dic = dict()

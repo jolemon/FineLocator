@@ -41,9 +41,9 @@ def load_dic_lmt(proj_path):
 
 
 def cal_time_diff_for_dic(dic, save_path):
-    comb_list = list(combinations(dic.keys(), 2))
-    list_size = len(comb_list)
-    print("Calculate combinations size :", list_size)
+    keys = dic.keys()
+    comb_list = list(combinations(keys, 2))
+    print("Calculate methods of size :", str(len(keys)))
     td_list = [int(time.mktime(time.strptime(dic[key], time_format))) for key in dic]
     avg_td = average(td_list, len(td_list))
     del td_list
