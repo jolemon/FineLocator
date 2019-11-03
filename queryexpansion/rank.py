@@ -1,12 +1,28 @@
 import math_tool
+from ss import load_brv
+import json
 
 
-def cal_rel(bug_report_vector, augmented_method_vector):
+def cal_single_rel(bug_report_vector, augmented_method_vector):
     return math_tool.cosine_similarity(bug_report_vector, augmented_method_vector)
 
 
 def load_augmentation_methods(path):
-    return
+    with open(path, 'r') as f:
+        dic = json.loads(f.read())
+    return dic
+
+
+def load_br_vector(path, dim):
+    return load_brv(path, dim = dim)
+
+
+def cal_rel(brv, dic):
+    result_dic = dict()
+    for key in dic:
+        rel_value = cal_single_rel(brv, dic[key])
+        result_dic[key] = rel_value
+    return result_dic
 
 
 # read "link_buggyMethods/xxx" file and return a dictionary

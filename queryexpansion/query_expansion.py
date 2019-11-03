@@ -5,58 +5,81 @@ from handle_cd_method import trim_method
 import os
 from math_tool import average
 from ss import load_cv
-import numpy as np
 
 alpha = 0.8
 beta = 0.1
 gamma = 0.1
 
 
-def find_v_by_sharp_k(key, dic, flag = True):
-    if key in dic:
-        return dic[key]
-    else:
-        parts = key.split('分')
-        m0 = parts[0]
-        m1 = parts[1]
-        switch_key = m1 + '分' + m0
-        if switch_key in dic:
-            return dic[switch_key]
+def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
+    parts = sharp_key_pair.split('分')
+    m0 = parts[0]
+    m1 = parts[1]
+    m0_sig = key_id_dic[m0]
+    m1_sig = key_id_dic[m1]
+
+    # step 1 : remove "@* " and function modifier and "throws *"
+    trim_m0 = trim_method(m0_sig)
+    trim_m1 = trim_method(m1_sig)
+
+    # step 2 : try to find new key in dic again
+
+    if trim_m0 in cd_sig2id_dic and trim_m1 in cd_sig2id_dic:
+        m0_id = cd_sig2id_dic[trim_m0]
+        m1_id = cd_sig2id_dic[trim_m1]
+
+        key = m0_id + '分' + m1_id
+        if key in cd_dic:
+            return cd_dic[key]
         else:
-            if flag is True:
-                # step 1 : remove "@* " and function modifier and "throws *"
-                trim_m0 = trim_method(m0)
-                trim_m1 = trim_method(m1)
-                # step 2 : try to find new key in dic again
-                new_key = trim_m0 + '分' + trim_m1
-                return find_v_by_sharp_k(new_key, dic, flag = False)
+            switch_key = m1_id + '分' + m0_id
+            if switch_key in cd_dic:
+                return cd_dic[switch_key]
             else:
                 return None
+    else:
+        return None
 
 
 def calculate_ac(ss_path, tp_path, cd_path):
     ac_dic = dict()
-    with open(ss_path, 'r') as ss_file:
+    with open(ss_path, 'r') as ss_file, open(ss_path + '.dic', 'r') as ss_id_file:
         ss_dic = json.loads(ss_file.read())
-    with open(tp_path, 'r') as tp_file:
+        # ss_id_dic = json.loads(ss_id_file.read())
+    with open(tp_path, 'r') as tp_file, open(tp_path + '.dic', 'r') as tp_id_file:
         tp_dic = json.loads(tp_file.read())
-    with open(cd_path, 'r') as cd_file:
+        tp_id_dic = json.loads(tp_id_file.read())
+    with open(cd_path, 'r') as cd_file, open(cd_path + '.dic', 'r') as cd_id_file:
         cd_dic = json.loads(cd_file.read())
+        cd_id2sig_dic = json.loads(cd_id_file.read())
+
+    # convert dict
+    cd_sig2id_dic = dict(zip(cd_id2sig_dic.values(), cd_id2sig_dic.keys()))
 
     print("load ss, tp, cd dictionary ready.")
     for tp_key in tp_dic:
         tp_value = tp_dic[tp_key]
-        ss_value = find_v_by_sharp_k(tp_key, ss_dic)
-        if ss_value is None:
+
+        if tp_key in ss_dic:
+            ss_value = ss_dic[tp_key]
+        else:
+            print(tp_key, 'not in ss_dic')
             continue
-        cd_value = find_v_by_sharp_k(tp_key, cd_dic)
+
+        cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
         if cd_value is None:
             cd_value = 0
 
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
-    del ss_dic, tp_dic, cd_dic
+    # del ss_dic, tp_dic, cd_dic
+    with open(save_path, 'w') as save_file:
+        save_file.write(json.dumps(ac_dic))
+    return ac_dic
+
+
+def filter_ac_dic(ac_dic):
     print("ac size:", len(ac_dic))
     avglist = ac_dic.values()
     avg_ac = average(avglist, len(avglist))
@@ -66,32 +89,26 @@ def calculate_ac(ss_path, tp_path, cd_path):
     for ac_key in ac_dic:
         if ac_dic[ac_key] < avg_ac:
             del ac_dic[ac_key]
-    return ac_dic
 
 
 def method_augmentation(cv_path, ac_dic, save_path):
-    methods_dic = load_cv(cv_path)
-    for ac_key in methods_dic:
-        ac_key.split()
-    for method in methods_dic:
-        doc_vector = methods_dic[method]
-        for ac_key in ac_dic:
-            if method in ac_key:
-                another_method = ac_key.replace(method, "").replace("#", "")
-                print(another_method)
-                try:
-                    another_doc = methods_dic[another_method]
-                except KeyError:
-                    print(another_method, "not found in methods dic.")
-                    continue
+    id_method_dic, id_value_dic = load_cv(cv_path)
 
-                doc_vector = doc_vector + another_doc * ac_dic[ac_key]
-                methods_dic[method] = doc_vector
+    for ac_key in ac_dic:
+        ids = ac_key.split("分")
+        ac_value = ac_dic[ac_key]
+        id1 = ids[0]
+        id2 = ids[1]
+        doc_vector1 = id_value_dic[id1]
+        doc_vector2 = id_value_dic[id2]
+
+        doc_vector1 += doc_vector2 * ac_value
+        doc_vector2 += doc_vector1 * ac_value
+
     with open(save_path, 'w') as save_file:
-        save_file.write(json.dumps(methods_dic))
+        save_file.write(json.dumps(id_value_dic))
+
     return
-
-
 
 
 if __name__ == '__main__':
@@ -112,6 +129,7 @@ if __name__ == '__main__':
     start = time.process_time()
     print("Finally, Start to Calculate Query Expansion...")
     ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path)
+    filter_ac_dic(ac_dic)
     # method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic, save_path = save_path)
 
     elapsed = round(time.process_time() - start, 2)

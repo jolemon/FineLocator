@@ -4,7 +4,7 @@ import numpy as np
 # calculate average number in list
 def average(list, size):
     import sys
-    sys.setrecursionlimit(100000)
+    sys.setrecursionlimit(1000000)
 
     if size == 1:
         return list[0]

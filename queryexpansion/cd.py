@@ -12,6 +12,7 @@ from math_tool import average, sigmoid
 import time
 import json
 import os
+from methods_dic import update_id_method_dic
 
 def add_paras_for_method(method_name, paras):
     if paras is None:
@@ -21,8 +22,8 @@ def add_paras_for_method(method_name, paras):
 
 
 def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"):
-    # save_file = open(save_path, 'w')
 
+    id_method_dic = dict()
     cd_dic = {}
 
     for f in udb.ents("File"):
@@ -59,22 +60,23 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
                     to_method_type = to_ent.type()
                     if to_method_type is not None:
                         to_method_name = to_method_type + ' ' + to_method_name
+
+                    from_signature = from_file_name + '#' + from_method_name
+                    to_signature = to_file_name   + '#' + to_method_name
+
+                    from_id = update_id_method_dic(id_method_dic = id_method_dic, method = from_signature)
+                    to_id = update_id_method_dic(id_method_dic = id_method_dic, method = to_signature)
+
                     if filter_ref_type == "Call":
-                        # line = from_file_name + '内' + from_method_name + '调用' + to_file_name + '内' + to_method_name + '行' + str(line_num)
-                        # save_file.write(line+'\n')
-                        dic_key   = from_file_name + '#' + from_method_name
-                        dic_value = to_file_name   + '#' + to_method_name
+                        dic_key   = from_id
+                        dic_value = to_id
                         add_to_dic(cd_dic, dic_key, dic_value)
                     else:
-                        # line = from_file_name + '内' + from_method_name + '被调' + to_file_name + '内' + to_method_name + '行' + str(line_num)
-                        # save_file.write(line + '\n')
-                        dic_key   = to_file_name   + '#' + to_method_name
-                        dic_value = from_file_name + '#' + from_method_name
+                        dic_key   = to_id
+                        dic_value = from_id
                         add_to_dic(cd_dic, dic_key, dic_value)
 
-    # save_file.write(str(cd_dic))
-    # save_file.close()
-    return cd_dic
+    return id_method_dic, cd_dic
 
 
 def add_to_dic(dic, key, value):
@@ -91,34 +93,34 @@ def build_graph(dic):
     return Graph(dic)
 
 
-def build_cd_dic(graph, save_path):
-    save_file = open(save_path, 'w')
+def build_cd_dic(graph, id_method_dic, save_path):
+
     vertices = graph.vertices()
-    print("Calculate shortest path for methods of size :", str(len(vertices)))
+    print("Calculate path for methods of size :", str(len(vertices)))
     permutations_list = list(permutations(vertices, 2))
-    cd_dic = dict()
+
+    cd_length_dic = dict()
     sigmoid_cd_dic = dict()
-    length_list = []
     for cd_pair in permutations_list:
         start_vertice = cd_pair[0]
         end_vertice   = cd_pair[1]
         path = graph.find_shortest_path(start = start_vertice, end = end_vertice)
         if path is not None:
             path_length = len(path)
-            cd_dic[cd_pair] = path_length
-            length_list.append(path_length)
-        # else:
-        #     sigmoid_cd_dic[start_vertice+'分'+end_vertice] = 0
+            cd_length_dic[cd_pair] = path_length
 
+    length_list = list(cd_length_dic.values())
     size = len(length_list)
     avg_shortest_length = average(length_list, size)
-    for cd_pair in cd_dic:
-        sigmoid_cd_dic[cd_pair[0]+'分'+cd_pair[1]] = sigmoid(1 - cd_dic[cd_pair] / avg_shortest_length)
-        # print(cd_pair)
-        # print(sigmoid_cd_dic[cd_pair])
+    for cd_pair in cd_length_dic:
+        sigmoid_cd_dic[str(cd_pair[0])+'分'+str(cd_pair[1])] = sigmoid(1 - cd_length_dic[cd_pair] / avg_shortest_length)
+
     print("Call dictionary size:", str(len(sigmoid_cd_dic)))
-    save_file.write(json.dumps(sigmoid_cd_dic))
-    save_file.close()
+    with open(save_path, 'w') as save_file:
+        save_file.write(json.dumps(sigmoid_cd_dic))
+    with open(save_path + '.dic', 'w') as dic_file:
+        dic_file.write(json.dumps(id_method_dic))
+
     return
 
 
@@ -135,10 +137,10 @@ if __name__ == "__main__":
     start = time.process_time()
     print("Start Calculate Call Dependency...")
     db = us.open(udb_path)
-    cd_dic = get_cd(udb = db, parent_dir = parent_dir)
+    id_method_dic, cd_dic = get_cd(udb = db, parent_dir = parent_dir)
     db.close()
     cd_graph = build_graph(cd_dic)
-    build_cd_dic(graph = cd_graph, save_path = save_path)
+    build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
     print("File size is around : ", str(round(os.path.getsize(save_path) / 1024, 2)), "K.")

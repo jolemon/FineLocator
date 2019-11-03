@@ -6,6 +6,7 @@ from itertools import combinations
 import time
 from math_tool import cosine_similarity
 import json
+from methods_dic import build_methods_dic
 
 # delete blank space, "[[    " from head and "]]" from tail
 def trim_text(string):
@@ -22,8 +23,7 @@ def load_brv(file_path, dim):
         return vec
 
 
-def _load_single_cv(abs_file_path, dim, parent_dir):
-    dic = dict()
+def _load_single_cv(id_method_dic, id_value_dic, abs_file_path, dim, parent_dir):
     with open(abs_file_path, 'r') as f:
         lines = f.readlines()
         for k in range(0, len(lines)-1, 2):
@@ -39,19 +39,21 @@ def _load_single_cv(abs_file_path, dim, parent_dir):
             arr = np.fromstring(string = trim_vec_text, sep = ',    ')
             vec = arr.reshape((-1, dim), order = 'C')
 
-            dic[signature] = vec
-        return dic
+            build_methods_dic(signature, vec, id_method_dic, id_value_dic)
+    return
 
 
 def load_cv(dir_path):
-    methods_dic = dict()
+    id_method_dic = dict()
+    id_value_dic = dict()
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             if file.endswith(".java"):
                 file_path = os.path.join(root, file)
-                sub_dic = _load_single_cv(abs_file_path = file_path, dim = dim, parent_dir = dir_path)
-                methods_dic.update(sub_dic)
-    return methods_dic
+                _load_single_cv(id_method_dic = id_method_dic, id_value_dic = id_value_dic,
+                                abs_file_path = file_path, dim = dim, parent_dir = dir_path)
+
+    return id_method_dic, id_value_dic
 
 
 if __name__ == '__main__':
@@ -70,9 +72,9 @@ if __name__ == '__main__':
     # br Vec
     br_vec = load_brv(file_path = br_vector_path, dim = dim)
 
+    id_method_dic, id_value_dic = load_cv(dir_path = code_vector_dir)
 
-    methods_dic = load_cv(dir_path = code_vector_dir)
-    keys = methods_dic.keys()
+    keys = id_method_dic.keys()
     print("Calculate methods of size :", str(len(keys)))
     comb_list = list(combinations(keys, 2))
     start = time.process_time()
@@ -81,13 +83,16 @@ if __name__ == '__main__':
     for ss in comb_list:
         m1 = ss[0]
         m2 = ss[1]
-        vec1 = methods_dic[m1]
-        vec2 = methods_dic[m2]
+        vec1 = id_value_dic[m1]
+        vec2 = id_value_dic[m2]
         cs = cosine_similarity(vec1 = vec1, vec2 = vec2)
-        ss_dic[m1+"分"+m2] = cs
+        ss_dic[str(m1)+"分"+str(m2)] = cs
 
     with open(save_path, 'w') as save_file:
         save_file.write(json.dumps(ss_dic))
+
+    with open(save_path+".dic", 'w') as dic_file:
+        dic_file.write(json.dumps(id_method_dic))
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Semantic Similarity. Time used : ", elapsed, "s.")
-    print("File size is around : ", str(round(os.path.getsize(save_path) / (1024 * 1024 * 1024), 2)), "G.")
+    print("File size is around : ", str(round(os.path.getsize(save_path) / (1024 * 1024 ), 2)), "M.")
