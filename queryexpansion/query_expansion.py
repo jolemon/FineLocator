@@ -5,6 +5,7 @@ from handle_cd_method import trim_method
 import os
 from math_tool import average
 from ss import load_cv
+from itertools import combinations
 
 alpha = 0.8
 beta = 0.1
@@ -41,7 +42,7 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
         return None
 
 
-def calculate_ac(ss_path, tp_path, cd_path):
+def calculate_ac(ss_path, tp_path, cd_path, save_path):
     ac_dic = dict()
     with open(ss_path, 'r') as ss_file, open(ss_path + '.dic', 'r') as ss_id_file:
         ss_dic = json.loads(ss_file.read())
@@ -73,43 +74,68 @@ def calculate_ac(ss_path, tp_path, cd_path):
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
+    print("ac size:", len(ac_dic))
+
+    sum = 0
+    for value in ac_dic.values():
+        sum += value
+    avg_ac = float(sum / len(ac_dic))
+    print("average augmentation coefficient is", avg_ac)
+
+    # before method augmentation, filter ac that is lower than avg_ac.
+    # list(ac_dic.keys()) 另存一个变量，重新申请内存空间
+    for ac_key in list(ac_dic.keys()):
+        if ac_dic[ac_key] < avg_ac:
+            del ac_dic[ac_key]
+
     # del ss_dic, tp_dic, cd_dic
-    with open(save_path, 'w') as save_file:
+    with open(save_path + ".acdic", 'w') as save_file:
         save_file.write(json.dumps(ac_dic))
     return ac_dic
 
 
-def filter_ac_dic(ac_dic):
-    print("ac size:", len(ac_dic))
-    avglist = ac_dic.values()
-    avg_ac = average(avglist, len(avglist))
-    print("average augmentation coefficient is", avg_ac)
-
-    # before method augmentation, filter ac that is lower than avg_ac.
-    for ac_key in ac_dic:
-        if ac_dic[ac_key] < avg_ac:
-            del ac_dic[ac_key]
 
 
 def method_augmentation(cv_path, ac_dic, save_path):
     id_method_dic, id_value_dic = load_cv(cv_path)
 
+    result_dic = dict()
+
     for ac_key in ac_dic:
         ids = ac_key.split("分")
         ac_value = ac_dic[ac_key]
-        id1 = ids[0]
-        id2 = ids[1]
+        id1 = int(ids[0])
+        id2 = int(ids[1])
+
         doc_vector1 = id_value_dic[id1]
         doc_vector2 = id_value_dic[id2]
 
-        doc_vector1 += doc_vector2 * ac_value
-        doc_vector2 += doc_vector1 * ac_value
+        if id1 not in result_dic:
+            result_dic[id1] = doc_vector1 + doc_vector2 * ac_value
+        else:
+            result_dic[id1] += doc_vector2 * ac_value
+
+        if id2 not in result_dic:
+            result_dic[id2] = doc_vector2 + doc_vector1 * ac_value
+        else:
+            result_dic[id2] += doc_vector1 * ac_value
+
+        # print(result_dic[id1])
+        # print(result_dic[id2])
 
     with open(save_path, 'w') as save_file:
-        save_file.write(json.dumps(id_value_dic))
+        save_file.write(json.dumps(result_dic))
 
     return
 
+
+
+
+
+def load_ac_dic(path):
+    with open(path + ".acdic", 'r') as f:
+        dic = json.loads(f.read())
+    return dic
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -128,9 +154,9 @@ if __name__ == '__main__':
 
     start = time.process_time()
     print("Finally, Start to Calculate Query Expansion...")
-    ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path)
-    filter_ac_dic(ac_dic)
-    # method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic, save_path = save_path)
+    # ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
+    ac_dic = load_ac_dic(path = save_path)
+    method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic, save_path = save_path)
 
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")
