@@ -116,6 +116,10 @@ public class PreprocessTask implements Callable<Void> {
 
         List<Method> list = methodExtractor.extract(this.filePath);
 
+        if (list.size() == 0 ) {
+            return;
+        }
+
         toSaveExtractPath    = createSavePath(commandLineValues.source_dir, commandLineValues.target_dir);
         toSaveCorrespondPath = createSavePath(commandLineValues.source_dir, commandLineValues.correspond_dir);
 

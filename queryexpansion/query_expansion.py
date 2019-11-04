@@ -1,10 +1,11 @@
 from argparse import ArgumentParser
 import json
 import time
-from handle_cd_method import trim_method
+from handle_cd_method import trim_method, trim_template_T
 from ss import load_cv
 import rank
 from methods_dic import load_dic, write_dic
+import math
 
 alpha = 0.8
 beta = 0.1
@@ -55,26 +56,31 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     print("load ss, tp, cd dictionary ready.")
     for tp_key in tp_dic:
         tp_value = tp_dic[tp_key]
-
         if tp_key in ss_dic:
             ss_value = ss_dic[tp_key]
         else:
-            print(tp_key, 'not in ss_dic')
-            continue
-
+            print(tp_key, 'not in ss_dic1')
+            continue 
         cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
         if cd_value is None:
             cd_value = 0
-
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
-        ac_dic[tp_key] = ac_value
+        if math.isnan(ac_value):
+            ac_dic[tp_key] = 0
+        else:
+            ac_dic[tp_key] = ac_value
 
     print("ac size:", len(ac_dic))
-
-    sum = 0
+    # write_dic(save_path + '.acdic', ac_dic)
+    sum = 0.0
+    # countnan = 0
     for value in ac_dic.values():
+        if math.isnan(value):
+            # countnan += 1
+            continue
         sum += value
     avg_ac = float(sum / len(ac_dic))
+    # print('count nan :', countnan)
     print("average augmentation coefficient is", avg_ac)
 
     # before method augmentation, filter ac that is lower than avg_ac.
@@ -82,6 +88,7 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     for ac_key in list(ac_dic.keys()):
         if ac_dic[ac_key] < avg_ac:
             del ac_dic[ac_key]
+
 
     # del ss_dic, tp_dic, cd_dic
     return ac_dic
@@ -145,9 +152,11 @@ if __name__ == '__main__':
 
 
     start = time.process_time()
-    print("Finally, Start to Calculate Query Expansion...")
-    # ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
-    ac_dic = load_ac_dic(path = save_path)
+    print("Start to Calculate Query Expansion...")
+    ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
+
+    # ac_dic = load_ac_dic(path = save_path)
+
     id_dic, ma_dic = method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic)
 
     # Rank
@@ -157,8 +166,8 @@ if __name__ == '__main__':
     # 输出格式与iBug项目一致，则可以复用iBug计算TopK、MAP、MRR的代码
     # 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
 
-    result_list = [ br_id + '$' + str((0, 1)[trim_method(id_dic[x[0]]) in buggy_method_list]) + '$'
-                    +  str(x[1]) + '$' + trim_method(id_dic[x[0]]) for x in rel_list ]
+    result_list = [ br_id + '$' + str((0, 1)[trim_template_T(trim_method(id_dic[x[0]])) in buggy_method_list]) + '$'
+                    +  str(x[1]) + '$' + trim_template_T(trim_method(id_dic[x[0]])) for x in rel_list ]
     with open(save_path, 'w') as f:
         f.write('\n'.join(result_list))
 

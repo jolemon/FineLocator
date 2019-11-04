@@ -24,7 +24,6 @@ function tfidf(){
                        -cr ${correspondAfterPTDir}/${proj_id} \
                        -bs ${brTfidfDir}/${proj_id} \
                        -cs ${codeTfidfDir}/${proj_id}
-
 }
 
 
@@ -37,7 +36,7 @@ function runWord2Vec(){
     # for convenience, copy bug report files to code dir to pack input for training model.
     # after training, bug reports must be deleted, or will be exported as vector when running next step.
     copyBrBeforeFit 
-    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} -fit 1 -dim ${dim}
+    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} -fit 1 -dim ${dim} -type type   # whatever type
     clearTmpDir
     echo "train word2vec model finished."
     
@@ -52,7 +51,8 @@ function runWord2Vec(){
          -correspond ${correspondAfterPTDir}/${proj_id} \
          -target ${codeVecDir}/${proj_id} -tfidf ${codeTfidfDir}/${proj_id} -type code
     echo "export code vector finished."
-}
+} 
+
 
 function copyBrBeforeFit(){
 	array=($(ls ${brAfterPTDir} | sort -t "_" -k 2n))
@@ -77,8 +77,7 @@ function clearTmpDir(){
 
 cd ${qedir}
 tfidf
-
-# cd ${deeplearning4jdir}
-# runWord2Vec 
+cd ${deeplearning4jdir}
+runWord2Vec 
 
 

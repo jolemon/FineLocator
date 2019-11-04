@@ -4,25 +4,26 @@ ptdir=$1
 ori_BRDir=$2 #the original dir of bug reports.
 ori_codeDir=$3
 gitDir=$4
+proj_id=$5
 
-pt_output_preprocessedBRDir=$5 #the output dir of preprocessed bug reports.
-pt_output_extractMethodDir=$6
-pt_output_correspondDir=$7
-pt_output_preprocessedCodeDir=$8
+pt_output_preprocessedBRDir=$6 #the output dir of preprocessed bug reports.
+pt_output_extractMethodDir=$7
+pt_output_correspondDir=$8
+pt_output_preprocessedCodeDir=$9
 
 function runPT(){
-    rm -rf ${pt_output_preprocessedBRDir}
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_BRDir}    -target ${pt_output_preprocessedBRDir}   -type br
+    rm -rf ${pt_output_preprocessedBRDir}/${proj_id}
+    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_BRDir}/${proj_id}    -target ${pt_output_preprocessedBRDir}/${proj_id}   -type br
 
-    rm -rf ${pt_output_extractMethodDir} 
-    rm -rf ${pt_output_correspondDir} 
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}  -target ${pt_output_extractMethodDir} \
-                                                   -correspond ${pt_output_correspondDir} -type extract \
-                                                   -git ${gitDir}
+    rm -rf ${pt_output_extractMethodDir}/${proj_id}
+    rm -rf ${pt_output_correspondDir}/${proj_id} 
+    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}/${proj_id}  -target ${pt_output_extractMethodDir}/${proj_id} \
+                                                   -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
+                                                   -git ${gitDir}/${proj_id}/.git
 
-    rm -rf ${pt_output_preprocessedCodeDir}
-    mkdir -p ${pt_output_preprocessedCodeDir}
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${pt_output_extractMethodDir}  -target ${pt_output_preprocessedCodeDir} -type code	
+    rm -rf ${pt_output_preprocessedCodeDir}/${proj_id}
+    mkdir -p ${pt_output_preprocessedCodeDir}/${proj_id}
+    java -cp preprocessor.jar org.gajnineteen.App  -source ${pt_output_extractMethodDir}/${proj_id}  -target ${pt_output_preprocessedCodeDir}/${proj_id} -type code	
 }
 
 

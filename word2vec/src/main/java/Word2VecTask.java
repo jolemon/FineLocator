@@ -95,10 +95,11 @@ public class Word2VecTask implements Callable<Void> {
                 continue;
             }
             String[] parts = line.split("分");
+
+            Map<String, Double> tfidfMap = new HashMap<>();
             if (parts.length == 1) {
                 continue;
             }
-            Map<String, Double> tfidfMap = new HashMap<>();
             for (String tfidfMapStr : parts[1].split("内")) {
                 String[] tfidfParts = tfidfMapStr.split("\\$") ;
                 String word = tfidfParts[0] ;
@@ -129,18 +130,25 @@ public class Word2VecTask implements Callable<Void> {
 
     private StringBuilder constructMethodVecString(String content, Map<String, Map<String, Double>> methodsDictionary, List<String> signatures) {
         StringBuilder stringBuilder = new StringBuilder();
-
-        String[] methods = content.split("分") ;
+        content = content.trim() ;
+        String[] methods = content.split(System.getProperty("line.separator")) ;
         for (int k=0 ; k<methods.length; k++) {
             String methodDoc = methods[k] ;
             methodDoc = methodDoc.trim();
+            String signature = signatures.get(k) ;
             if (methodDoc.length() == 0) {
                 continue;
+            }
+            if (methodDoc.equals("分")) {
+                INDArray array1 = Nd4j.zeros(1, Common.dimension) ;
+                stringBuilder.append(array1).append(System.getProperty("line.separator")) ;
+                stringBuilder.append("#").append(signature).append("分").append(System.getProperty("line.separator"));
+            } else {
+                methodDoc = methodDoc.replace("分", "") ;
             }
 
             List<INDArray> vecList = new ArrayList<>();
 
-            String signature = signatures.get(k) ;
             if ( !methodsDictionary.containsKey(signature) ) {
                 System.out.println(signature + ": cannot find corresponding tfidf dictionary.");
                 continue;
@@ -148,28 +156,29 @@ public class Word2VecTask implements Callable<Void> {
             Map<String, Double> methodDictionary = methodsDictionary.get(signature) ;
 
             // vec multiply tfidf value
-            for (String word : methodDoc.split(" ")) {
-                word = word.trim() ;
-                if (word.length() == 0) {
-                    continue;
-                }
+            if (methodDoc.contains(" ")) {
+                for (String word : methodDoc.split(" ")) {
+                    word = word.trim();
+                    if (word.length() == 0) {
+                        continue;
+                    }
 
-                if (!methodDictionary.containsKey(word)) {
-                    System.out.println(word + ": not in tfidf dictionary.");
-                    continue;
-                }
+                    if (!methodDictionary.containsKey(word)) {
+                        System.out.println(word + ": not in tfidf dictionary.");
+                        continue;
+                    }
 
-                INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase()) ;
+                    INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase());
 
-                if (wordVectorMatrix == null) {
-                    System.out.println(word + " not in the word2vec model's vocabulary.");
-                    continue;
-                } else {
-                    // query dictionary for tf*idf of word and multiply vector
-                    Double tfidfValue = methodDictionary.get(word) ;
-                    wordVectorMatrix = wordVectorMatrix.mul(tfidfValue) ;
-
-                    vecList.add(wordVectorMatrix);
+                    if (wordVectorMatrix == null) {
+                        System.out.println(word + " not in the word2vec model's vocabulary.");
+                        continue;
+                    } else {
+                        // query dictionary for tf*idf of word and multiply vector
+                        Double tfidfValue = methodDictionary.get(word);
+                        wordVectorMatrix = wordVectorMatrix.mul(tfidfValue);
+                        vecList.add(wordVectorMatrix);
+                    }
                 }
             }
 
@@ -183,7 +192,6 @@ public class Word2VecTask implements Callable<Void> {
             stringBuilder.append(array1).append(System.getProperty("line.separator")) ;
             stringBuilder.append("#").append(signature).append("分").append(System.getProperty("line.separator"));
         }
-
         return stringBuilder ;
     }
 
@@ -216,7 +224,6 @@ public class Word2VecTask implements Callable<Void> {
             if (word.length() == 0) {
                 continue;
             }
-
 
             if ( !brDictionary.containsKey(word) ) {
                 System.out.println(word + " word : not in tfidf dictionary..");

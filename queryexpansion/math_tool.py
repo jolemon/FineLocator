@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # calculate average number in list
 def average(list, size):
     import sys

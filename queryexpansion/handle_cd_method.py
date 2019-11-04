@@ -12,7 +12,8 @@ def trim_method(ori_method_str):
 def trim_comma_in_paras(method_str):
     return re.sub(r'(,(\s*))', ',', method_str)
 
-
+def trim_template_T(method_str):
+    return re.sub(r'(#<T>)', '#', method_str)
 
 
 def _test_():

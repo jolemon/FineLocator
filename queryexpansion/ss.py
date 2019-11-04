@@ -7,6 +7,7 @@ import time
 from math_tool import cosine_similarity
 import json
 from methods_dic import build_methods_dic
+import math
 
 # delete blank space, "[[    " from head and "]]" from tail
 def trim_text(string):
@@ -86,6 +87,8 @@ if __name__ == '__main__':
         vec1 = id_value_dic[m1]
         vec2 = id_value_dic[m2]
         cs = cosine_similarity(vec1 = vec1, vec2 = vec2)
+        if math.isnan(cs):
+            cs = 0.0
         ss_dic[str(m1)+"分"+str(m2)] = cs
 
     with open(save_path, 'w') as save_file:
