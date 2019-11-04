@@ -1,6 +1,7 @@
 import math_tool
 from ss import load_brv
 import json
+from handle_cd_method import trim_comma_in_paras, trim_method
 
 
 def cal_single_rel(bug_report_vector, augmented_method_vector):
@@ -22,11 +23,18 @@ def cal_rel(brv, dic):
     for key in dic:
         rel_value = cal_single_rel(brv, dic[key])
         result_dic[key] = rel_value
-    return result_dic
+
+    ranked_dic = _rank_dic(result_dic)
+    return ranked_dic
+
+
+def _rank_dic(dic):
+    sorted_dic = sorted(dic.items(), key = lambda x : x[1], reverse = True)
+    return sorted_dic
 
 
 # read "link_buggyMethods/xxx" file and return a dictionary
-def load_link_dic(path, parent_name_for_path):
+def load_link_dic(path):
     dic = {}
     f = open(path, 'r')
     while True:
@@ -43,7 +51,7 @@ def load_link_dic(path, parent_name_for_path):
                 if len(pm_parts) < 2:
                     print(pm_parts, "in this sentence can not find PATH / METHOD_NAME !")
                     continue
-                path = parent_name_for_path + '/' + str(pm_parts[0])
+                path =  '/'+'/'.join((pm_parts[0].split('/'))[2:])
                 method = pm_parts[1]
 
                 method_parts = method.split(' ')
@@ -53,9 +61,9 @@ def load_link_dic(path, parent_name_for_path):
                     for i in range(1, len(method_parts)):
                         new_method += method_parts[i] + ' '
                     new_method = new_method.strip()
-                    path_method = path + '#' + new_method
+                    path_method = path + '#' + trim_method(trim_comma_in_paras(new_method))
                 else:
-                    path_method = path + '#' + method
+                    path_method = path + '#' + trim_method(trim_comma_in_paras(method))
 
                 if br_id not in dic:
                     dic.setdefault(br_id, []).append(path_method)
@@ -64,5 +72,9 @@ def load_link_dic(path, parent_name_for_path):
     return dic
 
 
-# 输出格式与iBug项目一致，则可以复用iBug计算TopK、MAP、MRR的代码
-# 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
+# dic = load_link_dic("/Users/lienming/Downloads/final_defects4j/linked-bugMethods/Time_bugId_buggyMethodsName")
+# for ms in dic['Time_3']:
+#     print(ms)
+
+
+

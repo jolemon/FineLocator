@@ -143,7 +143,8 @@ if __name__ == "__main__":
     build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
-    print("File size is around : ", str(round(os.path.getsize(save_path) / 1024, 2)), "K.")
+
+
     # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
     # cd_dic = get_cd(dub)
     # cd_graph = build_graph(cd_dic)

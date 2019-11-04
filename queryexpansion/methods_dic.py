@@ -1,3 +1,5 @@
+import json
+
 # use :
 #      id_methods_dic = {id : method}
 #             vec_dic = {id : vec}
@@ -22,12 +24,27 @@ def update_id_method_dic(id_method_dic, method):
         return find_k_by_v(id_method_dic, method)
 
 
+def load_dic(path):
+    with open(path, 'r') as f:
+        dic = json.loads(f.read())
+    return dic
+
+
+def write_dic(path, dic):
+    with open(path, 'w') as f:
+        f.write(json.dumps(dic))
+    return
+
+
 def find_k_by_v(dic, value):
     k_list = [k for k, v in dic.items() if v == value]
     if len(k_list) > 0:
         return k_list[0]
     else:
         return None
+
+
+
 
 
 # dic = {1:0.1, 2:0.2}

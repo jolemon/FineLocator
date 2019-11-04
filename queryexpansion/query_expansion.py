@@ -2,10 +2,9 @@ from argparse import ArgumentParser
 import json
 import time
 from handle_cd_method import trim_method
-import os
-from math_tool import average
 from ss import load_cv
-from itertools import combinations
+import rank
+from methods_dic import load_dic, write_dic
 
 alpha = 0.8
 beta = 0.1
@@ -44,15 +43,11 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
 
 def calculate_ac(ss_path, tp_path, cd_path, save_path):
     ac_dic = dict()
-    with open(ss_path, 'r') as ss_file, open(ss_path + '.dic', 'r') as ss_id_file:
-        ss_dic = json.loads(ss_file.read())
-        # ss_id_dic = json.loads(ss_id_file.read())
-    with open(tp_path, 'r') as tp_file, open(tp_path + '.dic', 'r') as tp_id_file:
-        tp_dic = json.loads(tp_file.read())
-        tp_id_dic = json.loads(tp_id_file.read())
-    with open(cd_path, 'r') as cd_file, open(cd_path + '.dic', 'r') as cd_id_file:
-        cd_dic = json.loads(cd_file.read())
-        cd_id2sig_dic = json.loads(cd_id_file.read())
+    ss_dic = load_dic(ss_path)
+    tp_dic = load_dic(tp_path)
+    tp_id_dic = load_dic(tp_path + '.dic')
+    cd_dic = load_dic(cd_path)
+    cd_id2sig_dic = load_dic(cd_path + '.dic')
 
     # convert dict
     cd_sig2id_dic = dict(zip(cd_id2sig_dic.values(), cd_id2sig_dic.keys()))
@@ -89,18 +84,15 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
             del ac_dic[ac_key]
 
     # del ss_dic, tp_dic, cd_dic
-    with open(save_path + ".acdic", 'w') as save_file:
-        save_file.write(json.dumps(ac_dic))
     return ac_dic
 
 
 
 
-def method_augmentation(cv_path, ac_dic, save_path):
+def method_augmentation(cv_path, ac_dic):
     id_method_dic, id_value_dic = load_cv(cv_path)
 
     result_dic = dict()
-
     for ac_key in ac_dic:
         ids = ac_key.split("分")
         ac_value = ac_dic[ac_key]
@@ -120,16 +112,7 @@ def method_augmentation(cv_path, ac_dic, save_path):
         else:
             result_dic[id2] += doc_vector1 * ac_value
 
-        # print(result_dic[id1])
-        # print(result_dic[id2])
-
-    with open(save_path, 'w') as save_file:
-        save_file.write(json.dumps(result_dic))
-
-    return
-
-
-
+    return id_method_dic, result_dic
 
 
 def load_ac_dic(path):
@@ -137,27 +120,49 @@ def load_ac_dic(path):
         dic = json.loads(f.read())
     return dic
 
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-ss", "--ss_path", dest = "ss_path", required = True)
     parser.add_argument("-tp", "--tp_path", dest = "tp_path", required = True)
     parser.add_argument("-cd", "--cd_path", dest = "cd_path", required = True)
     parser.add_argument("-c",  "--code_vector_dir", dest = "code_vector_dir", required = True)
-    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
-
+    parser.add_argument("-s",  "--save_path", dest = "save_path", required = True)
+    parser.add_argument("-b",  "--br_path", dest = "br_path", required = True)
+    parser.add_argument("-i",  "--br_id"  , dest = "br_id",   required = True)
+    parser.add_argument("-l",  "--link_buggy_path", dest = "link_buggy_path", required = True)
+    parser.add_argument("-d",  "--dim"    , dest = "dim",     required = True)
     args = parser.parse_args()
     ss_path = args.ss_path
     tp_path = args.tp_path
     cd_path = args.cd_path
     code_vector_dir = args.code_vector_dir
+    br_path = args.br_path
+    br_id = args.br_id
+    link_buggy_path = args.link_buggy_path
     save_path = args.save_path
+    dim = int(args.dim)
+
 
     start = time.process_time()
     print("Finally, Start to Calculate Query Expansion...")
     # ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
     ac_dic = load_ac_dic(path = save_path)
-    method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic, save_path = save_path)
+    id_dic, ma_dic = method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic)
+
+    # Rank
+    rel_list = rank.cal_rel(rank.load_brv(br_path, dim = dim), ma_dic)
+    link_dic = rank.load_link_dic(link_buggy_path)
+    buggy_method_list = link_dic[br_id]
+    # 输出格式与iBug项目一致，则可以复用iBug计算TopK、MAP、MRR的代码
+    # 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
+
+    result_list = [ br_id + '$' + str((0, 1)[trim_method(id_dic[x[0]]) in buggy_method_list]) + '$'
+                    +  str(x[1]) + '$' + trim_method(id_dic[x[0]]) for x in rel_list ]
+    with open(save_path, 'w') as f:
+        f.write('\n'.join(result_list))
+
+
 
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")
-    print("File size is around : ", str(round(os.path.getsize(save_path) / (1024 * 1024 * 1024), 2)), "G.")
