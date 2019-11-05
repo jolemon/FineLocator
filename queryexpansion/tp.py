@@ -12,8 +12,6 @@ time_format = "%a %b %d %H:%M:%S %Z %Y"
 
 
 def cal_time_diff_by_second(time1, time2):
-    # seconds1 = int(time.mktime(time.strptime(time_str1, time_format)))
-    # seconds2 = int(time.mktime(time.strptime(time_str2, time_format)))
     return abs(time1 - time2)
 
 
@@ -32,12 +30,14 @@ def load_dic_lmt(proj_path):
                 for line in lines:
                     if line is not None:
                         line = line.strip()
-                        parts = line.split(',')
-                        method_signature = parts[:-3]
+                        # parts = line.split(',')
+                        parts = line.split('$')
+                        method_signature = parts[0]
                         last_modify_time = parts[-1]
                         # use relative path
                         relative_path = file_path.replace(proj_path, "")
-                        key = relative_path + '#' + ','.join(method_signature)
+                        # key = relative_path + '#' + ','.join(method_signature)
+                        key = relative_path + '#' + method_signature
                         td = get_td(last_modify_time, cache_dic)
                         build_methods_dic(method = key, value = td,
                                           id_method_dic = id_method_dic ,
@@ -85,7 +85,7 @@ def cal_time_diff_for_dic(id_method_dic, id_value_dic, save_path):
                 diff = cal_time_diff_by_second(time1, time2)
                 sig_time_diff = sigmoid(diff / avg_td)
                 cache_dic[str(time1) + '#' + str(time2)] = sig_time_diff
-                cache_dic[str(time1) + '#' + str(time2)] = sig_time_diff
+                cache_dic[str(time2) + '#' + str(time1)] = sig_time_diff
                 tp_dic[str(m1) + "分" + str(m2)] = sig_time_diff
                 # f.write(m1 + "分"+ m2 + "分" + str(sig_time_diff) + "\n")
         f.write(json.dumps(tp_dic))

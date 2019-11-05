@@ -145,8 +145,8 @@ public class PreprocessTask implements Callable<Void> {
             extractOut.newLine();
 
             Date latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum) ;
-            correspondOut.write(method.signature + "," + method.startLineNum
-                    + "," + method.endLineNum + "," + latestModifyTime);
+            correspondOut.write(method.signature + "$" + method.startLineNum
+                    + "$" + method.endLineNum + "$" + latestModifyTime);
             correspondOut.newLine();
         }
         extractOut.flush();

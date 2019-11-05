@@ -8,10 +8,12 @@ from math_tool import cosine_similarity
 import json
 from methods_dic import build_methods_dic
 import math
+import re
 
 # delete blank space, "[[    " from head and "]]" from tail
 def trim_text(string):
-    return string.strip().replace("[[", "").replace("]]", "").strip()
+    string = string.strip().replace("[[", "").replace("]]", "").strip()
+    return re.sub(r',(\s*)', ',' ,string)
 
 
 # read one line from br file and parse this line to a vector in shape of (1, dim)
@@ -19,7 +21,7 @@ def load_brv(file_path, dim):
     with open(file_path, 'r') as f:
         vec_text = f.readline()
         trim_vec_text = trim_text(vec_text)
-        arr = np.fromstring(string = trim_vec_text, sep = ',    ')
+        arr = np.fromstring(string = trim_vec_text, sep = ',')
         vec = arr.reshape((-1, dim), order = 'C')
         return vec
 
@@ -37,7 +39,7 @@ def _load_single_cv(id_method_dic, id_value_dic, abs_file_path, dim, parent_dir)
             signature = relative_path + signature
             vec_text = lines[k]
             trim_vec_text = trim_text(vec_text)
-            arr = np.fromstring(string = trim_vec_text, sep = ',    ')
+            arr = np.fromstring(string = trim_vec_text, sep = ',')
             vec = arr.reshape((-1, dim), order = 'C')
 
             build_methods_dic(signature, vec, id_method_dic, id_value_dic)
@@ -60,18 +62,13 @@ def load_cv(dir_path, dim = 300):
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-c" , "--code_vector_dir", dest = "code_vector_dir", required = True)
-    parser.add_argument("-br", "--br_vector_path" , dest = "br_vector_path" , required = True)
     parser.add_argument("-d" , "--dim"            , dest = "dim"            , required = True)
     parser.add_argument("-s" , "--save_path"      , dest = "save_path"      , required = True)
 
     args = parser.parse_args()
     code_vector_dir = args.code_vector_dir
-    br_vector_path  = args.br_vector_path
     dim = int(args.dim)
     save_path = args.save_path
-
-    # br Vec
-    br_vec = load_brv(file_path = br_vector_path, dim = dim)
 
     id_method_dic, id_value_dic = load_cv(dir_path = code_vector_dir, dim = dim)
 

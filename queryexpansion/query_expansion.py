@@ -60,7 +60,7 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
             ss_value = ss_dic[tp_key]
         else:
             print(tp_key, 'not in ss_dic1')
-            continue 
+            continue
         cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
         if cd_value is None:
             cd_value = 0

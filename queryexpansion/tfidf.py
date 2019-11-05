@@ -30,8 +30,10 @@ def load_code(proj_path, correspond_path, save_dic):
                     if line is not None:
                         line = line.replace('分', '')
                         line = line.strip().split()
-                        method_signature = clines[j].split(',')[:-3]
-                        key = file_path + '#' + ','.join(method_signature)
+                        # method_signature = clines[j].split('$')[:-3]
+                        # key = file_path + '#' + ','.join(method_signature)
+                        method_signature = clines[j].split('$')[0]
+                        key = file_path + '#' + method_signature
                         save_dic[key] = Counter(line)
                 rf.close()
                 cf.close()

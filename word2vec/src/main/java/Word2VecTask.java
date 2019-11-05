@@ -119,11 +119,12 @@ public class Word2VecTask implements Callable<Void> {
         List<String> signatures = new ArrayList<>() ;
         for (String line : lines) {
             line = line.trim() ;
-            String[] parts = line.split(",") ;
-            for (int i=parts.length-1; i>=parts.length-3 ; i--) {
-                line = line.replace(","+parts[i], "") ;
-            }
-            signatures.add(line.trim()) ;
+            String[] parts = line.split("\\$") ;
+            signatures.add(parts[0].trim()) ;
+//            for (int i=parts.length-1; i>=parts.length-3 ; i--) {
+//                line = line.replace(","+parts[i], "") ;
+//            }
+//            signatures.add(line.trim()) ;
         }
         return signatures;
     }
