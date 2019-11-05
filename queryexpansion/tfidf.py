@@ -7,12 +7,12 @@ import os
 def load_bug_report(file_path, save_dic):
     file = open(file_path, 'r')
     lines = file.readlines()
+    total = ''
     for line in lines:
-        if line is not None:
-            line = line.strip().split()
-            save_dic[file_path] = Counter(line)
-            break
-    return save_dic
+        line = line.strip()
+        total += line
+    save_dic[file_path] = Counter(total.split())
+    return
 
 
 def load_code(proj_path, correspond_path, save_dic):
@@ -35,7 +35,7 @@ def load_code(proj_path, correspond_path, save_dic):
                         save_dic[key] = Counter(line)
                 rf.close()
                 cf.close()
-    return save_dic
+    return
 
 
 # function to calculate tfidf
@@ -61,9 +61,7 @@ def tfidf(word, count, count_list):
     return tf(word, count) * idf(word, count_list)
 
 
-
 if __name__ == "__main__":
-
     parser = ArgumentParser()
     parser.add_argument("-br", "--bug_report_path", dest = "bug_report_path", required = True)
     parser.add_argument("-co", "--code_path",       dest = "code_path",       required = True)
@@ -79,11 +77,10 @@ if __name__ == "__main__":
 
     corpus_dic = {}
 
-    corpus_dic = load_bug_report(file_path = bug_report_path, save_dic = corpus_dic)
-    corpus_dic = load_code(proj_path = code_path, correspond_path = correspond_path, save_dic = corpus_dic)
+    load_bug_report(file_path = bug_report_path, save_dic = corpus_dic)
+    load_code(proj_path = code_path, correspond_path = correspond_path, save_dic = corpus_dic)
 
     counter_list = list(corpus_dic.values())
-
 
     # save br
     if bug_report_path in corpus_dic:
@@ -100,10 +97,6 @@ if __name__ == "__main__":
         doc_parts = doc.split('#')
         file_path = doc_parts[0]
         method = doc_parts[1]
-        write_path = ''
-        if code_path not in file_path:
-            print('can not find', code_path, 'in', file_path)
-            continue
         write_path = file_path.replace(code_path, code_save_path)
 
         # create dirs
