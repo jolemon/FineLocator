@@ -96,14 +96,9 @@ def build_cd_dic(graph, id_method_dic, cd_dic, save_path):
     print("Calculate path for methods of size :", str(len(vertices)))
     permutations_list = list(permutations(vertices, 2))
 
-    # for from_id in cd_dic:
-    #     to_id_list = cd_dic[from_id]
-    #     for to_id in to_id_list:
-    #         start_vertice = from_id
-    #         end_vertice = to_id
-
     cd_length_dic = dict()
     sigmoid_cd_dic = dict()
+
     for cd_pair in permutations_list:
         start_vertice = cd_pair[0]
         end_vertice   = cd_pair[1]
@@ -111,11 +106,10 @@ def build_cd_dic(graph, id_method_dic, cd_dic, save_path):
         if path is not None:
             path_length = len(path)
             cd_length_dic[cd_pair] = path_length
-
     length_list = list(cd_length_dic.values())
     size = len(length_list)
 
-    avg_shortest_length = sum(length_list)/size   # average(length_list, size)
+    avg_shortest_length = average(length_list, size)
 
     for cd_pair in cd_length_dic:
         sigmoid_cd_dic[str(cd_pair[0])+'分'+str(cd_pair[1])] = sigmoid(1 - cd_length_dic[cd_pair] / avg_shortest_length)
@@ -153,4 +147,5 @@ if __name__ == "__main__":
     # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
     # id_dic, cd_dic = get_cd(dub, "")
     # cd_graph = build_graph(cd_dic)
+
     # build_cd_dic(graph = cd_graph, id_method_dic = id_dic, cd_dic = cd_dic,  save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3123")

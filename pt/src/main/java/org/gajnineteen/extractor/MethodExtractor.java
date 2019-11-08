@@ -17,7 +17,6 @@ import java.util.List;
 public class MethodExtractor {
 
     public MethodExtractor(){ }
-
     public List<Method> extract(Path filePath){
         String content ;
         try {
@@ -139,18 +138,19 @@ public class MethodExtractor {
 //        return methodDeclaration.toString().trim();
     }
 
-    String constructParams(List paras) {
+    String constructParams(final List paras) {
         int parasLength = paras.size() ;
         if (parasLength == 0) {
-            return "() ";
+            return "()";
         } else {
-            String para0 = paras.get(0).toString() ;
+            String para0 = paras.get(0).toString().replace("final ", "") ;
             if (parasLength == 1) {
                 return "(" + para0 + ")" ;
             } else {
                 String result = "(" + para0 ;
                 for (int i=1 ; i<parasLength ; i++) {
-                    result = result.concat(","+(paras.get(i).toString()))  ;
+                    String paraString = paras.get(i).toString().replace("final ", "");
+                    result = result.concat(","+paraString)  ;
                 }
                 result = result.concat(")") ;
                 return result ;

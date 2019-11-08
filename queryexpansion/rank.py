@@ -13,8 +13,6 @@ def load_augmentation_methods(path):
     return dic
 
 
-
-
 def cal_rel(brv, dic):
     result_dic = dict()
     for key in dic:

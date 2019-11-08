@@ -1,11 +1,11 @@
 from argparse import ArgumentParser
 import json
 import time
-from handle_cd_method import trim_method, trim_template_T
+from handle_cd_method import trim_template_T
 from ss import load_cv, load_brv
 import rank
-from methods_dic import load_dic, write_dic
-import math
+from methods_dic import load_dic, compare_dic
+
 
 alpha = 0.8
 beta = 0.1
@@ -20,14 +20,14 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
     m1_sig = key_id_dic[m1]
 
     # step 1 : remove "@* " and function modifier and "throws *"
-    trim_m0 = trim_method(m0_sig)
-    trim_m1 = trim_method(m1_sig)
+    # trim_m0 = trim_method(m0_sig)
+    # trim_m1 = trim_method(m1_sig)
 
     # step 2 : try to find new key in dic again
 
-    if trim_m0 in cd_sig2id_dic and trim_m1 in cd_sig2id_dic:
-        m0_id = cd_sig2id_dic[trim_m0]
-        m1_id = cd_sig2id_dic[trim_m1]
+    if m0_sig in cd_sig2id_dic and m1_sig in cd_sig2id_dic:
+        m0_id = cd_sig2id_dic[m0_sig]
+        m1_id = cd_sig2id_dic[m1_sig]
 
         key = m0_id + '分' + m1_id
         if key in cd_dic:
@@ -41,6 +41,7 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
 def calculate_ac(ss_path, tp_path, cd_path, save_path):
     ac_dic = dict()
     ss_dic = load_dic(ss_path)
+    ss_id_dic = load_dic(ss_path + '.dic')
     tp_dic = load_dic(tp_path)
     tp_id_dic = load_dic(tp_path + '.dic')
     cd_dic = load_dic(cd_path)
@@ -50,6 +51,12 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     cd_sig2id_dic = dict(zip(cd_id2sig_dic.values(), cd_id2sig_dic.keys()))
 
     print("load ss, tp, cd dictionary ready.")
+    #check tp/ss dic
+    if not compare_dic(tp_id_dic, ss_id_dic):
+        print("check tp/ss_dic exception!")
+    else:
+        print("check tp/ss_dic is same.")
+
     for tp_key in tp_dic:
         tp_value = tp_dic[tp_key]
         if tp_key in ss_dic:
@@ -60,14 +67,9 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
 
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
-        # if math.isnan(ac_value):
-        #     ac_dic[tp_key] = 0
-        # else:
-        #     ac_dic[tp_key] = ac_value
         ac_dic[tp_key] = ac_value
 
     print("ac size:", len(ac_dic))
-    # write_dic(save_path + '.acdic', ac_dic)
 
     avg_ac = float(sum(ac_dic.values()) / len(ac_dic))
 
@@ -79,11 +81,7 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         if ac_dic[ac_key] < avg_ac:
             del ac_dic[ac_key]
 
-
-    # del ss_dic, tp_dic, cd_dic
     return ac_dic
-
-
 
 
 def method_augmentation(cv_path, ac_dic):
@@ -146,8 +144,6 @@ if __name__ == '__main__':
     print("Start to Calculate Query Expansion...")
     ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
 
-    # ac_dic = load_ac_dic(path = save_path)
-
     id_dic, id_value_dic = method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic)
 
     # Rank
@@ -159,9 +155,8 @@ if __name__ == '__main__':
     # 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
 
     result_list = [ br_id + '$' +
-                    str((0, 1)[trim_template_T(trim_method(id_dic[x[0]])) in buggy_method_list]) + '$' +
-                    str(x[1]) + '$' +
-                    trim_template_T(trim_method(id_dic[x[0]]))
+                    str((0, 1)[trim_template_T(id_dic[x[0]]) in buggy_method_list]) + '$' +
+                    str(x[1]) + '$' + trim_template_T(id_dic[x[0]])
                     for x in rel_list ]
 
     with open(save_path, 'w') as f:

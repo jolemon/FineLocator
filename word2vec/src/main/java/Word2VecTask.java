@@ -186,6 +186,7 @@ public class Word2VecTask implements Callable<Void> {
             INDArray array = Nd4j.create(vecList, vecList.size(), Common.dimension);
             INDArray array1 = Nd4j.zeros(1, Common.dimension) ;
             for (int i=0 ; i<Common.dimension; i++) {
+//                Number number = array.getColumns(i).maxNumber() ;
                 Number number = array.getColumns(i).maxNumber() ;
                 array1.put(0, i, number);
             }
@@ -247,6 +248,7 @@ public class Word2VecTask implements Callable<Void> {
         INDArray array = Nd4j.create(vecList, vecList.size(), Common.dimension);
         INDArray array1 = Nd4j.zeros(1, Common.dimension) ;
         for (int i=0 ; i<Common.dimension; i++) {
+//            Number number = array.getColumns(i).maxNumber() ;
             Number number = array.getColumns(i).maxNumber() ;
             array1.put(0, i, number);
         }

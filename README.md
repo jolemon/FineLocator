@@ -8,10 +8,13 @@ Baseline method implementation FineLocator for iBug.
 
 For MacOS:
 1. install GCC@8 (8.3) to use deeplearning4j.
+
 2. install Java Understand (use python API).
    API doc: 
    /Applications/Understand.app/Contents/Resources/doc/manuals/python/understand.html
    /Applications/Understand.app/Contents/Resources/doc/manuals/pdf/understand.pdf  (From Page 323)
+   
+   Understand sometimes occurs API License problem. Need to Reinstrall.
 
 #### Instructions
 

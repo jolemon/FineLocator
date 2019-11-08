@@ -16,9 +16,9 @@ def trim_template_T(method_str):
     return re.sub(r'(#<T>)', '#', method_str)
 
 
-def _test_():
-    str1 = '/src/main/java/org/joda/time/MutablePeriod.java#public MutablePeriod(ReadableDuration duration,ReadableInstant endInstant)分/src/main/java/org/joda/time/base/AbstractDateTime.java#public String toString(String pattern,Locale locale) throws IllegalArgumentException'
-    print(trim_method(str1))
+# def _test_():
+#     str1 = '/src/main/java/org/joda/time/MutablePeriod.java#public MutablePeriod(ReadableDuration duration,ReadableInstant endInstant)分/src/main/java/org/joda/time/base/AbstractDateTime.java#public String toString(String pattern,Locale locale) throws IllegalArgumentException'
+#     print(trim_method(str1))
 
 # with open('/Users/lienming/FineLocator/expRes/cd/Time/Time_3', 'r') as cd_file:
 #     cd_dic = json.loads(cd_file.read())

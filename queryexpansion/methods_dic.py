@@ -44,8 +44,30 @@ def find_k_by_v(dic, value):
         return None
 
 
+def compare_dic(dic1, dic2):
+    len1 = len(dic1)
+    len2 = len(dic2)
+    if len1 != len2:
+        print('length:', len1, len2)
+        return False
+    else:
+        for key in dic1:
+            if key not in dic2:
+                print('key:', key, 'not exists')
+                return False
+            else:
+                v1 = dic1[key]
+                v2 = dic2[key]
+                if  v1 != v2:
+                    print('key =', key, 'v1 =', v1, 'v2 =', v2)
+                    return False
+                continue
+        return True
 
-
+# dic1 = {1:'aaa', 2:'bbb', 3:'ccc'}
+# dic2 = {1:'aaa', 2:'bbb', 3:'ccc'}
+# dic3 = {1:'aaa', 2:'bb', 3:'ccc'}
+# print(compare_dic(dic1, dic3))
 
 # dic = {1:0.1, 2:0.2}
 # import json

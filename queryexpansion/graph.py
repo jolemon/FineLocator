@@ -97,7 +97,8 @@ class Graph(object):
                 if extended_path:
                     return extended_path
         return None
-    
+
+
 
     def find_all_paths(self, start_vertex, end_vertex, path=[]):
         """ find all paths from start_vertex to 
@@ -135,6 +136,19 @@ class Graph(object):
                     if not shortest or len(newpath) < len(shortest):
                         shortest = newpath
         return shortest
+
+    # Code by Eryk Kopczyński
+    # def find_shortest_path_2(self, start, end):
+    #     from collections import deque
+    #     dist = {start: [start]}
+    #     q = deque(str(start))
+    #     while len(q):
+    #         at = int(q.popleft())
+    #         for next in self.__graph_dict[at]:
+    #             if next not in dist:
+    #                 dist[next] = [dist[at], next]
+    #                 q.append(str(next))
+    #     return dist[end]
 
 
     def is_connected(self, 
