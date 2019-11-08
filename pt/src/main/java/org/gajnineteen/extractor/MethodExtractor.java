@@ -78,18 +78,6 @@ public class MethodExtractor {
             int methodStartPosition = javaDocStartPosition + javaDoc.getLength() + 1 ;
             int javadocNextLineNum = compilationUnit.getLineNumber(methodStartPosition) ;
             return javadocNextLineNum;
-
-            // the following code is buggy!
-//            int returnTypeLineNum = compilationUnit.getLineNumber(methodDeclaration.getReturnType2().getStartPosition()) ;
-//            if (javadocNextLineNum == returnTypeLineNum) {
-//                return javadocNextLineNum;
-//            } else {
-//                String warningInfo = filePath.toString() + " "
-//                        + methodDeclaration.getName()
-//                        + ", choose the former line of (" + javadocNextLineNum +"," + returnTypeLineNum +") as start line.";
-//                System.out.println(warningInfo);
-//                return javadocNextLineNum ;
-//            }
         }
     }
 
@@ -117,14 +105,23 @@ public class MethodExtractor {
 
 
     public String getMethodSignature(MethodDeclaration methodDeclaration) {
-        String res = getMethodWithoutJavadoc(methodDeclaration) ;
-        res = res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
-        String lineSeparator = System.getProperty("line.separator");
-        if (res.contains(lineSeparator)) {
-            System.out.println(methodDeclaration.getName() + " contains line separator. remove it.");
-            res = res.replace(lineSeparator, "");
+//        String res = getMethodWithoutJavadoc(methodDeclaration) ;
+//        res = res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
+//        String lineSeparator = System.getProperty("line.separator");
+//        if (res.contains(lineSeparator)) {
+//            System.out.println(methodDeclaration.getName() + " contains line separator. remove it.");
+//            res = res.replace(lineSeparator, "");
+//        }
+        String res = "" ;
+        Type returnType = methodDeclaration.getReturnType2() ;
+        if (returnType != null) {
+            res = res.concat(returnType.toString() + " ");
         }
-
+        String methodName = methodDeclaration.getName().toString() ;
+        res = res.concat(methodName) ;
+        List paras = methodDeclaration.parameters();
+        String parameters = constructParams(paras) ;
+        res = res.concat(parameters) ;
         return res ;
     }
 
@@ -140,6 +137,26 @@ public class MethodExtractor {
         }
         return methodDeclaration.toString();
 //        return methodDeclaration.toString().trim();
+    }
+
+    String constructParams(List paras) {
+        int parasLength = paras.size() ;
+        if (parasLength == 0) {
+            return "() ";
+        } else {
+            String para0 = paras.get(0).toString() ;
+            if (parasLength == 1) {
+                return "(" + para0 + ")" ;
+            } else {
+                String result = "(" + para0 ;
+                for (int i=1 ; i<parasLength ; i++) {
+                    result = result.concat(","+(paras.get(i).toString()))  ;
+                }
+                result = result.concat(")") ;
+                return result ;
+            }
+        }
+
     }
 
 //    public static void main(String[] args) {
