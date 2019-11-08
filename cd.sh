@@ -16,6 +16,6 @@ rm -f ${cd_dir}/${proj}
 mkdir -p ${cd_dir}
 
 cd ${cd_script_dir}
-${und_dir}/und create -db ${udb_dir}/${proj} -languages Java add ${ori_code_dir} analyze -all > ${cd_dir}/${proj}.log
+${und_dir}/und create -db ${udb_dir}/${proj} -languages Java add ${ori_code_dir} analyze -all > ${udb_dir}/${proj}.log
 ${PYTHON} cd.py -u ${udb_dir}/${proj}.udb -s ${cd_dir}/${proj} -p ${ori_code_dir}
 

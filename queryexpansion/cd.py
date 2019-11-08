@@ -11,7 +11,6 @@ from itertools import permutations
 from math_tool import average, sigmoid
 import time
 import json
-import os
 from methods_dic import update_id_method_dic
 
 def add_paras_for_method(method_name, paras):
@@ -46,8 +45,6 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
                     # line_num = ref.line()
 
                     from_ent = ref.scope()
-                    # print()
-
                     from_method_paras = from_ent.parameters()
                     from_method_name = add_paras_for_method(method_name = from_ent.simplename(), paras = from_method_paras)
                     from_method_type = from_ent.type()
@@ -93,11 +90,17 @@ def build_graph(dic):
     return Graph(dic)
 
 
-def build_cd_dic(graph, id_method_dic, save_path):
+def build_cd_dic(graph, id_method_dic, cd_dic, save_path):
 
     vertices = graph.vertices()
     print("Calculate path for methods of size :", str(len(vertices)))
     permutations_list = list(permutations(vertices, 2))
+
+    # for from_id in cd_dic:
+    #     to_id_list = cd_dic[from_id]
+    #     for to_id in to_id_list:
+    #         start_vertice = from_id
+    #         end_vertice = to_id
 
     cd_length_dic = dict()
     sigmoid_cd_dic = dict()
@@ -111,7 +114,9 @@ def build_cd_dic(graph, id_method_dic, save_path):
 
     length_list = list(cd_length_dic.values())
     size = len(length_list)
-    avg_shortest_length = average(length_list, size)
+
+    avg_shortest_length = sum(length_list)/size   # average(length_list, size)
+
     for cd_pair in cd_length_dic:
         sigmoid_cd_dic[str(cd_pair[0])+'分'+str(cd_pair[1])] = sigmoid(1 - cd_length_dic[cd_pair] / avg_shortest_length)
 
@@ -140,12 +145,12 @@ if __name__ == "__main__":
     id_method_dic, cd_dic = get_cd(udb = db, parent_dir = parent_dir)
     db.close()
     cd_graph = build_graph(cd_dic)
-    build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, save_path = save_path)
+    build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, cd_dic = cd_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
 
 
     # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
-    # cd_dic = get_cd(dub)
+    # id_dic, cd_dic = get_cd(dub, "")
     # cd_graph = build_graph(cd_dic)
-    # build_cd_dic(graph = cd_graph, save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3")
+    # build_cd_dic(graph = cd_graph, id_method_dic = id_dic, cd_dic = cd_dic,  save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3123")

@@ -1,5 +1,4 @@
 import math_tool
-from ss import load_brv
 import json
 from handle_cd_method import trim_comma_in_paras, trim_method
 
@@ -14,8 +13,6 @@ def load_augmentation_methods(path):
     return dic
 
 
-def load_br_vector(path, dim):
-    return load_brv(path, dim = dim)
 
 
 def cal_rel(brv, dic):

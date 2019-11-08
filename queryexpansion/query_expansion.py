@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 import json
 import time
 from handle_cd_method import trim_method, trim_template_T
-from ss import load_cv
+from ss import load_cv, load_brv
 import rank
 from methods_dic import load_dic, write_dic
 import math
@@ -33,13 +33,9 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
         if key in cd_dic:
             return cd_dic[key]
         else:
-            switch_key = m1_id + '分' + m0_id
-            if switch_key in cd_dic:
-                return cd_dic[switch_key]
-            else:
-                return None
+            return 0
     else:
-        return None
+        return 0
 
 
 def calculate_ac(ss_path, tp_path, cd_path, save_path):
@@ -62,25 +58,19 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
             print(tp_key, 'not in ss_dic1')
             continue
         cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
-        if cd_value is None:
-            cd_value = 0
+
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
-        if math.isnan(ac_value):
-            ac_dic[tp_key] = 0
-        else:
-            ac_dic[tp_key] = ac_value
+        # if math.isnan(ac_value):
+        #     ac_dic[tp_key] = 0
+        # else:
+        #     ac_dic[tp_key] = ac_value
+        ac_dic[tp_key] = ac_value
 
     print("ac size:", len(ac_dic))
     # write_dic(save_path + '.acdic', ac_dic)
-    sum = 0.0
-    # countnan = 0
-    for value in ac_dic.values():
-        if math.isnan(value):
-            # countnan += 1
-            continue
-        sum += value
-    avg_ac = float(sum / len(ac_dic))
-    # print('count nan :', countnan)
+
+    avg_ac = float(sum(ac_dic.values()) / len(ac_dic))
+
     print("average augmentation coefficient is", avg_ac)
 
     # before method augmentation, filter ac that is lower than avg_ac.
@@ -118,8 +108,9 @@ def method_augmentation(cv_path, ac_dic):
             result_dic[id2] = doc_vector2 + doc_vector1 * ac_value
         else:
             result_dic[id2] += doc_vector1 * ac_value
+    id_value_dic.update(result_dic)
 
-    return id_method_dic, result_dic
+    return id_method_dic, id_value_dic
 
 
 def load_ac_dic(path):
@@ -157,17 +148,22 @@ if __name__ == '__main__':
 
     # ac_dic = load_ac_dic(path = save_path)
 
-    id_dic, ma_dic = method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic)
+    id_dic, id_value_dic = method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic)
 
     # Rank
-    rel_list = rank.cal_rel(rank.load_brv(br_path, dim = dim), ma_dic)
+    br_vector = load_brv(br_path, dim = dim)
+    rel_list = rank.cal_rel(br_vector, id_value_dic)
     link_dic = rank.load_link_dic(link_buggy_path)
     buggy_method_list = link_dic[br_id]
     # 输出格式与iBug项目一致，则可以复用iBug计算TopK、MAP、MRR的代码
     # 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
 
-    result_list = [ br_id + '$' + str((0, 1)[trim_template_T(trim_method(id_dic[x[0]])) in buggy_method_list]) + '$'
-                    +  str(x[1]) + '$' + trim_template_T(trim_method(id_dic[x[0]])) for x in rel_list ]
+    result_list = [ br_id + '$' +
+                    str((0, 1)[trim_template_T(trim_method(id_dic[x[0]])) in buggy_method_list]) + '$' +
+                    str(x[1]) + '$' +
+                    trim_template_T(trim_method(id_dic[x[0]]))
+                    for x in rel_list ]
+
     with open(save_path, 'w') as f:
         f.write('\n'.join(result_list))
 

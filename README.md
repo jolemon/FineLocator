@@ -11,7 +11,7 @@ For MacOS:
 2. install Java Understand (use python API).
    API doc: 
    /Applications/Understand.app/Contents/Resources/doc/manuals/python/understand.html
-   /Applications/Understand.app/Contents/Resources/doc/manuals/pdf  (From Page 323)
+   /Applications/Understand.app/Contents/Resources/doc/manuals/pdf/understand.pdf  (From Page 323)
 
 #### Instructions
 

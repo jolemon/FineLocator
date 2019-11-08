@@ -13,7 +13,7 @@ cd_dir=${10}          # ~/FineLocator/expRes/cd/${proj}
 link_buggy_file=${11}  # ~/Downloads/final_defects4j/linked-bugMethods/${proj}_bugId_buggyMethodsName   
 
 rm -f ${save_dir}/${proj_id}
-rm -f ${save_dir}/${proj_id}.acdic
+# rm -f ${save_dir}/${proj_id}.acdic
 
 mkdir -p ${save_dir}     
 cd ${queryExpansionDir}
