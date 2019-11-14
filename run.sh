@@ -68,7 +68,7 @@ do
 
         echo "step 5 : use Java Understand to extract Call Dependency for method"
         ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir}  ${udbRootDir}/${proj_name}\
-                 ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir}  ${PYTHON}
+                 ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir} ${undAPIPath} ${PYTHON}
         cd ${scriptRootDir}
 
         echo "step 6 : query expansion , ranking on bug reports and augmented methods"

@@ -2,9 +2,6 @@
 
 # Call Dependency
 
-import sys
-sys.path.append('/Applications/Understand.app/Contents/MacOS/Python')
-import understand as us
 from argparse import ArgumentParser
 from graph import Graph
 from itertools import permutations
@@ -128,10 +125,16 @@ if __name__ == "__main__":
     parser.add_argument("-u", "--udb_path",   dest = "udb_path",   required = True)
     parser.add_argument("-s", "--save_path",  dest = "save_path",  required = True)
     parser.add_argument("-p", "--parent_dir", dest = "parent_dir", required = True)
+    parser.add_argument("-a", "--api_path",   dest = "api_path",   required = True)
     args = parser.parse_args()
     udb_path = args.udb_path
     save_path = args.save_path
     parent_dir = args.parent_dir
+    api_path = args.api_path
+
+    import sys
+    sys.path.append(api_path) # '/Applications/Understand.app/Contents/MacOS/Python'
+    import understand as us
 
     start = time.process_time()
     print("Start Calculate Call Dependency...")
