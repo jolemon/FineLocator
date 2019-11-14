@@ -1,14 +1,6 @@
 #!/bin/bash
 
-defects4jDatRootDir=~/Downloads/final_defects4j #$1
-scriptRootDir=~/FineLocator #$2
-
-bugReport4VectorDir=${defects4jDatRootDir}/bugReport4Vector
-allMethodsDir=${defects4jDatRootDir}/allMethods
-linkedBugMethodsDir=${defects4jDatRootDir}/linked-bugMethods
-
-gitRootDir=~/Downloads/bugcode
-undDir=/Applications/Understand.app/Contents/MacOS
+. input.properties 
 
 ptDir=${scriptRootDir}/pt
 deeplearning4jDir=${scriptRootDir}/word2vec
@@ -87,8 +79,8 @@ do
         cd ${scriptRootDir}
 
         echo "clear large file ss, tp."
-        rm -rf ${ssRootDir}/${proj_name}/${proj_id} 
-        rm -rf ${tpRootDir}/${proj_name}/${proj_id} 
+        rm -f ${ssRootDir}/${proj_name}/${proj_id}*
+        rm -f ${tpRootDir}/${proj_name}/${proj_id}*
     done
 
     break 
