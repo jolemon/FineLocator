@@ -56,7 +56,7 @@ do
                           ${word2vec_model_dimension}
         cd ${scriptRootDir}
 
-        echo "step 3 : Calculate semantic similarity for all methods"
+       echo "step 3 : Calculate semantic similarity for all methods"
         ./ss.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name}  \
                 ${ssRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension} ${PYTHON} 
         cd ${scriptRootDir}
@@ -67,7 +67,7 @@ do
         cd ${scriptRootDir}
 
         echo "step 5 : use Java Understand to extract Call Dependency for method"
-        ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir}  ${udbRootDir}/${proj_name}\
+        ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir} ${udbCreateDir} ${udbRootDir}/${proj_name} \
                  ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir} ${undAPIPath} ${PYTHON}
         cd ${scriptRootDir}
 
@@ -81,7 +81,7 @@ do
         echo "clear large file ss, tp."
         rm -f ${ssRootDir}/${proj_name}/${proj_id}*
         rm -f ${tpRootDir}/${proj_name}/${proj_id}*
-    done
+   done
 
     break 
 done
