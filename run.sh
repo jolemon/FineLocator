@@ -40,6 +40,8 @@ do
     for proj_id in  "Time_3"   # `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
+        begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
+        echo "begin time:" ${begin_time}
         echo "step 1 : preprocessing for bug report and method"
         ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name} ${allMethodsDir}/${proj_name} \
                     ${gitRootDir}  ${proj_id} \
@@ -81,6 +83,8 @@ do
         echo "clear large file ss, tp."
         rm -f ${ssRootDir}/${proj_name}/${proj_id}*
         rm -f ${tpRootDir}/${proj_name}/${proj_id}*
+        end_time=$(date  "+%Y/%m/%d-%H:%M:%S")
+        echo "begin time: "${begin_time}"  end time:" ${end_time}
    done
 
     break 
