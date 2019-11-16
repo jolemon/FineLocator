@@ -6,11 +6,12 @@ br_vec_dir=$3         # ~/FineLocator/expRes/vec/br/${proj}
 save_dir=$4           # ~/FineLocator/expRes/final/${proj}
 proj_id=$5            # ${proj_id}
 word2vec_dimension=$6 # 
-PYTHON=$7             # python3.7
-ss_dir=$8             # ~/FineLocator/expRes/ss/${proj}
-tp_dir=$9             # ~/FineLocator/expRes/tp/${proj}
-cd_dir=${10}          # ~/FineLocator/expRes/cd/${proj}
-link_buggy_file=${11}  # ~/Downloads/final_defects4j/linked-bugMethods/${proj}_bugId_buggyMethodsName   
+word2vec_model_epochs=$7
+PYTHON=$8            # python3.7
+ss_dir=$9             # ~/FineLocator/expRes/ss/${proj}
+tp_dir=${10}             # ~/FineLocator/expRes/tp/${proj}
+cd_dir=${11}          # ~/FineLocator/expRes/cd/${proj}
+link_buggy_file=${12}  # ~/Downloads/final_defects4j/linked-bugMethods/${proj}_bugId_buggyMethodsName   
 
 rm -f ${save_dir}/${proj_id}
 # rm -f ${save_dir}/${proj_id}.acdic
@@ -26,4 +27,5 @@ ${PYTHON} query_expansion.py \
           -i ${proj_id} \
           -l ${link_buggy_file} \
           -d ${word2vec_dimension} \
-          -s ${save_dir}/${proj_id}
+          -s ${save_dir}/${proj_id} \
+          -e ${word2vec_model_epochs}

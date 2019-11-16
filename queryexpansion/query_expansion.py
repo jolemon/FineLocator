@@ -128,6 +128,7 @@ if __name__ == '__main__':
     parser.add_argument("-i",  "--br_id"  , dest = "br_id",   required = True)
     parser.add_argument("-l",  "--link_buggy_path", dest = "link_buggy_path", required = True)
     parser.add_argument("-d",  "--dim"    , dest = "dim",     required = True)
+    parser.add_argument("-e",  "--epochs",  dest = "epochs",  required = True)
     args = parser.parse_args()
     ss_path = args.ss_path
     tp_path = args.tp_path
@@ -138,7 +139,7 @@ if __name__ == '__main__':
     link_buggy_path = args.link_buggy_path
     save_path = args.save_path
     dim = int(args.dim)
-
+    epochs = int(args.epochs)
 
     start = time.process_time()
     print("Start to Calculate Query Expansion...")
@@ -153,16 +154,17 @@ if __name__ == '__main__':
     buggy_method_list = link_dic[br_id]
     # 输出格式与iBug项目一致，则可以复用iBug计算TopK、MAP、MRR的代码
     # 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
-
     result_list = [ br_id + '$' +
+                    str(x[1]) + '$' +
                     str((0, 1)[trim_template_T(id_dic[x[0]]) in buggy_method_list]) + '$' +
-                    str(x[1]) + '$' + trim_template_T(id_dic[x[0]])
+                    trim_template_T(id_dic[x[0]])
                     for x in rel_list ]
 
     with open(save_path, 'w') as f:
         f.write('\n'.join(result_list))
 
-
+    import subprocess
+    subprocess.call(['./zou_cal_HitK-MAP-MRR.sh', save_path])
 
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")

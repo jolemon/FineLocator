@@ -32,12 +32,13 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 
 PYTHON=python3.7
 word2vec_model_dimension=300
+word2vec_model_epochs=10
 
 
 for proj_name in "Time"  # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in  "Time_3"   # `ls ${allMethodsDir}/${proj_name}`
+    for proj_id in  "Time_15"   # `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
@@ -55,7 +56,7 @@ do
                           ${correspondAfterPTDir}/${proj_name} \
                           ${brTfidfDir}/${proj_name} ${codeTfidfDir}/${proj_name} \
                           ${brVecRootDir}/${proj_name}  ${codeVecRootDir}/${proj_name} \
-                          ${word2vec_model_dimension}
+                          ${word2vec_model_dimension}  ${word2vec_model_epochs}
         cd ${scriptRootDir}
 
        echo "step 3 : Calculate semantic similarity for all methods"
@@ -75,7 +76,7 @@ do
 
         echo "step 6 : query expansion , ranking on bug reports and augmented methods"
         ./query_expansion.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name} ${brVecRootDir}/${proj_name} \
-                             ${finalRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension} ${PYTHON} \
+                             ${finalRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension}  ${word2vec_model_epochs} ${PYTHON} \
                              ${ssRootDir}/${proj_name} ${tpRootDir}/${proj_name} ${cdRootDir}/${proj_name} \
                              ${linkedBugMethodsDir}/${proj_name}_bugId_buggyMethodsName
         cd ${scriptRootDir}

@@ -11,6 +11,7 @@ codeTfidfDir=$9
 brVecDir=${10}
 codeVecDir=${11}
 dim=${12}
+epochs=${13}
 
 function tfidf(){
     rm -f ${brTfidfDir}/${proj_id}
@@ -36,7 +37,7 @@ function runWord2Vec(){
     # for convenience, copy bug report files to code dir to pack input for training model.
     # after training, bug reports must be deleted, or will be exported as vector when running next step.
     copyBrBeforeFit 
-    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} -fit 1 -dim ${dim} -type type   # whatever type
+    java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} -fit 1 -dim ${dim} -epochs ${epochs} -type type   # whatever type
     clearTmpDir
     echo "train word2vec model finished."
     
