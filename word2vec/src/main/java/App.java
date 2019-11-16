@@ -26,7 +26,7 @@ public class App {
 
         if (s_CommandLineValues.fit == 1) {
             Common.dimension = s_CommandLineValues.dim > 0 ? s_CommandLineValues.dim : Common.dimension ;
-            Word2Vec model = Word2VecModel.initModel(s_CommandLineValues.source_dir);
+            Word2Vec model = Word2VecModel.initModel(s_CommandLineValues);
             Word2VecModel.saveModel(model, Common.modelSavePath);
         } else {
             Path path = Paths.get(s_CommandLineValues.source_dir) ;
