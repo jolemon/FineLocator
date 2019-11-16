@@ -34,10 +34,10 @@ PYTHON=python3.7
 word2vec_model_dimension=300
 
 
-for proj_name in "Time"  # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Lang"  # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in  "Time_3"   # `ls ${allMethodsDir}/${proj_name}`
+    for proj_id in `ls ${allMethodsDir}/${proj_name}` # "Time_3"   # `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
