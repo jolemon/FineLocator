@@ -49,16 +49,16 @@ def load_link_dic(path):
                 path =  '/'+'/'.join((pm_parts[0].split('/'))[2:])
                 method = pm_parts[1]
 
-                method_parts = method.split(' ')
-                ret_type = method_parts[0]
-                if ret_type.endswith('[]'):
-                    new_method = ret_type[:-2] + ' '
-                    for i in range(1, len(method_parts)):
-                        new_method += method_parts[i] + ' '
-                    new_method = new_method.strip()
-                    path_method = path + '#' + trim_method(trim_comma_in_paras(new_method))
-                else:
-                    path_method = path + '#' + trim_method(trim_comma_in_paras(method))
+                # method_parts = method.split(' ')
+                # ret_type = method_parts[0]
+                # if ret_type.endswith('[]'):
+                #     new_method = ret_type[:-2] + ' '
+                #     for i in range(1, len(method_parts)):
+                #         new_method += method_parts[i] + ' '
+                #     new_method = new_method.strip()
+                #     path_method = path + '#' + trim_method(trim_comma_in_paras(new_method))
+                # else:
+                path_method = path + '#' + trim_method(trim_comma_in_paras(method))
 
                 if br_id not in dic:
                     dic.setdefault(br_id, []).append(path_method)
