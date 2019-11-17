@@ -163,8 +163,10 @@ if __name__ == '__main__':
     with open(save_path, 'w') as f:
         f.write('\n'.join(result_list))
 
-    import subprocess
-    subprocess.call(['./zou_cal_HitK-MAP-MRR.sh', save_path])
 
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")
+
+    
+    import subprocess
+    subprocess.call(['./zou_cal_HitK-MAP-MRR.sh', save_path])

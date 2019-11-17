@@ -1,6 +1,6 @@
 package model;
 
-import common.Common;
+import common.CommandLineValues;
 import org.deeplearning4j.models.embeddings.learning.impl.elements.SkipGram;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
@@ -19,7 +19,9 @@ public class Word2VecModel {
 
     private static Logger log = LoggerFactory.getLogger(Word2VecModel.class);
 
-    public static Word2Vec initModel(String dataDir){
+    public static Word2Vec initModel(CommandLineValues commandLineValues){
+        String dataDir = commandLineValues.source_dir ;
+
         log.info("Load & Vectorize Sentences....");
         SentenceIterator iter = new FileSentenceIterator(new File(dataDir));
         iter.setPreProcessor(new SentencePreProcessor() {
@@ -40,9 +42,9 @@ public class Word2VecModel {
         Word2Vec vec = new Word2Vec.Builder()
                 .elementsLearningAlgorithm(new SkipGram<>())  // CBOW : new CBOW<>()
                 .minWordFrequency(1)
-                .epochs(1)       // num of epochs over whole training corpus
+                .epochs(commandLineValues.epochs)       // num of epochs over whole training corpus
                 .iterations(1)   // num of iterations done for each mini-batch during training
-                .layerSize(Common.dimension)  // 200-500 is acceptable
+                .layerSize(commandLineValues.dim)  // 200-500 is acceptable
                 .windowSize(5)
                 .iterate(iter)
                 .tokenizerFactory(t)
