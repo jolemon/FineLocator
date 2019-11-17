@@ -46,6 +46,7 @@ do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
         echo "begin time:" ${begin_time}
+        cd ${scriptRootDir}
         echo "step 1 : preprocessing for bug report and method"
         ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name} ${allMethodsDir}/${proj_name} \
                     ${gitRootDir}  ${proj_id} \
