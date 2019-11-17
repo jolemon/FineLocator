@@ -7,11 +7,6 @@ import rank
 from methods_dic import load_dic, compare_dic
 
 
-alpha = 0.8
-beta = 0.1
-gamma = 0.1
-
-
 def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
     parts = sharp_key_pair.split('分')
     m0 = parts[0]
@@ -129,6 +124,9 @@ if __name__ == '__main__':
     parser.add_argument("-l",  "--link_buggy_path", dest = "link_buggy_path", required = True)
     parser.add_argument("-d",  "--dim"    , dest = "dim",     required = True)
     parser.add_argument("-e",  "--epochs",  dest = "epochs",  required = True)
+    parser.add_argument("-alpha", "--alpha", dest = "alpha", required = True)
+    parser.add_argument("-beta", "--beta", dest = "beta", required = True)
+    parser.add_argument("-gamma", "--gamma", dest = "gamma", required = True)
     args = parser.parse_args()
     ss_path = args.ss_path
     tp_path = args.tp_path
@@ -140,6 +138,9 @@ if __name__ == '__main__':
     save_path = args.save_path
     dim = int(args.dim)
     epochs = int(args.epochs)
+    alpha = float(args.alpha)
+    beta  = float(args.beta)
+    gamma = float(args.gamma)
 
     start = time.process_time()
     print("Start to Calculate Query Expansion...")
@@ -160,6 +161,9 @@ if __name__ == '__main__':
                     trim_template_T(id_dic[x[0]])
                     for x in rel_list ]
 
+    proj_id = br_id
+    abrstr = str(int(10 * alpha)) + str(int(10 * beta)) + str(int(10 * gamma))
+    save_path = save_path + '/' + proj_id + '_' + str(dim) + '_' + str(epochs) + '_' + abrstr
     with open(save_path, 'w') as f:
         f.write('\n'.join(result_list))
 

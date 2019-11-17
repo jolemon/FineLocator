@@ -12,6 +12,9 @@ ss_dir=$9             # ~/FineLocator/expRes/ss/${proj}
 tp_dir=${10}             # ~/FineLocator/expRes/tp/${proj}
 cd_dir=${11}          # ~/FineLocator/expRes/cd/${proj}
 link_buggy_file=${12}  # ~/Downloads/final_defects4j/linked-bugMethods/${proj}_bugId_buggyMethodsName   
+alpha=${13}
+beta=${14}
+gamma=${15}
 
 rm -f ${save_dir}/${proj_id}
 # rm -f ${save_dir}/${proj_id}.acdic
@@ -27,5 +30,11 @@ ${PYTHON} query_expansion.py \
           -i ${proj_id} \
           -l ${link_buggy_file} \
           -d ${word2vec_dimension} \
-          -s ${save_dir}/${proj_id} \
-          -e ${word2vec_model_epochs}
+          -s ${save_dir} \
+          -e ${word2vec_model_epochs} \
+          -alpha ${alpha} \
+          -beta ${beta} \
+          -gamma ${gamma}
+
+
+          # /${proj_id}_${word2vec_dimension}_${word2vec_model_epochs}_${alpha}_${alpha}_${beta}_${gamma} \
