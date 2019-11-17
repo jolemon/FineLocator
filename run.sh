@@ -35,7 +35,7 @@ word2vec_model_dimension=300
 word2vec_model_epochs=10
 
 
-for proj_name in "Lang"  # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Math" # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
     for proj_id in `ls ${allMethodsDir}/${proj_name}` # "Time_3"   # `ls ${allMethodsDir}/${proj_name}`
