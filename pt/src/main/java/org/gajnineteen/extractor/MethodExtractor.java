@@ -34,6 +34,7 @@ public class MethodExtractor {
         CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
 
         List types = compilationUnit.types();
+
         if(types.size()==0){
 //            System.out.println(filePath.toString() + " ASTParser.createAST().types().size()=0. Extract Failed.");
             return null;
@@ -45,6 +46,21 @@ public class MethodExtractor {
         //show methods
         MethodDeclaration[] methodDeclarations = typeDec.getMethods();
 
+        addToList(methodList, methodDeclarations, compilationUnit, filePath);
+
+        //subclasses
+        TypeDeclaration[] subclasses = typeDec.getTypes();
+        if(subclasses.length>0){
+            for (TypeDeclaration subclass:subclasses) {
+                MethodDeclaration[] subclassMethods = subclass.getMethods();
+                addToList(methodList, subclassMethods, compilationUnit, filePath);
+            }
+        }
+
+        return methodList;
+    }
+
+    void addToList(List<Method> list, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit, Path filePath){
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
             int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration, filePath) ;
             int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
@@ -52,10 +68,8 @@ public class MethodExtractor {
             String methodSignature = getMethodSignature(methodDeclaration) ;
             String methodStr = getMethodWithoutJavadoc(methodDeclaration) ;
             Method method = new Method(methodSignature, startLineNum, endLineNum, methodStr) ;
-
-            methodList.add(method);
+            list.add(method);
         }
-        return methodList;
     }
 
 
@@ -161,8 +175,8 @@ public class MethodExtractor {
 
 //    public static void main(String[] args) {
 //        MethodExtractor methodExtractor = new MethodExtractor();
-//        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
-//
+////        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
+//        File file = new File("/Users/lienming/Downloads/final_defects4j/allMethods/Time/Time_6/src/main/java/org/joda/time/chrono/GJChronology.java");
 //        List<Method> list = methodExtractor.extract(file.toPath());
 //        for (Method method:list) {
 //            method.print();
