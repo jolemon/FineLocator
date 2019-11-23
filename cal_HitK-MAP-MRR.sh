@@ -1,6 +1,15 @@
 #!/bin/bash
 #run: ./cal_HitK-MAP-MRR.sh ${repo_predictRes} 
-predictResult=$1
+# predictResult=$1
+proj=Closure  #$1
+dim=300       #$2
+epochs=10     #$3
+divide=811    #$4
+final_dir=~/Downloads/expres/all   #$5
+
+dir=${final_dir}/${proj}/${proj}_*_${dim}_${epochs}_${divide}
+
+predictRes=${proj}_${dim}_${epochs}_${divide}
 
 function cal_hitK_MAP_MRR(){
     rankRes=$1 #data file format: bugid, rank (started with 0)
@@ -23,4 +32,16 @@ function hitK_MAP_MRR4repos(){
     cal_hitK_MAP_MRR tmpres > ${res_file}
     rm tmpres
 } 
-hitK_MAP_MRR4repos ${predictResult}
+
+
+# cat $dir > $predictRes 
+
+
+for file in `ls $dir`
+do
+    cat $file >> $predictRes
+    echo >> $predictRes
+done
+
+hitK_MAP_MRR4repos ${predictRes}
+rm $predictRes

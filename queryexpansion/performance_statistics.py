@@ -147,6 +147,6 @@ def process_result(output_dir, res_dir, proj_name, dim, epochs, abr):
 
     workbook.close()
 
-process_result('/Users/lienming/Downloads/final',
-               '/Users/lienming/Downloads/test/Time',
-               'Time', 300, 10, 811)
+process_result('/Users/lienming/Downloads/expres',
+               '/Users/lienming/Downloads/expres/all/Closure',
+               'Closure', 300, 10, 811)

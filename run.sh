@@ -38,10 +38,10 @@ beta=0.1
 gamma=0.1
 
 
-for proj_name in "Time" "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Time" # "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in `ls ${allMethodsDir}/${proj_name}`
+    for proj_id in "Time_6"  #`ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
@@ -93,6 +93,6 @@ do
         echo "begin time: "${begin_time}"  end time:" ${end_time}
    done
 
-    break 
+   break 
 done
 
