@@ -46,23 +46,25 @@ public class MethodExtractor {
         //show methods
         MethodDeclaration[] methodDeclarations = typeDec.getMethods();
 
-        addToList(methodList, methodDeclarations, compilationUnit, filePath);
+        addToList(methodList, methodDeclarations, compilationUnit);
 
         //subclasses
         TypeDeclaration[] subclasses = typeDec.getTypes();
         if(subclasses.length>0){
             for (TypeDeclaration subclass:subclasses) {
+                // Method to get subclass name as follow :
+//                System.out.println("subclass name: " + subclass.getName());
                 MethodDeclaration[] subclassMethods = subclass.getMethods();
-                addToList(methodList, subclassMethods, compilationUnit, filePath);
+                addToList(methodList, subclassMethods, compilationUnit);
             }
         }
 
         return methodList;
     }
 
-    void addToList(List<Method> list, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit, Path filePath){
+    void addToList(List<Method> list, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
-            int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration, filePath) ;
+            int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration) ;
             int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
 
             String methodSignature = getMethodSignature(methodDeclaration) ;
@@ -82,7 +84,7 @@ public class MethodExtractor {
      * @param methodDeclaration
      * @return
      */
-    int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration, Path filePath) {
+    int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
         Javadoc javaDoc = methodDeclaration.getJavadoc();
         if (javaDoc == null) {
             return compilationUnit.getLineNumber(methodDeclaration.getStartPosition());
@@ -172,7 +174,7 @@ public class MethodExtractor {
         }
 
     }
-
+//
 //    public static void main(String[] args) {
 //        MethodExtractor methodExtractor = new MethodExtractor();
 ////        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
