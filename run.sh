@@ -33,15 +33,15 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 PYTHON=python3.7
 word2vec_model_dimension=300
 word2vec_model_epochs=10
-alpha=0.8
-beta=0.1
-gamma=0.1
+alpha=0.6
+beta=0.2
+gamma=0.2
 
 
 for proj_name in "Time" # "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Time_6"  #`ls ${allMethodsDir}/${proj_name}`
+    for proj_id in "Time_26"  #`ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
@@ -63,7 +63,7 @@ do
                           ${word2vec_model_dimension}  ${word2vec_model_epochs}
         cd ${scriptRootDir}
 
-       echo "step 3 : Calculate semantic similarity for all methods"
+        echo "step 3 : Calculate semantic similarity for all methods"
         ./ss.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name}  \
                 ${ssRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension} ${PYTHON} 
         cd ${scriptRootDir}

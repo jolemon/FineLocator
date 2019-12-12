@@ -64,13 +64,14 @@ def batch_run():
             ori_len = len(dic[item])
             res_len = len(res_dic[item])
             if ori_len != res_len:
-                print(item, 'ori_num:', ori_len, 'res_num', res_len)
+                print(item, 'ori_num:', ori_len, 'res_num:', res_len)
+
+                print('ori', sorted(dic[item]))
+                print('res', sorted(res_dic[item]))
+                print('lack:')
                 for method in dic[item]:
                     if method not in res_dic[item]:
                         print(method)
-                print(sorted(dic[item]))
-                print(sorted(res_dic[item]))
-
 
 linked_buggy_dir = '/Users/lienming/Downloads/final_defects4j/linked-bugMethods/'
 linked_buggy_postfix = '_bugId_buggyMethodsName'

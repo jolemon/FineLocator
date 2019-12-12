@@ -27,7 +27,6 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
         if not str(from_file_name).endswith(filter_file_type):
             continue
 
-        # print("filename : " + fromFileName)
         if filter_ref_type == "Call":
             dic = f.depends()
         else:
@@ -36,12 +35,15 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
         for entKey in dic:
             ref_list = dic[entKey]
             to_file_name = entKey.longname(True).replace(parent_dir, "")  # get abs path
+
+
             for ref in ref_list:
                 kindname = ref.kindname()
                 if kindname == "Call":   # no matter "Call" or "Callby"
                     # line_num = ref.line()
 
                     from_ent = ref.scope()
+                    from_class_name = from_ent.name().split('.')[0]
                     from_method_paras = from_ent.parameters()
                     from_method_name = add_paras_for_method(method_name = from_ent.simplename(), paras = from_method_paras)
                     from_method_type = from_ent.type()
@@ -49,17 +51,23 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
                         from_method_name = from_method_type + ' ' + from_method_name
 
                     to_ent = ref.ent()
+                    to_class_name = to_ent.name().split('.')[0]
                     to_method_paras = to_ent.parameters()
                     to_method_name = add_paras_for_method(method_name = to_ent.simplename(), paras = to_method_paras)
                     to_method_type = to_ent.type()
                     if to_method_type is not None:
                         to_method_name = to_method_type + ' ' + to_method_name
 
-                    from_signature = from_file_name + '#' + from_method_name
-                    to_signature = to_file_name   + '#' + to_method_name
+                    from_signature = from_file_name + '#' + from_class_name + '#' + from_method_name
+                    to_signature = to_file_name + '#' + to_class_name + '#' + to_method_name
 
                     from_id = update_id_method_dic(id_method_dic = id_method_dic, method = from_signature)
+
                     to_id = update_id_method_dic(id_method_dic = id_method_dic, method = to_signature)
+
+
+
+                    # print(ref.__str__())
 
                     if filter_ref_type == "Call":
                         dic_key   = from_id
@@ -146,9 +154,10 @@ if __name__ == "__main__":
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
 
-
-    # dub = us.open("/Users/lienming/Time_3/Time_3.udb")
+    # import sys
+    # sys.path.append('/Applications/Understand.app/Contents/MacOS/Python')
+    # import understand as us
+    # dub = us.open("/Users/lienming/test.udb")
     # id_dic, cd_dic = get_cd(dub, "")
     # cd_graph = build_graph(cd_dic)
-
     # build_cd_dic(graph = cd_graph, id_method_dic = id_dic, cd_dic = cd_dic,  save_path = "/Users/lienming/FineLocator/expRes/cd/Time/Time_3123")

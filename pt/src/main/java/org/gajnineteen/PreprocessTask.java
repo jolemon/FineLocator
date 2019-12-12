@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,10 +39,10 @@ public class PreprocessTask implements Callable<Void> {
     public Void call() throws IOException, GitAPIException {
         if (this.commandLineValues.type.equals("br")){
             processFile(new LRProcessor());
-        } else if (this.commandLineValues.type.equals("code")) {
-            processFile(new CodeProcessor());
         } else if (this.commandLineValues.type.equals("extract")) {
             extractMethod();
+        } else if (this.commandLineValues.type.equals("code")) {
+            processFile(new CodeProcessor());
         }
 
         return null;
@@ -96,13 +97,15 @@ public class PreprocessTask implements Callable<Void> {
                 }
                 processor.setText(method);
                 String result = processor.process() ;
-                stringBuilder.append(result).append("分"+System.getProperty("line.separator"));
+                result = result.concat("分"+System.getProperty("line.separator")) ;
+                stringBuilder.append(result);
             }
             out.write(stringBuilder.toString());
         } else {
             processor.setText(content);
             String result = processor.process() ;
             out.write(result);
+
         }
 
         out.close() ;
@@ -131,9 +134,9 @@ public class PreprocessTask implements Callable<Void> {
             return ;
         } else {
             extractOut = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(toSaveExtractPath.toString()), "utf-8"));
+                    (new FileOutputStream(toSaveExtractPath.toString()), StandardCharsets.UTF_8));    //"utf-8"
             correspondOut = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(toSaveCorrespondPath.toString()), "utf-8"));
+                    (new FileOutputStream(toSaveCorrespondPath.toString()), StandardCharsets.UTF_8)); //"utf-8"
         }
 
         this.timeExtractor = new TimeExtractor(commandLineValues.git_dir,

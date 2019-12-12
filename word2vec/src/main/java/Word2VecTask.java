@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,8 +42,8 @@ public class Word2VecTask implements Callable<Void> {
         BufferedWriter out ;
         String content ;
         List<String> tfidfContent ;
-
         String filePathStr = filePath.toString() ;
+//        System.out.println(filePathStr);
         String tfidfPathStr = filePathStr;
         String correspondPathStr = filePathStr ;
         if (filePathStr.contains(commandLineValues.source_dir)) {
@@ -65,7 +66,7 @@ public class Word2VecTask implements Callable<Void> {
                 Files.createFile(toSavePath) ;
             }
             out = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(filePathStr), "utf-8"));
+                    (new FileOutputStream(filePathStr), StandardCharsets.UTF_8));
 
             StringBuilder stringBuilder ;
             if (commandLineValues.type.equals(Common.CodeType)) {

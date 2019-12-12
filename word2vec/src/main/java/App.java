@@ -45,7 +45,7 @@ public class App {
         LinkedList<Word2VecTask> tasks = new LinkedList<>();
         try {
             Files.walk(Paths.get(s_CommandLineValues.source_dir)).filter(Files::isRegularFile)
-                    .filter(p -> !p.toString().toLowerCase().endsWith(".DS_Store")).forEach(f -> {
+                    .filter(p -> !p.toString().endsWith(".DS_Store")).forEach(f -> {
                         Word2VecTask task = new Word2VecTask(s_CommandLineValues, f);
                     tasks.add(task);
                 });

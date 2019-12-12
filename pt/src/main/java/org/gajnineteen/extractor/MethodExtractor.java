@@ -43,31 +43,37 @@ public class MethodExtractor {
 
         List<Method> methodList = new ArrayList<>();
 
-        //show methods
+
+        //get main class name
+        String mainClassName = typeDec.getName().toString() ;
+//        System.out.println("MainClass Name : " + mainClassName);
+
+        //get methods in main class
         MethodDeclaration[] methodDeclarations = typeDec.getMethods();
+        addToList(methodList, mainClassName, methodDeclarations, compilationUnit);
 
-        addToList(methodList, methodDeclarations, compilationUnit);
-
-        //subclasses
+        //get methods in inner classes
         TypeDeclaration[] subclasses = typeDec.getTypes();
         if(subclasses.length>0){
             for (TypeDeclaration subclass:subclasses) {
                 // Method to get subclass name as follow :
-//                System.out.println("subclass name: " + subclass.getName());
+                String subclassName =  subclass.getName().toString() ;
+//                System.out.println("Subclass Name : " + subclassName);
                 MethodDeclaration[] subclassMethods = subclass.getMethods();
-                addToList(methodList, subclassMethods, compilationUnit);
+                addToList(methodList, subclassName, subclassMethods, compilationUnit);
             }
         }
 
         return methodList;
     }
 
-    void addToList(List<Method> list, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
+    void addToList(List<Method> list, String className, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
             int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration) ;
             int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
 
             String methodSignature = getMethodSignature(methodDeclaration) ;
+            methodSignature = className.concat("#").concat(methodSignature) ;
             String methodStr = getMethodWithoutJavadoc(methodDeclaration) ;
             Method method = new Method(methodSignature, startLineNum, endLineNum, methodStr) ;
             list.add(method);
@@ -120,13 +126,6 @@ public class MethodExtractor {
 
 
     public String getMethodSignature(MethodDeclaration methodDeclaration) {
-//        String res = getMethodWithoutJavadoc(methodDeclaration) ;
-//        res = res.replace(methodDeclaration.getBody().toString(), "").trim();  //will remain comment!
-//        String lineSeparator = System.getProperty("line.separator");
-//        if (res.contains(lineSeparator)) {
-//            System.out.println(methodDeclaration.getName() + " contains line separator. remove it.");
-//            res = res.replace(lineSeparator, "");
-//        }
         String res = "" ;
         Type returnType = methodDeclaration.getReturnType2() ;
         if (returnType != null) {
@@ -174,7 +173,7 @@ public class MethodExtractor {
         }
 
     }
-//
+
 //    public static void main(String[] args) {
 //        MethodExtractor methodExtractor = new MethodExtractor();
 ////        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");

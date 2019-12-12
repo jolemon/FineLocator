@@ -98,7 +98,7 @@ if __name__ == "__main__":
     for doc in corpus_dic:
         doc_parts = doc.split('#')
         file_path = doc_parts[0]
-        method = doc_parts[1]
+        method = '#'.join(doc_parts[1:])
         write_path = file_path.replace(code_path, code_save_path)
 
         # create dirs
