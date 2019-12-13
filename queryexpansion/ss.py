@@ -41,7 +41,6 @@ def _load_single_cv(id_method_dic, id_value_dic, abs_file_path, dim, parent_dir)
             trim_vec_text = trim_text(vec_text)
             arr = np.fromstring(string = trim_vec_text, sep = ',')
             vec = arr.reshape((-1, dim), order = 'C')
-
             build_methods_dic(signature, vec, id_method_dic, id_value_dic)
     return
 

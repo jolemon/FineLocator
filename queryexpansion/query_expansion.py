@@ -172,5 +172,5 @@ if __name__ == '__main__':
     print("Finished Calculate Query Expansion. Time used : ", elapsed, "s.")
 
     
-    import subprocess
-    subprocess.call(['./zou_cal_HitK-MAP-MRR.sh', save_path])
+    # import subprocess
+    # subprocess.call(['./zou_cal_HitK-MAP-MRR.sh', save_path])
