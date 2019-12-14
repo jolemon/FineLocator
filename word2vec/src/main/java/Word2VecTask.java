@@ -43,7 +43,6 @@ public class Word2VecTask implements Callable<Void> {
         String content ;
         List<String> tfidfContent ;
         String filePathStr = filePath.toString() ;
-//        System.out.println(filePathStr);
         String tfidfPathStr = filePathStr;
         String correspondPathStr = filePathStr ;
         if (filePathStr.contains(commandLineValues.source_dir)) {
@@ -98,18 +97,17 @@ public class Word2VecTask implements Callable<Void> {
             String[] parts = line.split("分");
 
             Map<String, Double> tfidfMap = new HashMap<>();
-            if (parts.length == 1) {
-                continue;
-            }
-            for (String tfidfMapStr : parts[1].split("内")) {
-                String[] tfidfParts = tfidfMapStr.split("\\$") ;
-                String word = tfidfParts[0] ;
-                double tfidfValue = Double.parseDouble(tfidfParts[1]) ;
-                tfidfMap.put(word, tfidfValue);
+            if (parts.length > 1) {
+                for (String tfidfMapStr : parts[1].split("内")) {
+                    String[] tfidfParts = tfidfMapStr.split("\\$") ;
+                    String word = tfidfParts[0] ;
+                    double tfidfValue = Double.parseDouble(tfidfParts[1]) ;
+                    tfidfMap.put(word, tfidfValue);
+                }
             }
 
-            String signature = parts[0] ;
-            fileMap.put(signature, tfidfMap) ;
+            String signature = parts[0];
+            fileMap.put(signature, tfidfMap);
 
         }
         return fileMap;
@@ -152,7 +150,7 @@ public class Word2VecTask implements Callable<Void> {
             List<INDArray> vecList = new ArrayList<>();
 
             if ( !methodsDictionary.containsKey(signature) ) {
-                System.out.println(signature + ": cannot find corresponding tfidf dictionary.");
+                System.out.println(this.filePath.toString() + "#" + signature + ": cannot find corresponding tfidf dictionary.");
                 continue;
             }
             Map<String, Double> methodDictionary = methodsDictionary.get(signature) ;
@@ -166,7 +164,7 @@ public class Word2VecTask implements Callable<Void> {
                     }
 
                     if (!methodDictionary.containsKey(word)) {
-                        System.out.println(word + ": not in tfidf dictionary.");
+                        System.out.println(this.filePath.toString() + "#" + signature + "#" + word + ": not in tfidf dictionary.");
                         continue;
                     }
 
