@@ -5,8 +5,8 @@
 ptDir=${scriptRootDir}/pt
 deeplearning4jDir=${scriptRootDir}/word2vec
 queryExpansionDir=${scriptRootDir}/queryexpansion
-expResDir=${scriptRootDir}/expRes
-
+# expResDir=${scriptRootDir}/expRes
+expResDir=${expResParentDir}/expRes
 afterPTRootDir=${expResDir}/afterPT
 brAfterPTDir=${afterPTRootDir}/br
 codeAfterPTDir=${afterPTRootDir}/code
@@ -38,15 +38,16 @@ beta=0.2
 gamma=0.2
 
 
-for proj_name in "Time" # "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Closure" # "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Time_26"  #`ls ${allMethodsDir}/${proj_name}`
+    for proj_id in "Closure_41"  #`ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
         echo "begin time:" ${begin_time}
         cd ${scriptRootDir}
+
         echo "step 1 : preprocessing for bug report and method"
         ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name} ${allMethodsDir}/${proj_name} \
                     ${gitRootDir}  ${proj_id} \
@@ -70,7 +71,7 @@ do
 
         echo "step 4 : Calculate temporal proximity for all methods"
         ./tp.sh  ${queryExpansionDir} ${correspondAfterPTDir}/${proj_name} ${tpRootDir}/${proj_name} \
-                 ${proj_id} ${PYTHON}
+                 ${ssRootDir}/${proj_name} ${proj_id} ${PYTHON}
         cd ${scriptRootDir}
 
         echo "step 5 : use Java Understand to extract Call Dependency for method"
