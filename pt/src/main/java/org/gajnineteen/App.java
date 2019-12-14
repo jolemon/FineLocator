@@ -38,13 +38,13 @@ public class App {
         try {
             if(type.equals(Common.bugReport)){
                 Files.walk(Paths.get(s_CommandLineValues.source_dir)).filter(Files::isRegularFile)
-                        .filter(p -> !p.toString().toLowerCase().endsWith(".DS_Store")).forEach(f -> {
+                        .filter(p -> !p.toString().endsWith(".DS_Store")).forEach(f -> {
                     PreprocessTask task = new PreprocessTask(s_CommandLineValues, f);
                     tasks.add(task);
                 });
             } else if (type.equals(Common.extract) || type.equals(Common.code)) {
                 Files.walk(Paths.get(s_CommandLineValues.source_dir)).filter(Files::isRegularFile)
-                        .filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(f -> {
+                        .filter(p -> p.toString().endsWith(".java")).forEach(f -> {
                     PreprocessTask task = new PreprocessTask(s_CommandLineValues, f);
                     tasks.add(task);
                 });
