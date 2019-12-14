@@ -37,7 +37,8 @@ public class TimeExtractor {
         blameCommand.setFilePath(filePath) ;
         ObjectId commitID = repo.resolve("HEAD~~") ;
         blameCommand.setStartCommit(commitID) ;
-        BlameResult blameResult = blameCommand.call();
+        BlameResult blameResult = null;
+        blameResult = blameCommand.call();
 
         for (int i=startLineNum ; i <= endLineNum ; i++) {
             RevCommit revCommit = blameResult.getSourceCommit(i) ;

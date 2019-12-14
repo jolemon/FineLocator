@@ -53,6 +53,7 @@ public class MethodExtractor {
         addToList(methodList, mainClassName, methodDeclarations, compilationUnit);
 
         //get methods in inner classes
+//        recursiveSearchSubclass(typeDec, methodList, mainClassName, compilationUnit);
         TypeDeclaration[] subclasses = typeDec.getTypes();
         if(subclasses.length>0){
             for (TypeDeclaration subclass:subclasses) {
@@ -65,6 +66,22 @@ public class MethodExtractor {
         }
 
         return methodList;
+    }
+
+    // try to search subclass recursively
+    void recursiveSearchSubclass(TypeDeclaration typeDeclaration, List<Method> methodList,
+                                 String className, CompilationUnit compilationUnit) {
+        TypeDeclaration[] subclasses = typeDeclaration.getTypes() ;
+        if(subclasses.length>0){
+            for (TypeDeclaration subclass:subclasses) {
+                // Method to get subclass name as follow :
+                String subclassName =  subclass.getName().toString() ;
+                String subclassPath = className.concat("#"+subclassName) ;
+                MethodDeclaration[] subclassMethods = subclass.getMethods();
+                addToList(methodList, subclassPath, subclassMethods, compilationUnit);
+                recursiveSearchSubclass(subclass, methodList, subclassPath, compilationUnit);
+            }
+        }
     }
 
     void addToList(List<Method> list, String className, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
