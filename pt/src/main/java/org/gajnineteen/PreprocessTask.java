@@ -111,7 +111,7 @@ public class PreprocessTask implements Callable<Void> {
         out.close() ;
     }
 
-    public void extractMethod() throws IOException, GitAPIException {
+    public void extractMethod() throws IOException {
         BufferedWriter extractOut ;
         Path toSaveExtractPath    ;
         BufferedWriter correspondOut  ;
@@ -146,11 +146,20 @@ public class PreprocessTask implements Callable<Void> {
             extractOut.write(method.methodStr);
             extractOut.write("分");
             extractOut.newLine();
+//            method.print();
+            Date latestModifyTime = null ;
+            try {
+                latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum);
+            } catch (Exception e) {
+                e.printStackTrace();
+                method.print();
+                latestModifyTime = new Date();
+            } finally {
+                correspondOut.write(method.signature + "$" + method.startLineNum
+                        + "$" + method.endLineNum + "$" + latestModifyTime);
+                correspondOut.newLine();
+            }
 
-            Date latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum) ;
-            correspondOut.write(method.signature + "$" + method.startLineNum
-                    + "$" + method.endLineNum + "$" + latestModifyTime);
-            correspondOut.newLine();
         }
         extractOut.flush();
         extractOut.close();
