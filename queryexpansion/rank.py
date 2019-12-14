@@ -32,10 +32,9 @@ def _rank_dic(dic):
 def load_link_dic(path):
     dic = {}
     f = open(path, 'r')
-    while True:
-        line = f.readline()
-        if not line:
-            break
+    lines = f.readlines()
+    for line in lines:
+        line = line.strip()
         if len(line) > 0:
             parts = line.split('\t')
             br_id = parts[0]
@@ -49,15 +48,6 @@ def load_link_dic(path):
                 path =  '/'+'/'.join((pm_parts[0].split('/'))[2:])
                 method = pm_parts[1]
 
-                # method_parts = method.split(' ')
-                # ret_type = method_parts[0]
-                # if ret_type.endswith('[]'):
-                #     new_method = ret_type[:-2] + ' '
-                #     for i in range(1, len(method_parts)):
-                #         new_method += method_parts[i] + ' '
-                #     new_method = new_method.strip()
-                #     path_method = path + '#' + trim_method(trim_comma_in_paras(new_method))
-                # else:
                 path_method = path + '#' + trim_method(trim_comma_in_paras(method))
 
                 if br_id not in dic:
@@ -66,8 +56,8 @@ def load_link_dic(path):
                     dic[br_id].append(path_method)
     return dic
 
-
-# dic = load_link_dic("/Users/lienming/Downloads/final_defects4j/linked-bugMethods/Time_bugId_buggyMethodsName")
+# for item in ['Time', 'Mockito', 'Lang', 'Math']:
+#     dic = load_link_dic("/Users/lienming/Downloads/final_defects4j/linked-bugMethods/" + item + "_bugId_buggyMethodsName")
 # for ms in dic['Time_3']:
 #     print(ms)
 

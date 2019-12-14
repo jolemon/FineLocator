@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import json
 import time
-from handle_cd_method import trim_template_T
+from handle_cd_method import trim_template_T, trim_method
 from ss import load_cv, load_brv
 import rank
 from methods_dic import load_dic, compare_dic
@@ -38,7 +38,8 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     ss_dic = load_dic(ss_path)
     ss_id_dic = load_dic(ss_path + '.dic')
     tp_dic = load_dic(tp_path)
-    tp_id_dic = load_dic(tp_path + '.dic')
+    # tp_id_dic = load_dic(tp_path + '.dic')
+    tp_id_dic = ss_id_dic
     cd_dic = load_dic(cd_path)
     cd_id2sig_dic = load_dic(cd_path + '.dic')
 
@@ -47,17 +48,18 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
 
     print("load ss, tp, cd dictionary ready.")
     #check tp/ss dic
-    if not compare_dic(tp_id_dic, ss_id_dic):
-        print("check tp/ss_dic exception!")
-    else:
-        print("check tp/ss_dic is same.")
+    # if not compare_dic(tp_id_dic, ss_id_dic):
+    #     print("check tp/ss_dic exception!")
+    #     return
+    # else:
+    #     print("check tp/ss_dic is same.")
 
     for tp_key in tp_dic:
         tp_value = tp_dic[tp_key]
         if tp_key in ss_dic:
             ss_value = ss_dic[tp_key]
         else:
-            print(tp_key, 'not in ss_dic1')
+            print(tp_key, 'not in ss_dic')
             continue
         cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
 
@@ -145,6 +147,8 @@ if __name__ == '__main__':
     start = time.process_time()
     print("Start to Calculate Query Expansion...")
     ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
+    if ac_dic is None:
+        exit(1)
 
     id_dic, id_value_dic = method_augmentation(cv_path = code_vector_dir, ac_dic = ac_dic)
 
@@ -157,7 +161,7 @@ if __name__ == '__main__':
     # 输出格式： bug报告ID$真实标签$计算相关度$路径方法名
     result_list = [ br_id + '$' +
                     str(x[1]) + '$' +
-                    str((0, 1)[trim_template_T(id_dic[x[0]]) in buggy_method_list]) + '$' +
+                    str((0, 1)[trim_method(trim_template_T(id_dic[x[0]])) in buggy_method_list]) + '$' +
                     trim_template_T(id_dic[x[0]])
                     for x in rel_list ]
 
