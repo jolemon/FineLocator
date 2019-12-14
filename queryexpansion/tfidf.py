@@ -26,13 +26,18 @@ def load_code(proj_path, correspond_path, save_dic):
                 lines = rf.readlines()
                 clines = cf.readlines()
                 for j in range(len(lines)):
-                    line = lines[j]
+                    try:
+                        line = lines[j]
+                        cline = clines[j]
+                    except IndexError:
+                        print('wrong in correspond file. please check!')
+                        print('code path:', file_path)
+                        print('correspond path:', correspond_file_path)
+                        return
+                    line = line.replace('分', '').strip()
                     if line is not None:
-                        line = line.replace('分', '')
-                        line = line.strip().split()
-                        # method_signature = clines[j].split('$')[:-3]
-                        # key = file_path + '#' + ','.join(method_signature)
-                        method_signature = clines[j].split('$')[0]
+                        line = line.split()
+                        method_signature = cline.split('$')[0]
                         key = file_path + '#' + method_signature
                         save_dic[key] = Counter(line)
                 rf.close()

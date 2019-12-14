@@ -15,13 +15,19 @@ def build_methods_dic(method, value, id_method_dic, id_value_dic):
     return
 
 
-def update_id_method_dic(id_method_dic, method):
-    if method not in id_method_dic.values():
-        new_id = len(id_method_dic)+1
+def update_id_method_dic(id_method_dic, method_id_dic, method):
+    if method not in method_id_dic:
+        new_id = len(id_method_dic) + 1
         id_method_dic[new_id] = method
+        method_id_dic[method] = new_id
         return new_id
+    # if method not in id_method_dic.values():
+    #     new_id = len(id_method_dic)+1
+    #     id_method_dic[new_id] = method
+    #     return new_id
     else:
-        return find_k_by_v(id_method_dic, method)
+        return method_id_dic[method]
+        # return find_k_by_v(id_method_dic, method)
 
 
 def load_dic(path):

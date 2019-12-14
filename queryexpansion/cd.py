@@ -20,6 +20,7 @@ def add_paras_for_method(method_name, paras):
 def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"):
 
     id_method_dic = dict()
+    method_id_dic = dict()
     cd_dic = {}
 
     for f in udb.ents("File"):
@@ -61,9 +62,9 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
                     from_signature = from_file_name + '#' + from_class_name + '#' + from_method_name
                     to_signature = to_file_name + '#' + to_class_name + '#' + to_method_name
 
-                    from_id = update_id_method_dic(id_method_dic = id_method_dic, method = from_signature)
+                    from_id = update_id_method_dic(id_method_dic = id_method_dic, method_id_dic = method_id_dic,  method = from_signature)
 
-                    to_id = update_id_method_dic(id_method_dic = id_method_dic, method = to_signature)
+                    to_id = update_id_method_dic(id_method_dic = id_method_dic, method_id_dic = method_id_dic,  method = to_signature)
 
 
 

@@ -6,7 +6,6 @@ from itertools import combinations
 from math_tool import sigmoid
 from argparse import ArgumentParser
 import json
-from methods_dic import build_methods_dic
 
 time_format = "%a %b %d %H:%M:%S %Z %Y"
 
@@ -16,9 +15,12 @@ def cal_time_diff_by_second(time1, time2):
 
 
 # load dic of last modify time for all methods
-def load_dic_lmt(proj_path):
-    id_method_dic = dict()
+def load_dic_lmt(proj_path, ss_dic):
+    # id_method_dic = dict()
+    reversed_ss_dic = dict(zip(ss_dic.values(), ss_dic.keys()))
+    id_method_dic = ss_dic
     id_value_dic = dict()
+
     cache_dic = dict()
     for root, dirs, files in os.walk(proj_path):
         for file in files:
@@ -39,9 +41,17 @@ def load_dic_lmt(proj_path):
                         # key = relative_path + '#' + ','.join(method_signature)
                         key = relative_path + '#' + method_signature
                         td = get_td(last_modify_time, cache_dic)
-                        build_methods_dic(method = key, value = td,
-                                          id_method_dic = id_method_dic ,
-                                          id_value_dic = id_value_dic )
+
+                        if key in reversed_ss_dic:
+                            ssid = reversed_ss_dic[key]
+                            id_method_dic[ssid] = key
+                            id_value_dic[ssid] = td
+                        else:
+                            print(key, 'not in ss dic')
+
+                        # build_methods_dic(method = key, value = td,
+                        #                   id_method_dic = id_method_dic ,
+                        #                   id_value_dic = id_value_dic )
                 f.close()
     return id_method_dic, id_value_dic
 
@@ -89,8 +99,8 @@ def cal_time_diff_for_dic(id_method_dic, id_value_dic, save_path):
                 tp_dic[str(m1) + "分" + str(m2)] = sig_time_diff
                 # f.write(m1 + "分"+ m2 + "分" + str(sig_time_diff) + "\n")
         f.write(json.dumps(tp_dic))
-    with open(save_path + ".dic", 'w') as dic_f:
-        dic_f.write(json.dumps(id_method_dic))
+    # with open(save_path + ".dic", 'w') as dic_f:
+    #     dic_f.write(json.dumps(id_method_dic))
     return
 
 
@@ -98,15 +108,20 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-c", "--correspond_path", dest = "correspond_path", required = True)
     parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
+    parser.add_argument("-d", "--ss_dic_path", dest = "ss_dic_path", required = True)
     args = parser.parse_args()
     correspond_path = args.correspond_path
     save_path = args.save_path
+    ss_dic_path = args.ss_dic_path
 
     start = time.process_time()
     print("Start Calculate Temporal Proximity...")
-    # save_path = "/Users/lienming/FineLocator/expRes/tp/Time/Time_3"
-    # time_dic = load_dic_lmt("/Users/lienming/FineLocator/expRes/afterPT/correspond/Closure/Closure_176")
-    id_method_dic, id_value_dic = load_dic_lmt(correspond_path)
+
+    from methods_dic import load_dic
+    # ss_dic
+    ss_dic = load_dic(ss_dic_path)
+
+    id_method_dic, id_value_dic = load_dic_lmt(correspond_path, ss_dic)
     cal_time_diff_for_dic(id_method_dic, id_value_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Temporal Proximity. Time used : ", elapsed, "s.")

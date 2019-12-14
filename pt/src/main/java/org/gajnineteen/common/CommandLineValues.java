@@ -6,6 +6,7 @@ import org.kohsuke.args4j.Option;
 
 public class CommandLineValues {
 
+    // Notice: source_dir should be directory, not a file, because later we will replace this name with none in TimeExtractor
     @Option(name = "-source")
     public String source_dir ;
 
