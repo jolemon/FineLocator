@@ -128,33 +128,41 @@ public class Word2VecTask implements Callable<Void> {
         return signatures;
     }
 
-    private StringBuilder constructMethodVecString(String content, Map<String, Map<String, Double>> methodsDictionary, List<String> signatures) {
+    private StringBuilder constructMethodVecString
+            (String content, Map<String, Map<String, Double>> methodsDictionary, List<String> signatures)
+    {
         StringBuilder stringBuilder = new StringBuilder();
         content = content.trim() ;
         String[] methods = content.split(System.getProperty("line.separator")) ;
         for (int k=0 ; k<methods.length; k++) {
             String methodDoc = methods[k] ;
             methodDoc = methodDoc.trim();
+
+//            if (methodDoc.length() == 0) {
+//                continue;
+//            }
+
             String signature = signatures.get(k) ;
-            if (methodDoc.length() == 0) {
-                continue;
-            }
+
+            // this method is empty, so write a zero matrix to StringBuilder and continue.
             if (methodDoc.equals("分")) {
                 INDArray array1 = Nd4j.zeros(1, Common.dimension) ;
                 stringBuilder.append(array1).append(System.getProperty("line.separator")) ;
                 stringBuilder.append("#").append(signature).append("分").append(System.getProperty("line.separator"));
-            } else {
-                methodDoc = methodDoc.replace("分", "") ;
+                continue;
             }
 
-            List<INDArray> vecList = new ArrayList<>();
-
-            if ( !methodsDictionary.containsKey(signature) ) {
+            // if cannot find tfidf dictionary, continue.
+            if (!methodsDictionary.containsKey(signature) ) {
                 System.out.println(this.filePath.toString() + "#" + signature + ": cannot find corresponding tfidf dictionary.");
                 continue;
             }
-            Map<String, Double> methodDictionary = methodsDictionary.get(signature) ;
 
+            // if method is not empty and we can find tfidf dictionary, then calculate vec and pooling
+            methodDoc = methodDoc.replace("分", "") ;
+            methodDoc = methodDoc.trim();
+            Map<String, Double> methodDictionary = methodsDictionary.get(signature) ;
+            List<INDArray> vecList = new ArrayList<>();
             // vec multiply tfidf value
             if (methodDoc.contains(" ")) {
                 for (String word : methodDoc.split(" ")) {
