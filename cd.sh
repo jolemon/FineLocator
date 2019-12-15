@@ -12,15 +12,17 @@ und_api_path=$8   # /Applications/Understand.app/Contents/MacOS/Python
 PYTHON=$9         # python3.7
 
 
-rm -f ${udb_dir}/${proj}
-mkdir -p ${udb_dir}   # udb_dir must exist!
+echo "There exists license expiration problem in Scitool.Understand"
+echo "So batch_run_und.sh for all project and get all *.udb files."
+# rm -f ${udb_dir}/${proj}
+# mkdir -p ${udb_dir}   # udb_dir must exist!
+# cd ${und_dir}
+# ./und create -db ${udb_create_dir}/${proj} -languages Java add ${ori_code_dir} analyze -all  > ${udb_dir}/${proj}.log
+# mv ${udb_create_dir}/${proj}.udb  ${udb_dir}
+
+
 rm -f ${cd_dir}/${proj}
 mkdir -p ${cd_dir}
-
-cd ${und_dir}
-./und create -db ${udb_create_dir}/${proj} -languages Java add ${ori_code_dir} analyze -all  > ${udb_dir}/${proj}.log
-mv ${udb_create_dir}/${proj}.udb  ${udb_dir}
-
 cd ${cd_script_dir}
 ${PYTHON} cd.py -u ${udb_dir}/${proj}.udb -s ${cd_dir}/${proj} -p ${ori_code_dir} -a ${und_api_path}
 
