@@ -22,6 +22,9 @@ public class CommandLineValues {
     @Option(name = "-type")
     public String type ;
 
+    @Option(name = "-commitID")
+    public String commitID ;
+
     @Option(name = "--num_threads")
     public int NumThreads = 32;
 
