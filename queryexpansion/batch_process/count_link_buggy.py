@@ -24,7 +24,7 @@ def load_linked_buggy_file(file, outer_splitor = '外', inner_splitor = '内', r
     return dic
 
 
-def load_prediction_file(proj, dir, find_tag = '$1', splitor = '$'):
+def load_prediction_file(proj, dir, find_tag = '$1$', splitor = '$'):
     import os
     dic = {}
     for file in os.listdir(dir):
@@ -47,7 +47,7 @@ def load_prediction_file(proj, dir, find_tag = '$1', splitor = '$'):
 
 
 def batch_run():
-    projs = ['Time', 'Mockito', 'Lang', 'Math', 'Closure']
+    projs = ['Closure'] #'Time', 'Mockito', 'Lang', 'Math', 'Closure'
 
     for proj in projs:
         linked_buggy_file = linked_buggy_dir + proj + linked_buggy_postfix
@@ -75,5 +75,5 @@ def batch_run():
 
 linked_buggy_dir = '/Users/lienming/Downloads/final_defects4j/linked-bugMethods/'
 linked_buggy_postfix = '_bugId_buggyMethodsName'
-predict_result_dir = '/Users/lienming/Downloads/expres/all/'
+predict_result_dir = '/Users/lienming/811/' #Downloads/expres/all/
 batch_run()
