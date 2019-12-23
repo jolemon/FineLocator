@@ -29,7 +29,7 @@ vecAfterPoolingDir=${expResDir}/vecAfterPooling
 brVecAfterPoolingDir=${vecAfterPoolingDir}/br
 codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 
-buggy_version_file=${queryexpansion}/batch_process/all_buggy_version
+buggy_version_file=${queryExpansionDir}/batch_process/all_buggy_version
 
 PYTHON=python3.7
 word2vec_model_dimension=300
@@ -75,10 +75,10 @@ do
                  ${ssRootDir}/${proj_name} ${proj_id} ${PYTHON}
         cd ${scriptRootDir}
 
-     #   echo "step 5 : use Java Understand to extract Call Dependency for method"
-#        ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir} ${udbCreateDir} ${udbRootDir}/${proj_name} \
-#                 ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir} ${undAPIPath} ${PYTHON}
-#        cd ${scriptRootDir}
+        # echo "step 5 : use Java Understand to extract Call Dependency for method"
+        # ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir} ${udbCreateDir} ${udbRootDir}/${proj_name} \
+        #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir} ${undAPIPath} ${PYTHON}
+        # cd ${scriptRootDir}
 
         echo "step 6 : query expansion , ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
         ./query_expansion.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name} ${brVecRootDir}/${proj_name} \

@@ -43,7 +43,7 @@ public class MethodExtractor {
         for(Object typeDeclarationObject : types) {
             TypeDeclaration typeDec = (TypeDeclaration)typeDeclarationObject ;
             if (typeDec.isInterface()) {
-                System.out.println(typeDec.getName().toString() + " is Interface");
+//                System.out.println(typeDec.getName().toString() + " is Interface");
                 continue ;
             }
             //get main class name
