@@ -18,6 +18,8 @@ public class MethodExtractor {
 
     public MethodExtractor(){ }
     public List<Method> extract(Path filePath){
+        List<String> enumSignatureList = new ArrayList<>();
+
         String content ;
         try {
             content = new String(Files.readAllBytes(filePath)) ;
@@ -35,56 +37,62 @@ public class MethodExtractor {
 
         List types = compilationUnit.types();
 
-        if(types.size()==0){
-//            System.out.println(filePath.toString() + " ASTParser.createAST().types().size()=0. Extract Failed.");
-            return null;
-        }
-        TypeDeclaration typeDec = (TypeDeclaration) types.get(0);
-
         List<Method> methodList = new ArrayList<>();
 
+//        TypeDeclaration typeDec = (TypeDeclaration) types.get(0);
+        for(Object typeDeclarationObject : types) {
+            TypeDeclaration typeDec = (TypeDeclaration)typeDeclarationObject ;
+            if (typeDec.isInterface()) {
+                System.out.println(typeDec.getName().toString() + " is Interface");
+                continue ;
+            }
+            //get main class name
+            String mainClassName = typeDec.getName().toString() ;
+//            System.out.println("MainClass Name : " + mainClassName);
 
-        //get main class name
-        String mainClassName = typeDec.getName().toString() ;
-//        System.out.println("MainClass Name : " + mainClassName);
+            // 声明变量，Enum 也在其中
+//            for(FieldDeclaration fieldDeclaration : typeDec.getFields()) {
+//                System.out.println("Field : " +fieldDeclaration.toString());
+//            }
 
-        //get methods in main class
-        MethodDeclaration[] methodDeclarations = typeDec.getMethods();
-        addToList(methodList, mainClassName, methodDeclarations, compilationUnit);
 
-        //get methods in inner classes
+            //get methods in main class
+            MethodDeclaration[] methodDeclarations = typeDec.getMethods();
+            addToList(methodList, enumSignatureList, mainClassName, methodDeclarations, compilationUnit);
+
+            //get methods in inner classes
 //        recursiveSearchSubclass(typeDec, methodList, mainClassName, compilationUnit);
-        TypeDeclaration[] subclasses = typeDec.getTypes();
-        if(subclasses.length>0){
-            for (TypeDeclaration subclass:subclasses) {
-                // Method to get subclass name as follow :
-                String subclassName =  subclass.getName().toString() ;
+            TypeDeclaration[] subclasses = typeDec.getTypes();
+            if(subclasses.length>0){
+                for (TypeDeclaration subclass:subclasses) {
+                    // Method to get subclass name as follow :
+                    String subclassName =  subclass.getName().toString() ;
 //                System.out.println("Subclass Name : " + subclassName);
-                MethodDeclaration[] subclassMethods = subclass.getMethods();
-                addToList(methodList, subclassName, subclassMethods, compilationUnit);
+                    MethodDeclaration[] subclassMethods = subclass.getMethods();
+                    addToList(methodList, enumSignatureList, subclassName, subclassMethods, compilationUnit);
+                }
             }
         }
-
         return methodList;
     }
 
     // try to search subclass recursively
-    void recursiveSearchSubclass(TypeDeclaration typeDeclaration, List<Method> methodList,
-                                 String className, CompilationUnit compilationUnit) {
-        TypeDeclaration[] subclasses = typeDeclaration.getTypes() ;
-        if(subclasses.length>0){
-            for (TypeDeclaration subclass:subclasses) {
-                // Method to get subclass name as follow :
-                String subclassName =  subclass.getName().toString() ;
-                String subclassPath = className.concat("#"+subclassName) ;
-                MethodDeclaration[] subclassMethods = subclass.getMethods();
-                addToList(methodList, subclassPath, subclassMethods, compilationUnit);
-                recursiveSearchSubclass(subclass, methodList, subclassPath, compilationUnit);
-            }
-        }
-    }
+//    void recursiveSearchSubclass(TypeDeclaration typeDeclaration, List<Method> methodList,
+//                                 String className, CompilationUnit compilationUnit) {
+//        TypeDeclaration[] subclasses = typeDeclaration.getTypes() ;
+//        if(subclasses.length>0){
+//            for (TypeDeclaration subclass:subclasses) {
+//                // Method to get subclass name as follow :
+//                String subclassName =  subclass.getName().toString() ;
+//                String subclassPath = className.concat("#"+subclassName) ;
+//                MethodDeclaration[] subclassMethods = subclass.getMethods();
+//                addToList(methodList, subclassPath, subclassMethods, compilationUnit);
+//                recursiveSearchSubclass(subclass, methodList, subclassPath, compilationUnit);
+//            }
+//        }
+//    }
 
-    void addToList(List<Method> list, String className, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
+    void addToList(List<Method> list, List<String> enumSignatureList, String className, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
             int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration) ;
             int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
@@ -93,8 +101,26 @@ public class MethodExtractor {
             methodSignature = className.concat("#").concat(methodSignature) ;
             String methodStr = getMethodWithoutJavadoc(methodDeclaration) ;
             Method method = new Method(methodSignature, startLineNum, endLineNum, methodStr) ;
+            if (!checkSameSignature(list, enumSignatureList, methodSignature)) {
+                method.signature = methodSignature + method.startLineNum ;
+            }
             list.add(method);
         }
+    }
+
+    boolean checkSameSignature(List<Method> list, List<String> enumSignatureList, String signature) {
+        if (enumSignatureList.contains(signature)) {
+            return false;
+        }
+
+        for(Method method : list) {
+            if (signature.equals(method.signature)) {
+                method.signature = method.signature + method.startLineNum ;
+                enumSignatureList.add(signature) ;
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -193,8 +219,14 @@ public class MethodExtractor {
 
 //    public static void main(String[] args) {
 //        MethodExtractor methodExtractor = new MethodExtractor();
-////        File file = new File("/Users/lienming/FineLocator/pt/src/main/java/org/gajnineteen/extractor/MethodExtractor.java");
-//        File file = new File("/Users/lienming/Downloads/final_defects4j/allMethods/Time/Time_6/src/main/java/org/joda/time/chrono/GJChronology.java");
+//        File file = new File(
+//                "/Users/lienming/Downloads/final_defects4j/allMethods/Closure/" +
+//                "Closure_1/src/com/google/javascript/jscomp/webservice/common/Protocol.java"
+//        );
+////        File file = new File("/Users/lienming/Downloads/final_defects4j/allMethods/Closure/" +
+////                "Closure_1/src/com/google/javascript/jscomp/jsonml/Reader.java");
+//
+//
 //        List<Method> list = methodExtractor.extract(file.toPath());
 //        for (Method method:list) {
 //            method.print();

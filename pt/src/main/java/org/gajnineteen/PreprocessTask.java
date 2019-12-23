@@ -140,7 +140,8 @@ public class PreprocessTask implements Callable<Void> {
         }
 
         this.timeExtractor = new TimeExtractor(commandLineValues.git_dir,
-                                filePath.toString().replace(commandLineValues.source_dir+"/", "")) ;
+                                filePath.toString().replace(commandLineValues.source_dir+"/", ""),
+                                commandLineValues.commitID) ;
 
         for (Method method : list) {
             extractOut.write(method.methodStr);
