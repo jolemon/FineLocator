@@ -74,6 +74,7 @@ def process_result(output_dir, res_dir, proj_name, dim, epochs, abr):
                     print('name : ' + name + ' not found in dic!')
 
         res_file.close()
+
     begin_row = 0
     # write file
 
@@ -147,6 +148,6 @@ def process_result(output_dir, res_dir, proj_name, dim, epochs, abr):
 
     workbook.close()
 
-process_result('/Users/lienming/Downloads/expres',
-               '/Users/lienming/Downloads/expres/all/Closure',
-               'Closure', 300, 10, 811)
+process_result('/Users/lienming',
+               '/Users/lienming/Math',
+               'Math', 300, 10, 811)

@@ -4,8 +4,7 @@
 
 ptDir=${scriptRootDir}/pt
 deeplearning4jDir=${scriptRootDir}/word2vec
-queryExpansionDir=${scriptRootDir}/queryexpansion
-# expResDir=${scriptRootDir}/expRes
+queryExpansionDir=${scriptRootDir}/queryexpansion 
 expResDir=${expResParentDir}/expRes
 afterPTRootDir=${expResDir}/afterPT
 brAfterPTDir=${afterPTRootDir}/br
@@ -30,6 +29,8 @@ vecAfterPoolingDir=${expResDir}/vecAfterPooling
 brVecAfterPoolingDir=${vecAfterPoolingDir}/br
 codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 
+buggy_version_file=${queryexpansion}/batch_process/all_buggy_version
+
 PYTHON=python3.7
 word2vec_model_dimension=300
 word2vec_model_epochs=10
@@ -38,10 +39,10 @@ beta=0.2
 gamma=0.2
 
 
-for proj_name in "Closure" # "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Closure" # "Time"  "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Closure_41"  #`ls ${allMethodsDir}/${proj_name}`
+    for proj_id in "Closure_1" # `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
@@ -52,7 +53,8 @@ do
         ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name} ${allMethodsDir}/${proj_name} \
                     ${gitRootDir}  ${proj_id} \
                     ${brAfterPTDir}/${proj_name}  ${extractAfterPTDir}/${proj_name} \
-                    ${correspondAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} 
+                    ${correspondAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
+                    ${buggy_version_file}
         cd ${scriptRootDir}
 
         echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
@@ -87,9 +89,10 @@ do
                              ${alpha} ${beta} ${gamma}
         cd ${scriptRootDir}
 
-        echo "clear large file ss, tp."
-        rm -f ${ssRootDir}/${proj_name}/${proj_id}*
-        rm -f ${tpRootDir}/${proj_name}/${proj_id}*
+        # echo "clear large file ss, tp."
+        # rm -f ${ssRootDir}/${proj_name}/${proj_id}*
+        # rm -f ${tpRootDir}/${proj_name}/${proj_id}*
+
         end_time=$(date  "+%Y/%m/%d-%H:%M:%S")
         echo "begin time: "${begin_time}"  end time:" ${end_time}
    done

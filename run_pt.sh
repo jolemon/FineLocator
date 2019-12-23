@@ -11,6 +11,9 @@ pt_output_extractMethodDir=$7
 pt_output_correspondDir=$8
 pt_output_preprocessedCodeDir=$9
 
+buggy_version_file=${10}
+buggy_version_commitID=0
+
 function runPT(){
     rm -rf ${pt_output_preprocessedBRDir}/${proj_id}
     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_BRDir}/${proj_id}    -target ${pt_output_preprocessedBRDir}/${proj_id}   -type br
@@ -19,7 +22,8 @@ function runPT(){
     rm -rf ${pt_output_correspondDir}/${proj_id} 
     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}/${proj_id}  -target ${pt_output_extractMethodDir}/${proj_id} \
                                                    -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
-                                                   -git ${gitDir}/${proj_id}/.git
+                                                   -git ${gitDir}/${proj_id}/.git \
+                                                   -commitID ${buggy_version_commitID}
 
     rm -rf ${pt_output_preprocessedCodeDir}/${proj_id}
     mkdir -p ${pt_output_preprocessedCodeDir}/${proj_id}
@@ -27,7 +31,20 @@ function runPT(){
 }
 
 
+function getBuggyVersionCommitID(){
+    for l in $(cat $buggyVersionMainCodeDir)
+    do
+        bid=$(echo $l | cut -f1 -d ",")
+        buggyVersion=$(echo $l | cut -f2 -d ",") 
+        if [[ $proj_id = $bid  ]]; then
+            buggy_version_commitID=$buggyVersion
+            break
+        fi
+    done
+}
 
+getBuggyVersionCommitID
+echo ${proj_id}' buggy version commitID is '${buggy_version_commitID}
 cd ${ptdir}
 runPT
   

@@ -56,7 +56,7 @@ def load_link_dic(path):
                     dic[br_id].append(path_method)
     return dic
 
-# for item in ['Time', 'Mockito', 'Lang', 'Math']:
+# for item in ['Closure']: #'Time', 'Mockito', 'Lang', 'Math'
 #     dic = load_link_dic("/Users/lienming/Downloads/final_defects4j/linked-bugMethods/" + item + "_bugId_buggyMethodsName")
 # for ms in dic['Time_3']:
 #     print(ms)
