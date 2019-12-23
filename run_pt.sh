@@ -32,7 +32,7 @@ function runPT(){
 
 
 function getBuggyVersionCommitID(){
-    for l in $(cat $buggyVersionMainCodeDir)
+    for l in $(cat ${buggy_version_file})
     do
         bid=$(echo $l | cut -f1 -d ",")
         buggyVersion=$(echo $l | cut -f2 -d ",") 
