@@ -4,8 +4,8 @@
 proj=Time  #$1
 dim=300       #$2
 epochs=10     #$3
-divide=622    #$4
-final_dir=~/Downloads/622   #$5
+divide=811    #$4
+final_dir=/data/expRes/final   #$5
 
 dir=${final_dir}/${proj}/${proj}_*_${dim}_${epochs}_${divide}
 
