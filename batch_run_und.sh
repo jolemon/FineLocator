@@ -6,7 +6,7 @@ udbRootDir=${expResDir}/udb
 udb_create_dir=~
 PYTHON=python3.7
 
-for proj_name in  "Closure"  # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in  "Math"  # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
     for proj_id in `ls ${allMethodsDir}/${proj_name}`

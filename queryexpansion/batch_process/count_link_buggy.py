@@ -75,5 +75,5 @@ def batch_run():
 
 linked_buggy_dir = '/Users/lienming/Downloads/final_defects4j/linked-bugMethods/'
 linked_buggy_postfix = '_bugId_buggyMethodsName'
-predict_result_dir = '/Users/lienming/811/' #Downloads/expres/all/
+predict_result_dir = '/Users/lienming/' #Downloads/expres/all/
 batch_run()
