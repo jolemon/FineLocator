@@ -20,7 +20,6 @@ Lang_19	Lang/Lang_19/src/main/java/org/apache/commons/lang3/text/translate/Numer
 Lang_20	Lang/Lang_20/src/main/java/org/apache/commons/lang3/StringUtils.java内StringUtils#String join(Object[] array, char separator, int startIndex, int endIndex)
 Lang_21	Lang/Lang_21/src/main/java/org/apache/commons/lang3/time/DateUtils.java内DateUtils#boolean isSameLocalTime(Calendar cal1, Calendar cal2)
 Lang_22	Lang/Lang_22/src/main/java/org/apache/commons/lang3/math/Fraction.java内Fraction#int greatestCommonDivisor(int u, int v)
-Lang_23	Lang/Lang_23/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java内ExtendedMessageFormat#boolean equals(Object obj)
 Lang_24	Lang/Lang_24/src/main/java/org/apache/commons/lang3/math/NumberUtils.java内NumberUtils#boolean isNumber(String str)
 Lang_26	Lang/Lang_26/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java内FastDateFormat#String format(Date date)
 Lang_27	Lang/Lang_27/src/main/java/org/apache/commons/lang3/math/NumberUtils.java内NumberUtils#Number createNumber(final String str)
