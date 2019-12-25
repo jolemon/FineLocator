@@ -7,7 +7,7 @@ import rank
 from methods_dic import load_dic, compare_dic
 
 
-def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
+def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic, used_cd_dic):
     parts = sharp_key_pair.split('分')
     m0 = parts[0]
     m1 = parts[1]
@@ -26,9 +26,15 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic):
 
         key = m0_id + '分' + m1_id
         if key in cd_dic:
+            used_cd_dic[key] = m0_sig + '分' + m1_sig
             return cd_dic[key]
         else:
-            return 0
+            reversed_key = m1_id + '分' + m0_id
+            if reversed_key in cd_dic:
+                used_cd_dic[reversed_key] = m0_sig + '分' + m1_sig
+                return cd_dic[reversed_key]
+            else:
+                return 0
     else:
         return 0
 
@@ -54,6 +60,8 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     # else:
     #     print("check tp/ss_dic is same.")
 
+    used_cd_dic = {}
+
     for tp_key in tp_dic:
         tp_value = tp_dic[tp_key]
         if tp_key in ss_dic:
@@ -61,11 +69,20 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         else:
             print(tp_key, 'not in ss_dic')
             continue
-        cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic, cd_sig2id_dic = cd_sig2id_dic)
+        cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic,
+                                     cd_sig2id_dic = cd_sig2id_dic, used_cd_dic = used_cd_dic )
 
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
+    print('cdlength' , len(cd_dic))
+    print('usedcdlength', len(used_cd_dic))
+    # for item in cd_dic:
+    #     if item not in used_cd_dic:
+    #         print(item)
+    #         parts = item.split('分')
+    #         print(cd_id2sig_dic[parts[0]])
+    #         print(cd_id2sig_dic[parts[1]])
     print("ac size:", len(ac_dic))
 
     avg_ac = float(sum(ac_dic.values()) / len(ac_dic))
