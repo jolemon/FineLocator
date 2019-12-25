@@ -73,8 +73,9 @@ def form_method_name_and_class(ent):
     class_name = ent_name_parts[0]
     class_method = ent_name_parts[1]
     method_simplename = str(ent.simplename())
+
     # 构造器作特殊处理
-    if method_simplename == class_method:
+    if class_name.islower(): # is package name
         class_name = class_method
 
     method_paras = ent.parameters()

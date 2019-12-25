@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import json
 import time
-from handle_cd_method import trim_template_T, trim_method
+from handle_cd_method import trim_template_T, trim_method, trim_ss_signature
 from ss import load_cv, load_brv
 import rank
 from methods_dic import load_dic, compare_dic
@@ -11,8 +11,8 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic, used_cd
     parts = sharp_key_pair.split('分')
     m0 = parts[0]
     m1 = parts[1]
-    m0_sig = key_id_dic[m0]
-    m1_sig = key_id_dic[m1]
+    m0_sig = trim_ss_signature(key_id_dic[m0])
+    m1_sig = trim_ss_signature(key_id_dic[m1])
 
     # step 1 : remove "@* " and function modifier and "throws *"
     # trim_m0 = trim_method(m0_sig)
@@ -75,14 +75,15 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
-    print('cdlength' , len(cd_dic))
-    print('usedcdlength', len(used_cd_dic))
-    # for item in cd_dic:
-    #     if item not in used_cd_dic:
-    #         print(item)
-    #         parts = item.split('分')
-    #         print(cd_id2sig_dic[parts[0]])
-    #         print(cd_id2sig_dic[parts[1]])
+    for item in cd_dic:
+        if item not in used_cd_dic:
+            # print(item)
+            parts = item.split('分')
+            print(cd_id2sig_dic[parts[0]])
+            print(cd_id2sig_dic[parts[1]])
+            print()
+
+    print('no used num:' , len(cd_dic)-len(used_cd_dic))
     print("ac size:", len(ac_dic))
 
     avg_ac = float(sum(ac_dic.values()) / len(ac_dic))
