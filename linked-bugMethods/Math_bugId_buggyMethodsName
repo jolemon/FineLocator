@@ -84,7 +84,7 @@ Math_95	Math/Math_95/src/java/org/apache/commons/math/distribution/FDistribution
 Math_96	Math/Math_96/src/java/org/apache/commons/math/complex/Complex.java内Complex#boolean equals(Object other)
 Math_97	Math/Math_97/src/java/org/apache/commons/math/analysis/BrentSolver.java内BrentSolver#double solve(double min, double max)
 Math_98	Math/Math_98/src/java/org/apache/commons/math/linear/BigMatrixImpl.java内BigMatrixImpl#BigDecimal[] operate(BigDecimal[] v)外Math/Math_98/src/java/org/apache/commons/math/linear/RealMatrixImpl.java内RealMatrixImpl#double[] operate(double[] v)
-Math_99	Math/Math_99/src/java/org/apache/commons/math/util/MathUtils.java内MathUtils#int gcd(final int p, final int q)外Math/Math_99/src/java/org/apache/commons/math/util/MathUtils.java内MathUtils#int lcm(int a, int b)
+Math_99	Math/Math_99/src/java/org/apache/commons/math/util/MathUtils.java内MathUtils#int gcd(int u, int v)外Math/Math_99/src/java/org/apache/commons/math/util/MathUtils.java内MathUtils#int lcm(int a, int b)
 Math_100	Math/Math_100/src/java/org/apache/commons/math/estimation/AbstractEstimator.java内AbstractEstimator#double[][] getCovariances(EstimationProblem problem)外Math/Math_100/src/java/org/apache/commons/math/estimation/AbstractEstimator.java内AbstractEstimator#double[] guessParametersErrors(EstimationProblem problem)
 Math_101	Math/Math_101/src/java/org/apache/commons/math/complex/ComplexFormat.java内ComplexFormat#Complex parse(String source, ParsePosition pos)
 Math_102	Math/Math_102/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java内ChiSquareTestImpl#double chiSquare(double[] expected, long[] observed)
