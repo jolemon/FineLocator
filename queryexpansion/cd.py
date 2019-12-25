@@ -44,31 +44,17 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
                     # line_num = ref.line()
 
                     from_ent = ref.scope()
-                    from_class_name = from_ent.name().split('.')[0]
-                    from_method_paras = from_ent.parameters()
-                    from_method_name = add_paras_for_method(method_name = from_ent.simplename(), paras = from_method_paras)
-                    from_method_type = from_ent.type()
-                    if from_method_type is not None:
-                        from_method_name = from_method_type + ' ' + from_method_name
+                    from_method_name, from_class_name = form_method_name_and_class(from_ent)
 
                     to_ent = ref.ent()
-                    to_class_name = to_ent.name().split('.')[0]
-                    to_method_paras = to_ent.parameters()
-                    to_method_name = add_paras_for_method(method_name = to_ent.simplename(), paras = to_method_paras)
-                    to_method_type = to_ent.type()
-                    if to_method_type is not None:
-                        to_method_name = to_method_type + ' ' + to_method_name
+                    to_method_name, to_class_name = form_method_name_and_class(to_ent)
 
                     from_signature = from_file_name + '#' + from_class_name + '#' + from_method_name
-                    to_signature = to_file_name + '#' + to_class_name + '#' + to_method_name
+                    to_signature   = to_file_name   + '#' + to_class_name   + '#' + to_method_name
 
                     from_id = update_id_method_dic(id_method_dic = id_method_dic, method_id_dic = method_id_dic,  method = from_signature)
+                    to_id   = update_id_method_dic(id_method_dic = id_method_dic, method_id_dic = method_id_dic,  method = to_signature)
 
-                    to_id = update_id_method_dic(id_method_dic = id_method_dic, method_id_dic = method_id_dic,  method = to_signature)
-
-
-
-                    # print(ref.__str__())
 
                     if filter_ref_type == "Call":
                         dic_key   = from_id
@@ -80,6 +66,23 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
                         add_to_dic(cd_dic, dic_key, dic_value)
 
     return id_method_dic, cd_dic
+
+
+def form_method_name_and_class(ent):
+    ent_name_parts = ent.name().split('.')
+    class_name = ent_name_parts[0]
+    class_method = ent_name_parts[1]
+    method_simplename = str(ent.simplename())
+    # 构造器作特殊处理
+    if method_simplename == class_method:
+        class_name = class_method
+
+    method_paras = ent.parameters()
+    method_name = add_paras_for_method(method_name = method_simplename, paras = method_paras)
+    method_type = ent.type()
+    if method_type is not None:
+        method_name = method_type + ' ' + method_name
+    return method_name, class_name
 
 
 def add_to_dic(dic, key, value):

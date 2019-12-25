@@ -21,8 +21,8 @@ echo "So batch_run_und.sh for all project and get all *.udb files."
 # mv ${udb_create_dir}/${proj}.udb  ${udb_dir}
 
 
-rm -f ${cd_dir}/${proj}
-mkdir -p ${cd_dir}
-cd ${cd_script_dir}
-${PYTHON} cd.py -u ${udb_dir}/${proj}.udb -s ${cd_dir}/${proj} -p ${ori_code_dir} -a ${und_api_path}
+# rm -f ${cd_dir}/${proj}
+# mkdir -p ${cd_dir}
+# cd ${cd_script_dir}
+# ${PYTHON} cd.py -u ${udb_dir}/${proj}.udb -s ${cd_dir}/${proj} -p ${ori_code_dir} -a ${und_api_path}
 
