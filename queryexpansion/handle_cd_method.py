@@ -16,7 +16,7 @@ def trim_template_T(method_str):
     return re.sub(r'(#<T>)', '#', method_str)
 
 def trim_ss_signature(method_str):
-    match_obj = re.search(r'(#(\w+)<.*>) ', method_str)
+    match_obj = re.search(r'(#(\w+)<\S*>) ', method_str)
     if match_obj is None:
         # 不存在<>，无需修改
         return method_str
@@ -41,3 +41,12 @@ def trim_ss_signature(method_str):
 # print(a)
 
 # print(trim_ss_signature('/src/main/java/org/apache/commons/lang3/tuple/Pair.java#Pair#Pair<L,R> of(L left,R right)'))
+# s = 'stat.StatUtils'
+# ent_name_parts = s.split('.')
+# class_name = ent_name_parts[0]
+# class_method = ent_name_parts[1]
+# if class_name.islower(): # is package name
+#     class_name = class_method
+#     print(class_method)
+
+print(trim_ss_signature('/src/org/mockito/internal/invocation/finder/AllInvocationsFinder.java#AllInvocationsFinder#List<Invocation> find(List<?> mocks)'))
