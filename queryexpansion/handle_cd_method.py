@@ -49,4 +49,4 @@ def trim_ss_signature(method_str):
 #     class_name = class_method
 #     print(class_method)
 
-print(trim_ss_signature('/src/org/mockito/internal/invocation/finder/AllInvocationsFinder.java#AllInvocationsFinder#List<Invocation> find(List<?> mocks)'))
+# print(trim_ss_signature('/src/org/mockito/internal/invocation/finder/AllInvocationsFinder.java#AllInvocationsFinder#List find(List<?> mocks)'))
