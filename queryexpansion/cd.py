@@ -45,9 +45,14 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
 
                     from_ent = ref.scope()
                     from_method_name, from_class_name = form_method_name_and_class(from_ent)
+                    if '(' in from_class_name and ')' in from_class_name:
+                        continue
 
                     to_ent = ref.ent()
                     to_method_name, to_class_name = form_method_name_and_class(to_ent)
+
+                    if '(' in to_class_name and ')' in to_class_name:
+                        continue
 
                     from_signature = from_file_name + '#' + from_class_name + '#' + from_method_name
                     to_signature   = to_file_name   + '#' + to_class_name   + '#' + to_method_name
@@ -73,7 +78,6 @@ def form_method_name_and_class(ent):
     class_name = ent_name_parts[0]
     class_method = ent_name_parts[1]
     method_simplename = str(ent.simplename())
-
     # 构造器作特殊处理
     if class_name.islower(): # is package name
         class_name = class_method
