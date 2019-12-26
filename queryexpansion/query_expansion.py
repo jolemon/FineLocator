@@ -83,7 +83,10 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
             print(cd_id2sig_dic[parts[1]])
             print()
 
-    print('no used num:' , len(cd_dic)-len(used_cd_dic))
+    cd_dic_not_used_num = len(cd_dic)-len(used_cd_dic)
+    if cd_dic_not_used_num > 0:
+        print('cd_dic not used num:' , cd_dic_not_used_num)
+
     print("ac size:", len(ac_dic))
 
     avg_ac = float(sum(ac_dic.values()) / len(ac_dic))
