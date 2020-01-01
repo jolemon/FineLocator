@@ -52,14 +52,6 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     # convert dict
     cd_sig2id_dic = dict(zip(cd_id2sig_dic.values(), cd_id2sig_dic.keys()))
 
-    print("load ss, tp, cd dictionary ready.")
-    #check tp/ss dic
-    # if not compare_dic(tp_id_dic, ss_id_dic):
-    #     print("check tp/ss_dic exception!")
-    #     return
-    # else:
-    #     print("check tp/ss_dic is same.")
-
     used_cd_dic = {}
 
     for tp_key in tp_dic:
@@ -79,9 +71,9 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         if item not in used_cd_dic:
             # print(item)
             parts = item.split('分')
-            print(cd_id2sig_dic[parts[0]])
-            print(cd_id2sig_dic[parts[1]])
-            print()
+            # print(cd_id2sig_dic[parts[0]])
+            # print(cd_id2sig_dic[parts[1]])
+            # print()
 
     cd_dic_not_used_num = len(cd_dic)-len(used_cd_dic)
     if cd_dic_not_used_num > 0:
