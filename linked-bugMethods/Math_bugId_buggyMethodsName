@@ -14,7 +14,7 @@ Math_16	Math/Math_16/src/main/java/org/apache/commons/math3/util/FastMath.java�
 Math_17	Math/Math_17/src/main/java/org/apache/commons/math3/dfp/Dfp.java内Dfp#Dfp multiply(final int x)
 Math_18	Math/Math_18/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java内FitnessFunction#double[] encode(final double[] x)外Math/Math_18/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java内FitnessFunction#double[] decode(final double[] x)外Math/Math_18/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java内FitnessFunction#boolean isFeasible(final double[] x)
 Math_19	Math/Math_19/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java内CMAESOptimizer#void checkParameters()
-Math_20	Math/Math_20/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java内FitnessFunction#double[] repairAndDecode(final double[] x)
+Math_20	Math/Math_20/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java内FitnessFunction#double[] decode(final double[] x)
 Math_21	Math/Math_21/src/main/java/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java内RectangularCholeskyDecomposition#RectangularCholeskyDecomposition(RealMatrix matrix, double small)
 Math_22	Math/Math_22/src/main/java/org/apache/commons/math3/distribution/FDistribution.java内FDistribution#boolean isSupportLowerBoundInclusive()外Math/Math_22/src/main/java/org/apache/commons/math3/distribution/UniformRealDistribution.java内UniformRealDistribution#boolean isSupportUpperBoundInclusive()
 Math_25	Math/Math_25/src/main/java/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java内ParameterGuesser#void guessAOmega()
