@@ -43,13 +43,13 @@ function runWord2Vec(){
     
 
     echo "export br vector..."
-    java -cp word2vec.jar App -source ${brAfterPTDir}/${proj_id}  \
+    java -cp word2vec.jar App -source ${brAfterPTDir}/${proj_id}  -dim ${dim} \
          -target ${brVecDir}/${proj_id}  -tfidf ${brTfidfDir}/${proj_id}  -type br
     echo "export br vector finished."
 
     echo "export code vector..."
     java -cp word2vec.jar App -source ${codeAfterPTDir}/${proj_id} \
-         -correspond ${correspondAfterPTDir}/${proj_id} \
+         -correspond ${correspondAfterPTDir}/${proj_id} -dim ${dim} \
          -target ${codeVecDir}/${proj_id} -tfidf ${codeTfidfDir}/${proj_id} -type code
     echo "export code vector finished."
 } 
