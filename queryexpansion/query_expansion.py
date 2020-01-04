@@ -95,7 +95,7 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
 
 
 def method_augmentation(cv_path, ac_dic):
-    id_method_dic, id_value_dic = load_cv(cv_path)
+    id_method_dic, id_value_dic = load_cv(cv_path, dim)
 
     result_dic = dict()
     for ac_key in ac_dic:
