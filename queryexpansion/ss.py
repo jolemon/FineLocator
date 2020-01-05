@@ -45,7 +45,7 @@ def _load_single_cv(id_method_dic, id_value_dic, abs_file_path, dim, parent_dir)
     return
 
 
-def load_cv(dir_path, dim = 300):
+def load_cv(dir_path, dim):
     id_method_dic = dict()
     id_value_dic = dict()
     for root, dirs, files in os.walk(dir_path):

@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 
 public class Word2VecTask implements Callable<Void> {
 
-    private static Word2Vec model = Word2VecModel.loadModel(Common.modelSavePath);
+    private static Word2Vec model ;
 
     private CommandLineValues commandLineValues;
     private Path filePath;
@@ -30,6 +30,9 @@ public class Word2VecTask implements Callable<Void> {
     public Word2VecTask(CommandLineValues commandLineValues, Path filePath){
         this.commandLineValues = commandLineValues ;
         this.filePath = filePath ;
+        if (model == null) {
+            model = Word2VecModel.loadModel(commandLineValues.model_name) ;
+        }
     }
 
     @Override

@@ -24,10 +24,10 @@ public class App {
             return;
         }
 
+        Common.dimension = s_CommandLineValues.dim > 0 ? s_CommandLineValues.dim : Common.dimension ;
         if (s_CommandLineValues.fit == 1) {
-            Common.dimension = s_CommandLineValues.dim > 0 ? s_CommandLineValues.dim : Common.dimension ;
             Word2Vec model = Word2VecModel.initModel(s_CommandLineValues);
-            Word2VecModel.saveModel(model, Common.modelSavePath);
+            Word2VecModel.saveModel(model, s_CommandLineValues.model_name);
         } else {
             Path path = Paths.get(s_CommandLineValues.source_dir) ;
             if (Files.isDirectory(path)) {
