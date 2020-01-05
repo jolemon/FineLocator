@@ -24,6 +24,7 @@ def load_dic_lmt(proj_path, ss_dic):
     cache_dic = dict()
 
     not_in_count = 0
+    not_in_list = []
 
     for root, dirs, files in os.walk(proj_path):
         for file in files:
@@ -50,6 +51,9 @@ def load_dic_lmt(proj_path, ss_dic):
                             id_method_dic[ssid] = key
                             id_value_dic[ssid] = td
                         else:
+                            file_name = key.split('#')[0]
+                            if file_name not in not_in_list:
+                                not_in_list.append(file_name)
                             not_in_count += 1
                             #print(key, 'not in ss dic')
 
@@ -57,7 +61,8 @@ def load_dic_lmt(proj_path, ss_dic):
                         #                   id_method_dic = id_method_dic ,
                         #                   id_value_dic = id_value_dic )
                 f.close()
-    print('calculate tp : ignore ', not_in_count, 'methods not in ss dic.')
+    print('calculate tp : ignore', not_in_count, 'methods not in ss dic.')
+    print(not_in_list)
     return id_method_dic, id_value_dic
 
 
