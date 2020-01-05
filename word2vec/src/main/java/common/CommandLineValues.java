@@ -6,6 +6,9 @@ import org.kohsuke.args4j.Option;
 
 public class CommandLineValues {
 
+    @Option(name = "-name", required = true)
+    public String model_name ;
+
     @Option(name = "-source", required = true)
     public String source_dir ;
 
@@ -24,8 +27,8 @@ public class CommandLineValues {
     @Option(name = "-fit")
     public int fit = 0 ;
 
-    @Option(name = "-dim")
-    public int dim = 300 ;
+    @Option(name = "-dim", required = true)
+    public int dim;
 
     @Option(name = "-epochs")
     public int epochs = 10 ;

@@ -61,5 +61,7 @@ def load_link_dic(path):
 # for ms in dic['Time_3']:
 #     print(ms)
 
+# print(load_link_dic("/Users/lienming/Downloads/final_defects4j/linked-bugMethods/Time_bugId_buggyMethodsName")['Time_25'])
+
 
 

@@ -4,7 +4,6 @@ import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.blame.BlameResult;
-import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -24,7 +23,7 @@ public class TimeExtractor {
     public TimeExtractor(String gitPathStr, String relativeFilePath, String commitID)  {
         try {
             this.repo = new FileRepository(gitPathStr) ;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         this.commitID = commitID;
@@ -39,9 +38,14 @@ public class TimeExtractor {
         BlameCommand blameCommand = git.blame() ;
         blameCommand.setFilePath(filePath) ;
         ObjectId commitID = repo.resolve(this.commitID) ;
+
         blameCommand.setStartCommit(commitID) ;
         BlameResult blameResult = blameCommand.call();
-        RawText rawText = blameResult.getResultContents();
+        if (blameResult == null) {
+            System.out.println(this.filePath + "time  null");
+            return null;
+        }
+//        RawText rawText = blameResult.getResultContents();
         for (int i=startLineNum ; i <= endLineNum ; i++) {
             RevCommit revCommit = blameResult.getSourceCommit(i) ;
             PersonIdent personIdent = revCommit.getAuthorIdent() ;
