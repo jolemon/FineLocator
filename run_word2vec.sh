@@ -51,8 +51,7 @@ function runWord2Vec(){
 
     echo "export code vector..."
     java -cp word2vec.jar App -name ${model_name} -source ${codeAfterPTDir}/${proj_id} \
-         -correspond ${correspondAfterPTDir}/${proj_id} -dim ${dim} 
-         \
+         -correspond ${correspondAfterPTDir}/${proj_id} -dim ${dim} \
          -target ${codeVecDir}/${proj_id} -tfidf ${codeTfidfDir}/${proj_id} -type code
     echo "export code vector finished."
 } 
