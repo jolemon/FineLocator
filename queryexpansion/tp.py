@@ -22,6 +22,9 @@ def load_dic_lmt(proj_path, ss_dic):
     id_value_dic = dict()
 
     cache_dic = dict()
+
+    not_in_count = 0
+
     for root, dirs, files in os.walk(proj_path):
         for file in files:
             if file.endswith(".java"):
@@ -47,12 +50,14 @@ def load_dic_lmt(proj_path, ss_dic):
                             id_method_dic[ssid] = key
                             id_value_dic[ssid] = td
                         else:
-                            print(key, 'not in ss dic')
+                            not_in_count += 1
+                            #print(key, 'not in ss dic')
 
                         # build_methods_dic(method = key, value = td,
                         #                   id_method_dic = id_method_dic ,
                         #                   id_value_dic = id_value_dic )
                 f.close()
+    print('calculate tp : ignore ', not_in_count, 'methods not in ss dic.')
     return id_method_dic, id_value_dic
 
 
