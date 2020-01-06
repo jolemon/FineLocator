@@ -78,9 +78,11 @@ def form_method_name_and_class(ent):
     class_name = ent_name_parts[0]
     class_method = ent_name_parts[1]
     method_simplename = str(ent.simplename())
-    # 构造器作特殊处理
+    # 构造器作特殊处理, 在这里构造器ent与一般方法的ent不一样，指向的是类实体而不是方法实体，
+    # 没有paras，因此构造器方法原有的参数得不到，所以不考虑构造器
     if class_name.islower(): # is package name
-        class_name = class_method
+        # class_name = class_method
+        return '()', '()'
 
     method_paras = ent.parameters()
     method_name = add_paras_for_method(method_name = method_simplename, paras = method_paras)
@@ -158,8 +160,8 @@ if __name__ == "__main__":
     db = us.open(udb_path)
     id_method_dic, cd_dic = get_cd(udb = db, parent_dir = parent_dir)
     db.close()
-    cd_graph = build_graph(cd_dic)
-    build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, cd_dic = cd_dic, save_path = save_path)
+    # cd_graph = build_graph(cd_dic)
+    # build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, cd_dic = cd_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
 

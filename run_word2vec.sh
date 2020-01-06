@@ -38,6 +38,7 @@ function runWord2Vec(){
 
     # for convenience, copy bug report files to code dir to pack input for training model.
     # after training, bug reports must be deleted, or will be exported as vector when running next step.
+    
     copyBrBeforeFit 
     java -cp word2vec.jar App -name ${model_name} -source ${codeAfterPTDir}/${proj_id} -fit 1 -dim ${dim} -epochs ${epochs} -type type   # whatever type
     clearTmpDir
@@ -81,7 +82,8 @@ function clearTmpDir(){
 cd ${qedir}
 tfidf
 cd ${deeplearning4jdir}
-runWord2Vec 
+runWord2Vec
+
 rm ${model_name}
 
 

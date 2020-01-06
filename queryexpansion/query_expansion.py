@@ -59,7 +59,8 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         if tp_key in ss_dic:
             ss_value = ss_dic[tp_key]
         else:
-            print(tp_key, 'not in ss_dic')
+            # '1#2' in, but '2#1' not in?
+            # print(tp_key, 'not in ss_dic')
             continue
         cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic,
                                      cd_sig2id_dic = cd_sig2id_dic, used_cd_dic = used_cd_dic )
@@ -67,17 +68,16 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
-    for item in cd_dic:
-        if item not in used_cd_dic:
-            # print(item)
-            parts = item.split('分')
-            # print(cd_id2sig_dic[parts[0]])
-            # print(cd_id2sig_dic[parts[1]])
-            # print()
+    # for item in cd_dic:
+    #     if item not in used_cd_dic:
+    #         parts = item.split('分')
+    #         print(parts[0], cd_id2sig_dic[parts[0]])
+    #         print(parts[1], cd_id2sig_dic[parts[1]])
+    #         print()
 
     cd_dic_not_used_num = len(cd_dic)-len(used_cd_dic)
     if cd_dic_not_used_num > 0:
-        print('cd_dic not used num:' , cd_dic_not_used_num)
+        print('total cd_dic num:', len(cd_dic), '; cd_dic not used num:' , cd_dic_not_used_num)
 
     print("ac size:", len(ac_dic))
 
