@@ -82,8 +82,9 @@ public class Word2VecTask implements Callable<Void> {
                 out.write(stringBuilder.toString());
             }
             out.close();
-        } catch (IOException e) {
+        }  catch (Exception e) {
             e.printStackTrace();
+            System.out.println(filePathStr);
         }
 
 
@@ -131,8 +132,9 @@ public class Word2VecTask implements Callable<Void> {
         return signatures;
     }
 
-    private StringBuilder constructMethodVecString
-            (String content, Map<String, Map<String, Double>> methodsDictionary, List<String> signatures)
+    private StringBuilder constructMethodVecString(String content,
+                                                   Map<String, Map<String, Double>> methodsDictionary,
+                                                   List<String> signatures) throws Exception
     {
         StringBuilder stringBuilder = new StringBuilder();
         content = content.trim() ;
@@ -167,33 +169,41 @@ public class Word2VecTask implements Callable<Void> {
             Map<String, Double> methodDictionary = methodsDictionary.get(signature) ;
             List<INDArray> vecList = new ArrayList<>();
             // vec multiply tfidf value
-            if (methodDoc.contains(" ")) {
-                for (String word : methodDoc.split(" ")) {
-                    word = word.trim();
-                    if (word.length() == 0) {
-                        continue;
-                    }
 
-                    if (!methodDictionary.containsKey(word)) {
-                        System.out.println(this.filePath.toString() + "#" + signature + "#" + word + ": not in tfidf dictionary.");
-                        continue;
-                    }
 
-                    INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase());
+            for (String word : methodDoc.split(" ")) {
+                word = word.trim();
+                if (word.length() == 0) {
+                    continue;
+                }
 
-                    if (wordVectorMatrix == null) {
-                        System.out.println(word + " not in the word2vec model's vocabulary.");
-                        continue;
-                    } else {
-                        // query dictionary for tf*idf of word and multiply vector
-                        Double tfidfValue = methodDictionary.get(word);
-                        wordVectorMatrix = wordVectorMatrix.mul(tfidfValue);
-                        vecList.add(wordVectorMatrix);
-                    }
+                if (!methodDictionary.containsKey(word)) {
+                    System.out.println(this.filePath.toString() + "#" + signature + "#" + word + ": not in tfidf dictionary.");
+                    continue;
+                }
+
+                INDArray wordVectorMatrix = model.getWordVectorMatrix(word.toLowerCase());
+
+                if (wordVectorMatrix == null) {
+                    System.out.println(word + " not in the word2vec model's vocabulary.");
+                    continue;
+                } else {
+                    // query dictionary for tf*idf of word and multiply vector
+                    Double tfidfValue = methodDictionary.get(word);
+                    wordVectorMatrix = wordVectorMatrix.mul(tfidfValue);
+                    vecList.add(wordVectorMatrix);
                 }
             }
 
-            INDArray array = Nd4j.create(vecList, vecList.size(), Common.dimension);
+
+            INDArray array = null;
+            try {
+                array = Nd4j.create(vecList, vecList.size(), Common.dimension);
+            } catch (Exception e) {
+                System.out.println(signature);
+                System.out.println(methods[k]);
+            }
+
             INDArray array1 = Nd4j.zeros(1, Common.dimension) ;
             for (int i=0 ; i<Common.dimension; i++) {
 //                Number number = array.getColumns(i).maxNumber() ;
