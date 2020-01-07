@@ -57,12 +57,10 @@ def load_dic_lmt(proj_path, ss_dic):
                             not_in_count += 1
                             #print(key, 'not in ss dic')
 
-                        # build_methods_dic(method = key, value = td,
-                        #                   id_method_dic = id_method_dic ,
-                        #                   id_value_dic = id_value_dic )
                 f.close()
-    print('calculate tp : ignore', not_in_count, 'methods not in ss dic.')
-    print(not_in_list)
+    if not_in_count > 0 :
+        print('calculate tp : ignore', not_in_count, 'methods not in ss dic.')
+        print(not_in_list)
     return id_method_dic, id_value_dic
 
 
