@@ -3,7 +3,7 @@
 # predictResult=$1
 # Time Mockito Lang Math Closure
 proj=$1
-dim=300       #$2
+dim=300      #$2
 epochs=10     #$3
 divide=$2    #$4
 final_dir=~  #$5

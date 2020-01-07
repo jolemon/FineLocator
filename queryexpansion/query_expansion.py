@@ -68,12 +68,12 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
         ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
-    # for item in cd_dic:
-    #     if item not in used_cd_dic:
-    #         parts = item.split('分')
-    #         print(parts[0], cd_id2sig_dic[parts[0]])
-    #         print(parts[1], cd_id2sig_dic[parts[1]])
-    #         print()
+    for item in cd_dic:
+        if item not in used_cd_dic:
+            parts = item.split('分')
+            print(parts[0], cd_id2sig_dic[parts[0]])
+            print(parts[1], cd_id2sig_dic[parts[1]])
+            print()
 
     cd_dic_not_used_num = len(cd_dic)-len(used_cd_dic)
     if cd_dic_not_used_num > 0:

@@ -160,8 +160,8 @@ if __name__ == "__main__":
     db = us.open(udb_path)
     id_method_dic, cd_dic = get_cd(udb = db, parent_dir = parent_dir)
     db.close()
-    # cd_graph = build_graph(cd_dic)
-    # build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, cd_dic = cd_dic, save_path = save_path)
+    cd_graph = build_graph(cd_dic)
+    build_cd_dic(graph = cd_graph, id_method_dic = id_method_dic, cd_dic = cd_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Call Dependency. Time used : ", elapsed, "s.")
 
