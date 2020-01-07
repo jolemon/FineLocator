@@ -32,29 +32,29 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 buggy_version_file=${queryExpansionDir}/batch_process/all_buggy_version
 
 PYTHON=python3.7
-word2vec_model_dimension=300
+word2vec_model_dimension=500
 word2vec_model_epochs=10
-alpha=0.8
-beta=0.1
+alpha=0.9
+beta=0
 gamma=0.1
 
 
-for proj_name in "Time"   # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Lang"   # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Time_23" # `ls ${allMethodsDir}/${proj_name}`
+    for proj_id in `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
         echo "begin time:" ${begin_time}
         cd ${scriptRootDir}
-        echo "step 1 : preprocessing for bug report and method"#   
-        ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name} ${allMethodsDir}/${proj_name} \
-                    ${gitRootDir}  ${proj_id} \
-                    ${brAfterPTDir}/${proj_name}  ${extractAfterPTDir}/${proj_name} \
-                    ${correspondAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
-                    ${buggy_version_file}
-        cd ${scriptRootDir}
+  #      echo "step 1 : preprocessing for bug report and method"#   
+  #      ./run_pt.sh ${ptDir} ${bugReport4VectorDir}/${proj_name} ${allMethodsDir}/${proj_name} \
+  #                  ${gitRootDir}  ${proj_id} \
+  #                  ${brAfterPTDir}/${proj_name}  ${extractAfterPTDir}/${proj_name} \
+  #                  ${correspondAfterPTDir}/${proj_name} ${codeAfterPTDir}/${proj_name} \
+  #                  ${buggy_version_file}
+  #      cd ${scriptRootDir}
 
         echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
         ./run_word2vec.sh ${deeplearning4jDir} ${queryExpansionDir} ${PYTHON} ${proj_id}\
