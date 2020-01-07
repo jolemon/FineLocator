@@ -2,6 +2,7 @@
 
 . input.properties 
 
+expResParentDir=/data2
 ptDir=${scriptRootDir}/pt
 deeplearning4jDir=${scriptRootDir}/word2vec
 queryExpansionDir=${scriptRootDir}/queryexpansion 
@@ -35,10 +36,10 @@ PYTHON=python3.7
 word2vec_model_dimension=300
 word2vec_model_epochs=10
 
-proj=$1
-alpha=$2
-beta=$3
-gamma=$4
+proj=Closure
+alpha=$1
+beta=$2
+gamma=$3
 
 
 for proj_name in $proj # "Time"  "Mockito"  "Lang"  "Math"  "Closure" 

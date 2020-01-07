@@ -32,17 +32,17 @@ codeVecAfterPoolingDir=${vecAfterPoolingDir}/code
 buggy_version_file=${queryExpansionDir}/batch_process/all_buggy_version
 
 PYTHON=python3.7
-word2vec_model_dimension=300
+word2vec_model_dimension=200
 word2vec_model_epochs=10
-alpha=0.8
-beta=0.1
+alpha=0.7
+beta=0.2
 gamma=0.1
 
 
-for proj_name in "Math" # "Time"  "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Math"   # "Time" "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in `ls ${allMethodsDir}/${proj_name}` 
+    for proj_id in `ls ${allMethodsDir}/${proj_name}`
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
@@ -75,9 +75,12 @@ do
                  ${ssRootDir}/${proj_name} ${proj_id} ${PYTHON}
         cd ${scriptRootDir}
 
-        echo "step 5 : use Java Understand to extract Call Dependency for method"
+        # echo "step 5 : use Java Understand to extract Call Dependency for method"
+        # ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir} ${udbCreateDir} ${udbRootDir}/${proj_name} \
+        #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir} ${undAPIPath} ${PYTHON}
+        # cd ${scriptRootDir}
 
-        echo "step 6 : query expansion, ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
+        echo "step 6 : query expansion , ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
         ./query_expansion.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name} ${brVecRootDir}/${proj_name} \
                              ${finalRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension}  ${word2vec_model_epochs} ${PYTHON} \
                              ${ssRootDir}/${proj_name} ${tpRootDir}/${proj_name} ${cdRootDir}/${proj_name} \
