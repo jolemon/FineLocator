@@ -48,7 +48,6 @@ Closure_51	Closure/Closure_51/src/com/google/javascript/jscomp/CodeConsumer.java
 Closure_52	Closure/Closure_52/src/com/google/javascript/jscomp/CodeGenerator.java内CodeGenerator#boolean isSimpleNumber(String s)
 Closure_53	Closure/Closure_53/src/com/google/javascript/jscomp/InlineObjectLiterals.java内InliningBehavior#void replaceAssignmentExpression(Var v, Reference ref, Map<String, String> varmap)
 Closure_54	Closure/Closure_54/src/com/google/javascript/jscomp/TypedScopeCreator.java内AbstractScopeBuilder#void maybeDeclareQualifiedName(NodeTraversal t, JSDocInfo info, Node n, Node parent, Node rhsValue)外Closure/Closure_54/src/com/google/javascript/rhino/jstype/FunctionType.java内FunctionType#void setPrototypeBasedOn(ObjectType baseType)外Closure/Closure_54/src/com/google/javascript/rhino/jstype/FunctionType.java内FunctionType#boolean setPrototype(PrototypeObjectType prototype)
-Closure_55	Closure/Closure_55/src/com/google/javascript/jscomp/FunctionRewriter.java内FunctionRewriter#boolean isReduceableFunctionExpression(Node n)
 Closure_56	Closure/Closure_56/src/com/google/javascript/jscomp/SourceFile.java内SourceFile#String getLine(int lineNumber)
 Closure_57	Closure/Closure_57/src/com/google/javascript/jscomp/ClosureCodingConvention.java内ClosureCodingConvention#String extractClassNameIfGoog(Node node, Node parent, String functionName)
 Closure_58	Closure/Closure_58/src/com/google/javascript/jscomp/LiveVariablesAnalysis.java内LiveVariablesAnalysis#void computeGenKill(Node n, BitSet gen, BitSet kill, boolean conditional)
