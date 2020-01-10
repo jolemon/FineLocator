@@ -112,7 +112,6 @@ Closure_129	Closure/Closure_129/src/com/google/javascript/jscomp/PrepareAst.java
 Closure_130	Closure/Closure_130/src/com/google/javascript/jscomp/CollapseProperties.java内CollapseProperties#void inlineAliases(GlobalNamespace namespace)
 Closure_131	Closure/Closure_131/src/com/google/javascript/rhino/TokenStream.java内TokenStream#boolean isJSIdentifier(String s)
 Closure_132	Closure/Closure_132/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java内PeepholeSubstituteAlternateSyntax#Node tryMinimizeIf(Node n)
-Closure_133	Closure/Closure_133/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java内JsDocInfoParser#String getRemainingJSDocLine()
 Closure_134	Closure/Closure_134/src/com/google/javascript/jscomp/AmbiguateProperties.java内AmbiguateProperties#void process(Node externs, Node root)外Closure/Closure_134/src/com/google/javascript/jscomp/AmbiguateProperties.java内PropertySubGraph#boolean isIndependentOf(Property prop)外Closure/Closure_134/src/com/google/javascript/jscomp/AmbiguateProperties.java内PropertySubGraph#void addNode(Property prop)外Closure/Closure_134/src/com/google/javascript/jscomp/AmbiguateProperties.java内Property#void addNonUnionType(JSType newType)
 Closure_135	Closure/Closure_135/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java内DevirtualizePrototypeMethods#void replaceReferencesToThis(Node node, String name)
 Closure_136	Closure/Closure_136/src/com/google/javascript/jscomp/MethodCompilerPass.java内MethodCompilerPass#void addPossibleSignature(String name, Node node, NodeTraversal t)
