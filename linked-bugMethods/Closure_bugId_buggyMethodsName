@@ -9,7 +9,7 @@ Closure_8	Closure/Closure_8/src/com/google/javascript/jscomp/CollapseVariableDec
 Closure_9	Closure/Closure_9/src/com/google/javascript/jscomp/ProcessCommonJSModules.java内ProcessCommonJSModules#String normalizeSourceName(String filename)外Closure/Closure_9/src/com/google/javascript/jscomp/ProcessCommonJSModules.java内ProcessCommonJsModulesCallback#void visitScript(NodeTraversal t, Node script)
 Closure_10	Closure/Closure_10/src/com/google/javascript/jscomp/NodeUtil.java内NodeUtil#boolean mayBeString(Node n, boolean recurse)
 Closure_11	Closure/Closure_11/src/com/google/javascript/jscomp/TypeCheck.java内TypeCheck#void visitGetProp(NodeTraversal t, Node n, Node parent)
-Closure_12	Closure/Closure_12/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java内MaybeReachingVariableUse#boolean hasExceptionHandler(Node cfgNode)
+Closure_12	Closure/Closure_12/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java内MaybeReachingVariableUse#ReachingUses flowThrough(Node n, ReachingUses input)
 Closure_13	Closure/Closure_13/src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java内PeepholeOptimizationsPass#void traverse(Node node)
 Closure_14	Closure/Closure_14/src/com/google/javascript/jscomp/ControlFlowAnalysis.java内ControlFlowAnalysis#Node computeFollowNode(Node fromNode, Node node, ControlFlowAnalysis cfa)
 Closure_16	Closure/Closure_16/src/com/google/javascript/jscomp/ScopedAliases.java内AliasedTypeNode#AliasedTypeNode(Node aliasReference,String correctedType)外Closure/Closure_16/src/com/google/javascript/jscomp/ScopedAliases.java内AliasedTypeNode#void applyAlias()外Closure/Closure_16/src/com/google/javascript/jscomp/ScopedAliases.java内Traversal#void fixTypeNode(Node typeNode)
