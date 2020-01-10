@@ -90,7 +90,7 @@ Closure_99	Closure/Closure_99/src/com/google/javascript/jscomp/CheckGlobalThis.j
 Closure_100	Closure/Closure_100/src/com/google/javascript/jscomp/CheckGlobalThis.java内CheckGlobalThis#boolean shouldTraverse(NodeTraversal t, Node n, Node parent)外Closure/Closure_100/src/com/google/javascript/jscomp/CheckGlobalThis.java内CheckGlobalThis#boolean shouldTraverse(NodeTraversal t, Node n, Node parent)
 Closure_101	Closure/Closure_101/src/com/google/javascript/jscomp/CommandLineRunner.java内CommandLineRunner#CompilerOptions createOptions()
 Closure_102	Closure/Closure_102/src/com/google/javascript/jscomp/Normalize.java内Normalize#void process(Node externs, Node root)
-Closure_103	Closure/Closure_103/src/com/google/javascript/jscomp/ControlFlowAnalysis.java内ControlFlowAnalysis#boolean mayThrowException(Node n)外Closure/Closure_103/src/com/google/javascript/jscomp/DisambiguateProperties.java内JSTypeSystem#ObjectType getTypeWithProperty(String field, JSType type)
+Closure_103	Closure/Closure_103/src/com/google/javascript/jscomp/ControlFlowAnalysis.java内ControlFlowAnalysis#boolean mayThrowException(Node n)外Closure/Closure_103/src/com/google/javascript/jscomp/DisambiguateProperties.java内JSTypeSystem#JSType getTypeWithProperty(String field, JSType type)
 Closure_104	Closure/Closure_104/src/com/google/javascript/rhino/jstype/UnionType.java内UnionType#JSType getLeastSupertype(JSType that)
 Closure_105	Closure/Closure_105/src/com/google/javascript/jscomp/FoldConstants.java内FoldConstants#void tryFoldStringJoin(NodeTraversal t, Node n, Node left, Node right, Node parent)
 Closure_106	Closure/Closure_106/src/com/google/javascript/jscomp/GlobalNamespace.java内Name#boolean canCollapseUnannotatedChildNames()
