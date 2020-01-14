@@ -2,7 +2,7 @@
 proj=$1 
 dim=$2         #300
 epochs=$3      #10 
-final_dir=$5   #$5
+final_dir=$4   #$5
 
 for((a=1;a<=10;a+=1))
 do
