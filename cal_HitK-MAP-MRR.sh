@@ -9,7 +9,6 @@ divide=$4
 final_dir=$5   #$5
 
 dir=${final_dir}/${proj}/${proj}_*_${dim}_${epochs}_${divide}
-
 predictRes=${proj}_${dim}_${epochs}_${divide}
 
 function cal_hitK_MAP_MRR(){
