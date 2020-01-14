@@ -3,10 +3,10 @@
 # predictResult=$1
 # Time Mockito Lang Math Closure
 proj=$1
-dim=300      #$2
-epochs=10     #$3
-final_dir=~   #$5
-divide=$2    #$4
+dim=$2        #300
+epochs=$3     #10
+divide=$4    
+final_dir=$5   #$5
 
 dir=${final_dir}/${proj}/${proj}_*_${dim}_${epochs}_${divide}
 
