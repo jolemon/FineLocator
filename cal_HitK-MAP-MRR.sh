@@ -5,7 +5,7 @@
 proj=$1
 dim=300      #$2
 epochs=10     #$3
-final_dir=/data/expRes/final   #$5
+final_dir=~   #$5
 divide=$2    #$4
 
 dir=${final_dir}/${proj}/${proj}_*_${dim}_${epochs}_${divide}
