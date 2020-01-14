@@ -12,7 +12,7 @@ do
         r=$((10-$a-$b))
         if [[ $r -ge 0 ]]; then          
             echo "calculate MAP, MRR, Hit-K for ${proj}_${dim}_${epochs}_${a}${b}${r}..."
-            ./cal_HitK-MAP-MRR.sh $proj ${word2vec_model_dimension} ${word2vec_model_epochs} $a$b$r ${finalRootDir}
+            ./cal_HitK-MAP-MRR.sh $proj ${dim} ${epochs} $a$b$r ${finalRootDir}
             mkdir -p ${predictResDir}/${proj}
             mv ${proj}_${dim}_${epochs}_${a}${b}${r}_res ${predictResDir}/${proj}/
         fi   
