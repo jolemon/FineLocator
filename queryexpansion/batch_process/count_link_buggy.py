@@ -47,13 +47,13 @@ def load_prediction_file(proj, dir, find_tag = '$1$', splitor = '$'):
 
 
 def batch_run():
-    projs = ['Mockito'] #'Time', 'Mockito', 'Lang', 'Math', 'Closure'
+    projs = ['Closure'] #'Time', 'Mockito', 'Lang', 'Math', 'Closure'
     abr = '811'
 
     from handle_cd_method import trim_method
     for proj in projs:
         linked_buggy_file = linked_buggy_dir + proj + linked_buggy_postfix
-        predict_result_file = predict_result_dir + '/' + proj + abr
+        predict_result_file = predict_result_dir + '/' + proj
 
         dic = load_linked_buggy_file(linked_buggy_file)
         res_dic = load_prediction_file(proj, predict_result_file)
@@ -77,5 +77,5 @@ def batch_run():
 
 linked_buggy_dir = '/Users/lienming/Downloads/final_defects4j/linked-bugMethods/'
 linked_buggy_postfix = '_bugId_buggyMethodsName'
-predict_result_dir = '/Users/lienming/dim300/' #Downloads/expres/all/
+predict_result_dir = '/Users/lienming/' #Downloads/expres/all/
 batch_run()

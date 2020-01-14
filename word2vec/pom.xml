@@ -123,6 +123,12 @@
             <version>2.33</version>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>org.bytedeco</groupId>-->
+            <!--<artifactId>javacpp</artifactId>-->
+            <!--<version>1.5.2</version>-->
+        <!--</dependency>-->
+
 
     </dependencies>
 
