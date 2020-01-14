@@ -80,7 +80,7 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
     #         print()
 
     cd_dic_not_used_num = len(cd_dic)-len(used_cd_dic)
-    if cd_dic_not_used_num > 0:
+    if cd_dic_not_used_num > 0 and gamma > 0:
         print('total cd_dic num:', len(cd_dic), '; cd_dic not used num:' , cd_dic_not_used_num)
 
     print("ac size:", len(ac_dic))
