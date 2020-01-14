@@ -62,10 +62,14 @@ def calculate_ac(ss_path, tp_path, cd_path, save_path):
             # '1#2' in, but '2#1' not in?
             # print(tp_key, 'not in ss_dic')
             continue
-        cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic,
+        ac_value = alpha * ss_value
+        if beta > 0:
+            ac_value += beta * tp_value
+        if gamma > 0:
+            cd_value = find_v_by_sharp_k(tp_key, tp_id_dic, cd_dic,
                                      cd_sig2id_dic = cd_sig2id_dic, used_cd_dic = used_cd_dic )
+            ac_value += gamma * cd_value
 
-        ac_value = alpha * ss_value + beta * tp_value + gamma * cd_value
         ac_dic[tp_key] = ac_value
 
     # for item in cd_dic:
