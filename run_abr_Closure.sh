@@ -2,9 +2,6 @@
 
 . input.properties 
 
-expResParentDir=/data2
-ptDir=${scriptRootDir}/pt
-deeplearning4jDir=${scriptRootDir}/word2vec
 queryExpansionDir=${scriptRootDir}/queryexpansion 
 expResDir=${expResParentDir}/expRes
 afterPTRootDir=${expResDir}/afterPT
