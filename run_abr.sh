@@ -40,7 +40,7 @@ alpha=$2
 beta=$3
 gamma=$4
 
-
+source activate FineLocator
 for proj_name in $proj # "Time"  "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
@@ -101,3 +101,4 @@ do
 
    break 
 done
+
