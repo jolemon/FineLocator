@@ -3,8 +3,11 @@
 #### Description
 
 Baseline approach implementation for BLESER.
+
 FineLocator is an approach to method-level bug localization. This technique retrieve information from input of bug report and source code and output a list of suspicious buggy method relevant to the bug report. 
+
 Each words in bug report and methods of source code are regarded as documents and transferred into numeric vectors by word embedding (word2vec). The vector representation of a document is calculated as the product of vectors of all words in the document and their corresponding TFIDF values, considering the influence of each single word.
+
 To address the representation sparseness problem caused by short-length methods, the methods are augmented by each other using 3 weighted scores of query expansion, including semantic similarity, temporal proximity and call dependency. The semantic similarity is described as the cosine similarity of method vectors. The temporal proximity is described as the time difference between the latest modified time of methods. The call dependency is described as length of the shortest call path of methods. At last, suspicious buggy methods are ranked by the cosine similarity of vectors of bug report and vectors of augmented methods.
 
 #### Installation
