@@ -21,28 +21,28 @@ On MacOS:
 
 -  [Java Understand](https://scitools.com/)
 
-  Need to purchase and install . FineLocator use python API of Understand.
-  API doc in the installation path of Understand: 
-  `Contents/Resources/doc/manuals/python/understand.html`
-  `Contents/Resources/doc/manuals/pdf/understand.pdf  (From Page 323)`
-
-  Problem1: API License problem. Need to purchase original software or reinstall it.
-
-  Problem2: `./und [option]`  in Ubuntu to creade `.udb` file directly in directory "`PATH_TO/FineLocator/expRes/…`" may failed. By now, my solution is to create `.udb` file in a parent directory like `~` and move it to result directory (i.e., "`PATH_TO/FineLocator/expRes/…`") later.
+  > Need to purchase and install . FineLocator use python API of Understand.
+  > API doc in the installation path of Understand: 
+  > `Contents/Resources/doc/manuals/python/understand.html`
+  > `Contents/Resources/doc/manuals/pdf/understand.pdf  (From Page 323)`
+>
+  > Problem1: API License problem. Need to purchase original software or reinstall it.
+>
+  > Problem2: `./und [option]`  in Ubuntu to creade `.udb` file directly in directory "`PATH_TO/FineLocator/expRes/…`" may failed. By now, my solution is to create `.udb` file in a parent directory like `~` and move it to result directory (i.e., "`PATH_TO/FineLocator/expRes/…`") later.
 
 - Prepare dataset. By default, we use [Defects4J](http://github.com/rjust/Defects4J)  dataset, which consists of 5 open source Java project (i.e.,  Closure compiler (156 defects), Apache commonsmath (85 defects), Apache commons-lang (56 defects), Joda-Time (23 defects) and Mockito (22 defects)). 
 
-  Follow instructions in [Defects4J](http://github.com/rjust/Defects4J) to get complete dataset.
-
-  Note : Taking into account the storage size of the dataset, the [Defects4J-dataset](https://github.com/chinalienming/Defects4J-dataset) in my github is not complete to run FineLocator. The reason is that it only include:
-
-  ​	1) bug reports
-
-  ​	2) the linked-buggyMethods(i.e., The file labeling real buggy methods corresponding to bug reports) 
-
-  ​	3) the source code for each buggy version corresponding to the bug report
-
-  It DOES NOT include "`.git`" directory for check out the latest modification time for each method in the code, which is a necessary for calculate temporal proximity in the query expansion of FineLocator.
+  > Follow instructions in [Defects4J](http://github.com/rjust/Defects4J) to get complete dataset.
+>
+  > Note : Taking into account the storage size of the dataset, the [Defects4J-dataset](https://github.com/chinalienming/Defects4J-dataset) in my github is not complete to run FineLocator. The reason is that it only include:
+>
+  > ​	1) bug reports
+>
+  > ​	2) the linked-buggyMethods(i.e., The file labeling real buggy methods corresponding to bug reports) 
+>
+  > ​	3) the source code for each buggy version corresponding to the bug report
+>
+  > It DOES NOT include "`.git`" directory for check out the latest modification time for each method in the code, which is a necessary for calculate temporal proximity in the query expansion of FineLocator.
 
 ## Instructions
 1. `mvn package` to make jar for "pt" (bug report preprocessor) and "word2vec" (embedding model) if not exist.
