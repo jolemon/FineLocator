@@ -2,7 +2,7 @@
 
 ## Description
 
-Baseline approach implementation for BLESER.
+Baseline approach implementation for [BLESER](https://github.com/chinalienming/iBug).
 
 [FineLocator](https://www.sciencedirect.com/science/article/pii/S0950584919300436) is an approach to method-level bug localization. This technique retrieve information from input of bug report and source code and output a list of suspicious buggy method relevant to the bug report. 
 
