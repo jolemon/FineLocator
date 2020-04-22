@@ -1,6 +1,6 @@
 # FineLocator
 
-#### Description
+## Description
 
 Baseline approach implementation for BLESER.
 
@@ -10,7 +10,7 @@ Each words in bug report and methods of source code are regarded as documents an
 
 To address the representation sparseness problem caused by short-length methods, the methods are augmented by each other using 3 weighted scores of query expansion, including semantic similarity, temporal proximity and call dependency. The semantic similarity is described as the cosine similarity of method vectors. The temporal proximity is described as the time difference between the latest modified time of methods. The call dependency is described as length of the shortest call path of methods. At last, suspicious buggy methods are ranked by the cosine similarity of vectors of bug report and vectors of augmented methods.
 
-#### Requirement
+## Requirement
 
 On MacOS:
 
@@ -44,7 +44,7 @@ On MacOS:
 
   It DOES NOT include "`.git`" directory for check out the latest modification time for each method in the code, which is a necessary for calculate temporal proximity in the query expansion of FineLocator.
 
-#### Instructions
+## Instructions
 1. `mvn package` to make jar for "pt" (bug report preprocessor) and "word2vec" (embedding model) if not exist.
 
    Problem: the "word2vec" jar may contain a lot of redundant dependency component for various OS.
