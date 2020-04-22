@@ -39,10 +39,10 @@ beta=0.1
 gamma=0.1
 
 source activate FineLocator
-for proj_name in "Time" # "Time"  "Mockito"  "Lang"  "Math"  "Closure" 
+for proj_name in "Time"  "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
-    for proj_id in "Time_3" #`ls ${allMethodsDir}/${proj_name}` 
+    for proj_id in `ls ${allMethodsDir}/${proj_name}` 
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
@@ -83,14 +83,8 @@ do
                              ${alpha} ${beta} ${gamma}
         cd ${scriptRootDir}
 
-        # echo "clear large file ss, tp."
-        # rm -f ${ssRootDir}/${proj_name}/${proj_id}*
-        # rm -f ${tpRootDir}/${proj_name}/${proj_id}*
-
         end_time=$(date  "+%Y/%m/%d-%H:%M:%S")
         echo "begin time: "${begin_time}"  end time:" ${end_time}
    done
-
-   # break 
 done
 source deactivate FineLocator

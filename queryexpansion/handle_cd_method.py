@@ -6,8 +6,9 @@ function_modifier_list = ['public', 'private', 'final', 'static', 'abstract',
 
 
 def trim_method(ori_method_str):
-    return re.sub(r'(@(\w+) )|(public )|(private )|(final )|(static )|(abstract )|(protected )|(synchronized )|(native )|(transient)|(volatie )|( throws(.*))', "", ori_method_str)
-
+    return re.sub(
+        r'(@(\w+) )|(public(\s*))|(private(\s*))|(final(\s*))|(static(\s*))|(abstract(\s*))|(protected(\s*))|(synchronized(\s*))|(native(\s*))|(transient(\s*))|(volatie(\s*))|((\s*)throws(.*))',
+        "", ori_method_str)
 
 def trim_comma_in_paras(method_str):
     return re.sub(r'(,(\s*))', ',', method_str)

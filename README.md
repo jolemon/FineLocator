@@ -17,9 +17,7 @@ For MacOS:
    Problem1: Understand sometimes occurs API License problem. Need to Reinstrall.
    
    Problem2: Using Understand in ubuntu system with instuction "./und …" to creade '.udb' file directly in directory "~/xxx/FineLocator/expRes/…" may failed. By now, my solution is to create '.udb' file in a parent directory like "~/xxx/" and move it to "~/xxx/FineLocator/expRes/…" later.
-
 #### Instructions
-
 1. use `mvn package` to package jar for "pt" and "word2vec".
 
    Problem: it will contain a lot of redundant dependency.
