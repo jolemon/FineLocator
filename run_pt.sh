@@ -13,21 +13,40 @@ pt_output_preprocessedCodeDir=$9
 
 buggy_version_file=${10}
 buggy_version_commitID=0
-
+proj=${11}
 function runPT(){
     rm -rf ${pt_output_preprocessedBRDir}/${proj_id}
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_BRDir}/${proj_id}    -target ${pt_output_preprocessedBRDir}/${proj_id}   -type br
+    java -cp preprocessor.jar org.gajnineteen.App \
+	 -source ${ori_BRDir}/${proj_id} \
+       	 -target ${pt_output_preprocessedBRDir}/${proj_id} \
+       	 -type br
 
     rm -rf ${pt_output_extractMethodDir}/${proj_id}
-    rm -rf ${pt_output_correspondDir}/${proj_id} 
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}/${proj_id}  -target ${pt_output_extractMethodDir}/${proj_id} \
-                                                   -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
-                                                   -git ${gitDir}/${proj_id}/.git \
-                                                   -commitID ${buggy_version_commitID}
+    rm -rf ${pt_output_correspondDir}/${proj_id}
+    echo "git:  "${gitDir}"/.git" 
+    java -cp preprocessor.jar org.gajnineteen.App \
+	 -source ${ori_codeDir}/${proj_id}/${proj} \
+	 -target ${pt_output_extractMethodDir}/${proj_id}/${proj} \
+         -correspond ${pt_output_correspondDir}/${proj_id}/${proj} \
+	 -type extract \
+         -commitID ${buggy_version_commitID} \
+         -git ${gitDir}/.git
+
+#     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}/${proj_id}  -target ${pt_output_extractMethodDir}/${proj_id} \
+#                                                    -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
+#                                                    -commitID ${buggy_version_commitID} \
+#  						     -git ${gitDir}/${proj_id}/.git 
 
     rm -rf ${pt_output_preprocessedCodeDir}/${proj_id}
     mkdir -p ${pt_output_preprocessedCodeDir}/${proj_id}
-    java -cp preprocessor.jar org.gajnineteen.App  -source ${pt_output_extractMethodDir}/${proj_id}  -target ${pt_output_preprocessedCodeDir}/${proj_id} -type code	
+    java -cp preprocessor.jar org.gajnineteen.App \
+	 -source ${pt_output_extractMethodDir}/${proj_id}/${proj} \
+	 -target ${pt_output_preprocessedCodeDir}/${proj_id}/${proj} \
+	 -type code	
+#     java -cp preprocessor.jar org.gajnineteen.App \
+#          -source ${pt_output_extractMethodDir}/${proj_id} \
+#          -target ${pt_output_preprocessedCodeDir}/${proj_id} \
+#          -type code
 }
 
 
