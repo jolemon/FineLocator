@@ -51,17 +51,18 @@ do
         #         ${ssRootDir}/${proj_name} ${proj_id} ${PYTHON}
         #cd ${scriptRootDir}
 
-        #echo "step 6 : query expansion, ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
-        #./query_expansion.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name} ${brVecRootDir}/${proj_name} \
-        #                     ${finalRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension}  ${word2vec_model_epochs} ${PYTHON} \
-        #                     ${ssRootDir}/${proj_name} ${tpRootDir}/${proj_name} ${cdRootDir}/${proj_name} \
-        #                     ${linkedBugMethodsDir}/${proj_name}_bugId_buggyMethodsName \
-        #                     ${alpha} ${beta} ${gamma}
-        #cd ${scriptRootDir}
+        # echo "step 5 : use Java Understand to extract Call Dependency for method"
+        # ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id}  ${queryExpansionDir} ${udbCreateDir} ${udbRootDir}/${proj_name} \
+        #          ${cdRootDir}/${proj_name}  ${proj_id}  ${undDir} ${undAPIPath} ${PYTHON}
+        # cd ${scriptRootDir}
 
-        # echo "clear large file ss, tp."
-        # rm -f ${ssRootDir}/${proj_name}/${proj_id}*
-        # rm -f ${tpRootDir}/${proj_name}/${proj_id}*
+#         echo "step 6 : query expansion, ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
+#         ./query_expansion.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name} ${brVecRootDir}/${proj_name} \
+#                              ${finalRootDir}/${proj_name} ${proj_id} ${word2vec_model_dimension}  ${word2vec_model_epochs} ${PYTHON} \
+#                              ${ssRootDir}/${proj_name} ${tpRootDir}/${proj_name} ${cdRootDir}/${proj_name} \
+#                              ${linkedBugMethodsDir}/${proj_name}_bugId_buggyMethodsName \
+#                              ${alpha} ${beta} ${gamma}
+        cd ${scriptRootDir}
 
         end_time=$(date  "+%Y/%m/%d-%H:%M:%S")
         echo "begin time: "${begin_time}"  end time:" ${end_time}

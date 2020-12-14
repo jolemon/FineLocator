@@ -3,6 +3,7 @@ import math
 from argparse import ArgumentParser
 import os
 
+
 # read doc from bugreport and code.
 def load_bug_report(file_path, save_dic):
     file = open(file_path, 'r')
