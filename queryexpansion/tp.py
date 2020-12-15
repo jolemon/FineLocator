@@ -40,6 +40,8 @@ def load_dic_lmt(proj_path, ss_dic):
                         parts = line.split('$')
                         method_signature = parts[0]
                         last_modify_time = parts[-1]
+                        if last_modify_time == 'null':
+                            continue
                         # use relative path
                         relative_path = file_path.replace(proj_path, "")
                         # key = relative_path + '#' + ','.join(method_signature)

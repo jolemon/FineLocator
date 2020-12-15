@@ -17,7 +17,8 @@ import java.util.List;
 public class MethodExtractor {
 
     public MethodExtractor(){ }
-    public List<Method> extract(Path filePath){
+
+    public static List<Method> extract(Path filePath){
         List<String> enumSignatureList = new ArrayList<>();
 
         String content ;
@@ -43,18 +44,15 @@ public class MethodExtractor {
         for(Object typeDeclarationObject : types) {
             TypeDeclaration typeDec = (TypeDeclaration)typeDeclarationObject ;
             if (typeDec.isInterface()) {
-//                System.out.println(typeDec.getName().toString() + " is Interface");
                 continue ;
             }
             //get main class name
             String mainClassName = typeDec.getName().toString() ;
-//            System.out.println("MainClass Name : " + mainClassName);
 
             // 声明变量，Enum 也在其中
 //            for(FieldDeclaration fieldDeclaration : typeDec.getFields()) {
 //                System.out.println("Field : " +fieldDeclaration.toString());
 //            }
-
 
             //get methods in main class
             MethodDeclaration[] methodDeclarations = typeDec.getMethods();
@@ -92,7 +90,8 @@ public class MethodExtractor {
 //        }
 //    }
 
-    void addToList(List<Method> list, List<String> enumSignatureList, String className, MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
+    static void addToList(List<Method> list, List<String> enumSignatureList, String className,
+                          MethodDeclaration[] methodDeclarations, CompilationUnit compilationUnit){
         for (MethodDeclaration methodDeclaration : methodDeclarations) {
             int startLineNum = getMethodStartLineNum(compilationUnit, methodDeclaration) ;
             int endLineNum = getMethodEndLineNum(compilationUnit, methodDeclaration) ;
@@ -108,7 +107,7 @@ public class MethodExtractor {
         }
     }
 
-    boolean checkSameSignature(List<Method> list, List<String> enumSignatureList, String signature) {
+    static boolean checkSameSignature(List<Method> list, List<String> enumSignatureList, String signature) {
         if (enumSignatureList.contains(signature)) {
             return false;
         }
@@ -133,7 +132,7 @@ public class MethodExtractor {
      * @param methodDeclaration
      * @return
      */
-    int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
+    static int getMethodStartLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
         Javadoc javaDoc = methodDeclaration.getJavadoc();
         if (javaDoc == null) {
             return compilationUnit.getLineNumber(methodDeclaration.getStartPosition());
@@ -157,7 +156,7 @@ public class MethodExtractor {
     }
 
 
-    int getMethodEndLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
+    static int getMethodEndLineNum(CompilationUnit compilationUnit, MethodDeclaration methodDeclaration) {
         return compilationUnit.getLineNumber(
                 methodDeclaration.getStartPosition() + methodDeclaration.getLength());
     }
@@ -168,7 +167,7 @@ public class MethodExtractor {
     }
 
 
-    public String getMethodSignature(MethodDeclaration methodDeclaration) {
+    public static String getMethodSignature(MethodDeclaration methodDeclaration) {
         String res = "" ;
         Type returnType = methodDeclaration.getReturnType2() ;
         if (returnType != null) {
@@ -187,16 +186,16 @@ public class MethodExtractor {
      * @param methodDeclaration
      * @return
      */
-    public String getMethodWithoutJavadoc(MethodDeclaration methodDeclaration) {
+    public static String getMethodWithoutJavadoc(MethodDeclaration methodDeclaration) {
         if (methodDeclaration.getJavadoc() !=null ) {
             String docStr = methodDeclaration.getJavadoc().toString();
             return methodDeclaration.toString().replace(docStr, "");
         }
-        return methodDeclaration.toString();
-//        return methodDeclaration.toString().trim();
+//        return methodDeclaration.toString();
+        return methodDeclaration.toString().trim();
     }
 
-    String constructParams(final List paras) {
+    static String constructParams(final List paras) {
         int parasLength = paras.size() ;
         if (parasLength == 0) {
             return "()";

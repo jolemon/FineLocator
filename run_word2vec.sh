@@ -20,11 +20,11 @@ function tfidf(){
     rm -rf ${codeTfidfDir}/${proj_id} 
     mkdir -p ${codeTfidfDir}/${proj_id}
 
-    ${PYTHON} tfidf.py -br ${brAfterPTDir}/${proj_id} \
-                       -co ${codeAfterPTDir}/${proj_id} \
-                       -cr ${correspondAfterPTDir}/${proj_id} \
-                       -bs ${brTfidfDir}/${proj_id} \
-                       -cs ${codeTfidfDir}/${proj_id}
+    ${PYTHON} tfidf.py --bug_report_path ${brAfterPTDir}/${proj_id} \
+                       --code_path       ${codeAfterPTDir}/${proj_id} \
+                       --correspond_path ${correspondAfterPTDir}/${proj_id} \
+                       --br_save_path    ${brTfidfDir}/${proj_id} \
+                       --code_save_path  ${codeTfidfDir}/${proj_id}
 }
 
 

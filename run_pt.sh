@@ -14,41 +14,48 @@ pt_output_preprocessedCodeDir=$9
 buggy_version_file=${10}
 buggy_version_commitID=0
 proj=${11}
+
 function runPT(){
     rm -rf ${pt_output_preprocessedBRDir}/${proj_id}
     java -cp preprocessor.jar org.gajnineteen.App \
-	 -source ${ori_BRDir}/${proj_id} \
-       	 -target ${pt_output_preprocessedBRDir}/${proj_id} \
-       	 -type br
+         -source ${ori_BRDir}/${proj_id} \
+         -target ${pt_output_preprocessedBRDir}/${proj_id} \
+         -type br
 
+    # 避免Windows提交导致的"^M"问题，应该先在linux下对allMethods执行
+    # 以下指令 : find . -type f -name "*.java" -print0 | xargs -0 sed -i 's/^M//g'
     rm -rf ${pt_output_extractMethodDir}/${proj_id}
     rm -rf ${pt_output_correspondDir}/${proj_id}
     echo "git:  "${gitDir}"/.git" 
     java -cp preprocessor.jar org.gajnineteen.App \
-	 -source ${ori_codeDir}/${proj_id}/${proj} \
-	 -target ${pt_output_extractMethodDir}/${proj_id}/${proj} \
+         -source ${ori_codeDir}/${proj_id}/${proj} \
+         -target ${pt_output_extractMethodDir}/${proj_id}/${proj} \
          -correspond ${pt_output_correspondDir}/${proj_id}/${proj} \
-	 -type extract \
+         -type extract \
          -commitID ${buggy_version_commitID} \
          -git ${gitDir}/.git
 
-#     java -cp preprocessor.jar org.gajnineteen.App  -source ${ori_codeDir}/${proj_id}  -target ${pt_output_extractMethodDir}/${proj_id} \
-#                                                    -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
-#                                                    -commitID ${buggy_version_commitID} \
-#  						     -git ${gitDir}/${proj_id}/.git 
+# for Defects4J
+#     java -cp preprocessor.jar org.gajnineteen.App  
+#          -source ${ori_codeDir}/${proj_id}  
+#          -target ${pt_output_extractMethodDir}/${proj_id} \
+#          -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
+#          -commitID ${buggy_version_commitID} \
+#          -git ${gitDir}/${proj_id}/.git 
 
     rm -rf ${pt_output_preprocessedCodeDir}/${proj_id}
     mkdir -p ${pt_output_preprocessedCodeDir}/${proj_id}
     java -cp preprocessor.jar org.gajnineteen.App \
-	 -source ${pt_output_extractMethodDir}/${proj_id}/${proj} \
-	 -target ${pt_output_preprocessedCodeDir}/${proj_id}/${proj} \
-	 -type code	
+         -source ${pt_output_extractMethodDir}/${proj_id}/${proj} \
+         -target ${pt_output_preprocessedCodeDir}/${proj_id}/${proj} \
+         -type code    
+}
+
+# for Defects4J
 #     java -cp preprocessor.jar org.gajnineteen.App \
 #          -source ${pt_output_extractMethodDir}/${proj_id} \
 #          -target ${pt_output_preprocessedCodeDir}/${proj_id} \
 #          -type code
-}
-
 
 function getBuggyVersionCommitID(){
     for l in $(cat ${buggy_version_file})
@@ -63,7 +70,7 @@ function getBuggyVersionCommitID(){
 }
 
 getBuggyVersionCommitID
-echo ${proj_id}' buggy version commitID is '${buggy_version_commitID}
+echo ${proj_id}' buggyCommitSHA: '${buggy_version_commitID}
 cd ${ptdir}
 runPT
   

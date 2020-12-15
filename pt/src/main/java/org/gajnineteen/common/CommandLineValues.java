@@ -26,7 +26,7 @@ public class CommandLineValues {
     public String commitID ;
 
     @Option(name = "--num_threads")
-    public int NumThreads = 32;
+    public int NumThreads = 16;
 
 
     public CommandLineValues(String... args) throws CmdLineException {
