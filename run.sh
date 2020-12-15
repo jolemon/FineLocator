@@ -12,7 +12,7 @@ beta=0.1
 gamma=0.1
 
 source activate FineLocator
-for proj_name in "zookeeper" # "org.aspectj" "openjpa" "tomcat" "lucene-solr" "hibernate-orm"
+for proj_name in "org.aspectj" # "openjpa" "tomcat" "lucene-solr" "hibernate-orm" # "zookeeper"
 # for proj_name in "Time"  "Mockito"  "Lang"  "Math"  "Closure" 
 do
     echo "handle project "${proj_name}"..."
