@@ -24,9 +24,7 @@ import java.util.concurrent.Callable;
 
 public class PreprocessTask implements Callable<Void> {
 
-    public static MethodExtractor methodExtractor = new MethodExtractor() ;
     public TimeExtractor timeExtractor ;
-
     private CommandLineValues commandLineValues;
     private Path filePath;
 
@@ -43,6 +41,8 @@ public class PreprocessTask implements Callable<Void> {
             extractMethod();
         } else if (this.commandLineValues.type.equals("code")) {
             processFile(new CodeProcessor());
+        } else if (this.commandLineValues.type.equals("diff")) {
+
         }
 
         return null;
@@ -83,7 +83,8 @@ public class PreprocessTask implements Callable<Void> {
         if (toSavePath == null) {
             System.out.println("toSavePath is null.");
             return ;
-        } else {// write processed code to file
+        } else {
+            // write processed code to file
             out = new BufferedWriter(new OutputStreamWriter
                     (new FileOutputStream(toSavePath.toString()), "utf-8"));
         }
@@ -117,9 +118,9 @@ public class PreprocessTask implements Callable<Void> {
         BufferedWriter correspondOut  ;
         Path toSaveCorrespondPath     ;
 
-        List<Method> list = methodExtractor.extract(this.filePath);
+        List<Method> methods = MethodExtractor.extract(this.filePath);
 
-        if (list.size() == 0 ) {
+        if (methods.isEmpty()) {
             return;
         }
 
@@ -143,7 +144,7 @@ public class PreprocessTask implements Callable<Void> {
                                 filePath.toString().replace(commandLineValues.source_dir+"/", ""),
                                 commandLineValues.commitID) ;
 
-        for (Method method : list) {
+        for (Method method : methods) {
             extractOut.write(method.methodStr);
             extractOut.write("分");
             extractOut.newLine();
@@ -153,14 +154,14 @@ public class PreprocessTask implements Callable<Void> {
                 latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum);
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println(this.filePath.toString());
                 method.print();
-                latestModifyTime = new Date();
+//                latestModifyTime = new Date();
             } finally {
                 correspondOut.write(method.signature + "$" + method.startLineNum
                         + "$" + method.endLineNum + "$" + latestModifyTime);
                 correspondOut.newLine();
             }
-
         }
         extractOut.flush();
         extractOut.close();

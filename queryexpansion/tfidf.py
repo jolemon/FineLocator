@@ -66,6 +66,7 @@ def tfidf(word, count, count_list):
 
 corpus_dic = {}
 
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-br", "--bug_report_path", dest = "bug_report_path", required = True)

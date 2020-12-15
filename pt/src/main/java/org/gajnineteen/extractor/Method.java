@@ -16,9 +16,9 @@ public class Method {
 
     public void print(){
         System.out.println(signature);
-        System.out.println(methodStr);
         System.out.println("StartLineNum :" + startLineNum);
         System.out.println("EndLineNum :" + endLineNum);
+        System.out.println(methodStr);
     }
 
 

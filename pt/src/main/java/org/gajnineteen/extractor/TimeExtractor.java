@@ -20,6 +20,14 @@ public class TimeExtractor {
     String filePath ;
     String commitID ;
 
+    /**
+     *
+     * @param gitPathStr
+     * @param relativeFilePath 是".git"目录的相对路径，
+     *                         比如".git"目录是${proj}/.git，文件是${proj}/a/b.java，
+     *                         则relativeFilePath是a/b.java
+     * @param commitID
+     */
     public TimeExtractor(String gitPathStr, String relativeFilePath, String commitID)  {
         try {
             this.repo = new FileRepository(gitPathStr) ;
@@ -33,21 +41,25 @@ public class TimeExtractor {
 
     // extract last modify time of method
     public Date extract(int startLineNum, int endLineNum) throws IOException, GitAPIException {
-
         Date latestDate = null ;
         BlameCommand blameCommand = git.blame() ;
         blameCommand.setFilePath(filePath) ;
         ObjectId commitID = repo.resolve(this.commitID) ;
-
-        blameCommand.setStartCommit(commitID) ;
+        blameCommand.setStartCommit(commitID);
         BlameResult blameResult = blameCommand.call();
         if (blameResult == null) {
-            System.out.println(this.filePath + "time  null");
+            System.out.println(this.filePath + " - time is null");
             return null;
         }
 //        RawText rawText = blameResult.getResultContents();
         for (int i=startLineNum ; i <= endLineNum ; i++) {
-            RevCommit revCommit = blameResult.getSourceCommit(i) ;
+            RevCommit revCommit;
+            try {
+                revCommit = blameResult.getSourceCommit(i) ;
+            } catch (ArrayIndexOutOfBoundsException e) { // 处理开始/结束行数计算错误的异常情况
+                System.out.println(filePath + " 行数非法 :" + i);
+                break;
+            }
             PersonIdent personIdent = revCommit.getAuthorIdent() ;
             Date date = personIdent.getWhen() ;
             if (latestDate == null) {
@@ -60,15 +72,4 @@ public class TimeExtractor {
         return latestDate;
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            Date date = new TimeExtractor("/Users/lienming/Downloads/bugcode/Lang_1/.git",
-//            "src/main/java/org/apache/commons/lang3/AnnotationUtils.java", "2c454a4ce3fe771098746879b166ede2284b94f4" )
-//                    .extract(0, 370) ;
-//            System.out.println(date);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

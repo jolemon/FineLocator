@@ -22,7 +22,7 @@ function runPT(){
          -target ${pt_output_preprocessedBRDir}/${proj_id} \
          -type br
 
-    # 避免Windows提交导致的"^M"问题，应该先对allMethods执行
+    # 避免Windows提交导致的"^M"问题，应该先在linux下对allMethods执行
     # 以下指令 : find . -type f -name "*.java" -print0 | xargs -0 sed -i 's/^M//g'
     rm -rf ${pt_output_extractMethodDir}/${proj_id}
     rm -rf ${pt_output_correspondDir}/${proj_id}
