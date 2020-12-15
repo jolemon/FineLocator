@@ -2,47 +2,42 @@ from collections import Counter
 import math
 from argparse import ArgumentParser
 import os
+import common
 
 
-# read doc from bugreport and code.
-def load_bug_report(file_path, save_dic):
-    file = open(file_path, 'r')
-    lines = file.readlines()
-    total = ''
-    for line in lines:
-        line = line.strip()
-        total += line
-    save_dic[file_path] = Counter(total.split())
+def load_bug_report(file_path: str):
+    global corpus_dic
+    with open(file_path, 'r') as file:
+        lines = [line.strip() for line in file.readlines()]
+        corpus_dic[file_path] = Counter(' '.join(lines).split())
     return
 
 
-def load_code(proj_path, correspond_path, save_dic):
+def load_code(proj_path: str, correspond_path: str):
+    global corpus_dic
     for root, dirs, files in os.walk(proj_path):
         for file in files:
-            if file.endswith(".java"):
-                file_path = os.path.join(root, file) 
-                correspond_file_path = file_path.replace(proj_path, correspond_path)
-                rf = open(file_path, 'r')
-                cf = open(correspond_file_path, 'r')
-                lines = rf.readlines()
-                clines = cf.readlines()
-                for j in range(len(lines)):
-                    try:
-                        line = lines[j]
-                        cline = clines[j]
-                    except IndexError:
-                        print('wrong in correspond file. please check!')
-                        print('code path:', file_path)
-                        print('correspond path:', correspond_file_path)
-                        return
-                    line = line.replace('分', '').strip()
-                    if line is not None:
-                        line = line.split()
-                        method_signature = cline.split('$')[0]
-                        key = file_path + '#' + method_signature
-                        save_dic[key] = Counter(line)
-                rf.close()
-                cf.close()
+            if not file.endswith(common.java_file_postfix):
+                continue
+
+            file_path = os.path.join(root, file)
+            correspond_file_path = file_path.replace(proj_path, correspond_path)
+            rf, cf = open(file_path, 'r'), open(correspond_file_path, 'r')
+            lines, clines = rf.readlines(), cf.readlines()
+            rf.close()
+            cf.close()
+            if len(lines) != len(clines):
+                print('wrong in correspond file. please check!')
+                print('code path:', file_path)
+                print('correspond path:', correspond_file_path)
+                return
+            for line, cline in zip(lines, clines):
+                line = line.strip(common.afterPT_code_text_splitor).strip()
+                cline_parts = cline.split(common.afterPT_code_correspond_splitor)
+                if not line or not cline_parts:
+                    continue
+                key = "{}{}{}".format(file_path, common.path_sig_splitor, cline_parts[0])
+                corpus_dic[key] = Counter(line.split())
     return
 
 
@@ -69,6 +64,8 @@ def tfidf(word, count, count_list):
     return tf(word, count) * idf(word, count_list)
 
 
+corpus_dic = {}
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-br", "--bug_report_path", dest = "bug_report_path", required = True)
@@ -83,28 +80,25 @@ if __name__ == "__main__":
     code_save_path = args.code_save_path
     br_save_path = args.br_save_path
 
-    corpus_dic = {}
-
-    load_bug_report(file_path = bug_report_path, save_dic = corpus_dic)
-    load_code(proj_path = code_path, correspond_path = correspond_path, save_dic = corpus_dic)
+    load_bug_report(file_path = bug_report_path)
+    load_code(proj_path = code_path, correspond_path = correspond_path)
 
     counter_list = list(corpus_dic.values())
 
     # save br
     if bug_report_path in corpus_dic:
         counter = corpus_dic[bug_report_path]
-        pair = [str(word) + '$' + str(tfidf(word, counter, counter_list)) for word in counter]
-        f = open(br_save_path, 'w')
-        f.write('\n'.join(pair))
-        f.close()
+        pair = ['{}${}'.format(word, tfidf(word, counter, counter_list)) for word in counter]
+        with open(br_save_path, 'w') as f:
+            f.write('\n'.join(pair))
         print('finished calculate tfidf for br.')
         del corpus_dic[bug_report_path]
 
     # save method
     for doc in corpus_dic:
-        doc_parts = doc.split('#')
+        doc_parts = doc.split(common.path_sig_splitor)
         file_path = doc_parts[0]
-        method = '#'.join(doc_parts[1:])
+        method = common.path_sig_splitor.join(doc_parts[1:])  # 因为都是'#'
         write_path = file_path.replace(code_path, code_save_path)
 
         # create dirs
@@ -112,13 +106,12 @@ if __name__ == "__main__":
         if not os.path.isdir(write_dir):
             os.makedirs(write_dir)
 
-        f = open(write_path, 'a')
-        f.write(method + '分')
-        counter = corpus_dic[doc]
-        pair = [str(word) + '$' + str(tfidf(word, counter, counter_list) ) for word in counter]
-        f.write('内'.join(pair))
-        f.write('\n')
-        f.close()
+        with open(write_path, 'a') as f:
+            f.write(method + common.method_tfidfvalue_splitor)
+            counter = corpus_dic[doc]
+            pair = ['{}${}'.format(word, tfidf(word, counter, counter_list)) for word in counter]
+            f.write(common.tfidfvalue_internal_splitor.join(pair))
+            f.write(os.linesep)
 
     print('finished calculate tfidf for method.')
 
