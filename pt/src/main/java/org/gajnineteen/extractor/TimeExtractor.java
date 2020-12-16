@@ -52,11 +52,13 @@ public class TimeExtractor {
             return null;
         }
 //        RawText rawText = blameResult.getResultContents();
-        for (int i=startLineNum ; i <= endLineNum ; i++) {
+//        System.out.println(rawText.size());
+        for (int i=startLineNum; i<=endLineNum; i++) {
             RevCommit revCommit;
             try {
-                revCommit = blameResult.getSourceCommit(i) ;
-            } catch (ArrayIndexOutOfBoundsException e) { // 处理开始/结束行数计算错误的异常情况
+                revCommit = blameResult.getSourceCommit(i-1) ;  // idx - line to read data of, 0 based.
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // 处理开始/结束行数计算错误的异常情况
                 System.out.println(filePath + " 行数非法:" + i);
                 break;
             }

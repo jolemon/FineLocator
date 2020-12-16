@@ -27,28 +27,48 @@ def load_linked_buggy_file(file, outer_splitor = '外', inner_splitor = '内', r
 def load_prediction_file(proj, dir, find_tag = '$1$', splitor = '$'):
     import os
     dic = {}
-    for file in os.listdir(dir):
-        if file == '.DS_Store':
+    for root, dirs, files in os.walk(dir):
+        if 'PossibilityResult.txt' not in files:
             continue
-        with open(os.path.join(dir,file), 'r') as prediction_file:
+
+
+        with open(os.path.join(root, 'PossibilityResult.txt'), 'r') as prediction_file:
             for line in prediction_file.readlines():
                 line = line.strip()
                 if find_tag not in line:
                     continue
                 else:
                     parts = line.split(splitor)
-                    proj_id = parts[0]
+                    proj_id = parts[0].split("/")[3]
                     # predict_res = parts[1]
                     sig = parts[3]
                     if proj_id not in dic:
                         dic[proj_id] = []
-                    dic[proj_id].append(proj + '/' + proj_id + sig)
+                    dic[proj_id].append(sig)
+                    # sig = sig.replace('document/code/', '')
     return dic
+
+    # for file in os.listdir(dir):
+    #     if file == '.DS_Store':
+    #         continue
+    #     with open(os.path.join(dir,file), 'r') as prediction_file:
+    #         for line in prediction_file.readlines():
+    #             line = line.strip()
+    #             if find_tag not in line:
+    #                 continue
+    #             else:
+    #                 parts = line.split(splitor)
+    #                 proj_id = parts[0]
+    #                 # predict_res = parts[1]
+    #                 sig = parts[3]
+    #                 if proj_id not in dic:
+    #                     dic[proj_id] = []
+    #                 dic[proj_id].append(proj + '/' + proj_id + sig)
+    # return dic
 
 
 def batch_run():
-    projs = ['Closure'] #'Time', 'Mockito', 'Lang', 'Math', 'Closure'
-    abr = '811'
+    projs = ['Time', 'Mockito', 'Lang', 'Math', 'Closure'] #
 
     from handle_cd_method import trim_method
     for proj in projs:
@@ -75,7 +95,7 @@ def batch_run():
                     if method not in res_dic[item]:
                         print(method)
 
-linked_buggy_dir = '/Users/lienming/Downloads/final_defects4j/linked-bugMethods/'
+linked_buggy_dir = '/Users/lienming/iBugzz/Defects4J-dataset/linked-buggyMethods-BLESER/'
 linked_buggy_postfix = '_bugId_buggyMethodsName'
-predict_result_dir = '/Users/lienming/' #Downloads/expres/all/
+predict_result_dir = '/Users/lienming/result_lj' #Downloads/expres/all/
 batch_run()
