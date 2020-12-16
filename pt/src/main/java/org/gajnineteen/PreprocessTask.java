@@ -24,25 +24,38 @@ import java.util.concurrent.Callable;
 
 public class PreprocessTask implements Callable<Void> {
 
-    public TimeExtractor timeExtractor ;
-    private CommandLineValues commandLineValues;
-    private Path filePath;
+    private final Path filePath;
+    private final String type;
+    private final String sourceDir;
+    private final String targetDir;
+    private final String correspondDir;
+    private final String commitID;
+    private final String gitDir;
 
     public PreprocessTask(CommandLineValues commandLineValues, Path filePath) {
-        this.commandLineValues = commandLineValues ;
         this.filePath = filePath ;
+        this.type = commandLineValues.type;
+        this.sourceDir = commandLineValues.source_dir;
+        this.targetDir = commandLineValues.target_dir;
+        this.correspondDir = commandLineValues.correspond_dir;
+        this.commitID = commandLineValues.commitID;
+        this.gitDir = commandLineValues.git_dir;
     }
 
     @Override
     public Void call() throws IOException, GitAPIException {
-        if (this.commandLineValues.type.equals("br")){
-            processFile(new LRProcessor());
-        } else if (this.commandLineValues.type.equals("extract")) {
-            extractMethod();
-        } else if (this.commandLineValues.type.equals("code")) {
-            processFile(new CodeProcessor());
-        } else if (this.commandLineValues.type.equals("diff")) {
-
+        switch (this.type) {
+            case "br":
+                processFile(new LRProcessor());
+                break;
+            case "extract":
+                extractMethod();
+                break;
+            case "code":
+                processFile(new CodeProcessor());
+                break;
+            default:
+                break;
         }
 
         return null;
@@ -50,7 +63,7 @@ public class PreprocessTask implements Callable<Void> {
 
     private Path createSavePath(String fromDirPath, String toDirPath) throws IOException {
         String filePathStr = filePath.toString() ;
-        if (filePathStr.contains(commandLineValues.source_dir)) {
+        if (filePathStr.contains(this.sourceDir)) {
             filePathStr = filePathStr.replace(fromDirPath, toDirPath) ;
         }
 
@@ -71,7 +84,7 @@ public class PreprocessTask implements Callable<Void> {
         BufferedWriter out ;
         String content     ;
         Path toSavePath    ;
-        toSavePath = createSavePath(commandLineValues.source_dir, commandLineValues.target_dir);
+        toSavePath = createSavePath(this.sourceDir, this.targetDir);
 
         try {
             content = new String(Files.readAllBytes(this.filePath)) ;
@@ -80,14 +93,9 @@ public class PreprocessTask implements Callable<Void> {
             content = Common.EmptyString;
         }
 
-        if (toSavePath == null) {
-            System.out.println("toSavePath is null.");
-            return ;
-        } else {
-            // write processed code to file
-            out = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(toSavePath.toString()), "utf-8"));
-        }
+        // write processed code to file
+        out = new BufferedWriter(new OutputStreamWriter
+                (new FileOutputStream(toSavePath.toString()), StandardCharsets.UTF_8));
 
         if (processor instanceof CodeProcessor) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -124,25 +132,13 @@ public class PreprocessTask implements Callable<Void> {
             return;
         }
 
-        toSaveExtractPath    = createSavePath(commandLineValues.source_dir, commandLineValues.target_dir);
-        toSaveCorrespondPath = createSavePath(commandLineValues.source_dir, commandLineValues.correspond_dir);
+        toSaveExtractPath    = createSavePath(this.sourceDir, this.targetDir);
+        toSaveCorrespondPath = createSavePath(this.sourceDir, this.correspondDir);
 
-        if (toSaveExtractPath == null) {
-            System.out.println("toSaveExtractPath is null.");
-            return ;
-        } else if (toSaveCorrespondPath == null) {
-            System.out.println("toSaveCorrespondPath is null.");
-            return ;
-        } else {
-            extractOut = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(toSaveExtractPath.toString()), StandardCharsets.UTF_8));    //"utf-8"
-            correspondOut = new BufferedWriter(new OutputStreamWriter
-                    (new FileOutputStream(toSaveCorrespondPath.toString()), StandardCharsets.UTF_8)); //"utf-8"
-        }
-
-        this.timeExtractor = new TimeExtractor(commandLineValues.git_dir,
-                                filePath.toString().replace(commandLineValues.source_dir+"/", ""),
-                                commandLineValues.commitID) ;
+        extractOut = new BufferedWriter(new OutputStreamWriter
+                (new FileOutputStream(toSaveExtractPath.toString()), StandardCharsets.UTF_8));    //"utf-8"
+        correspondOut = new BufferedWriter(new OutputStreamWriter
+                (new FileOutputStream(toSaveCorrespondPath.toString()), StandardCharsets.UTF_8)); //"utf-8"
 
         for (Method method : methods) {
             extractOut.write(method.methodStr);
@@ -151,7 +147,8 @@ public class PreprocessTask implements Callable<Void> {
 //            method.print();
             Date latestModifyTime = null ;
             try {
-                latestModifyTime = timeExtractor.extract(method.startLineNum, method.endLineNum);
+                latestModifyTime = TimeExtractor.getInstance(this.gitDir, this.commitID)
+                        .extract(this.filePath.toString(), method.startLineNum, method.endLineNum);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println(this.filePath.toString());
