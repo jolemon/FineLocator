@@ -14,41 +14,43 @@ import java.io.IOException;
 import java.util.Date;
 
 public class TimeExtractor {
+    private static volatile TimeExtractor timeExtractor;
 
-    Repository repo ;
-    Git git ;
-    String filePath ;
-    String commitID ;
+    private Repository repository;
+    private final Git git;
+    private ObjectId commitId;
 
-    /**
-     *
-     * @param gitPathStr
-     * @param relativeFilePath 是".git"目录的相对路径，
-     *                         比如".git"目录是${proj}/.git，文件是${proj}/a/b.java，
-     *                         则relativeFilePath是a/b.java
-     * @param commitID
-     */
-    public TimeExtractor(String gitPathStr, String relativeFilePath, String commitID)  {
+    private TimeExtractor(String gitPathStr, String commitID)  {
         try {
-            this.repo = new FileRepository(gitPathStr) ;
+            repository = new FileRepository(gitPathStr) ;
+            commitId = repository.resolve(commitID);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.commitID = commitID;
-        this.git = new Git(this.repo) ;
-        this.filePath = relativeFilePath ;
+        git = new Git(repository);
     }
 
-    // extract last modify time of method
-    public Date extract(int startLineNum, int endLineNum) throws IOException, GitAPIException {
+    public static TimeExtractor getInstance(String gitPathStr, String commitID) {
+        if (null == timeExtractor) {
+            synchronized (TimeExtractor.class) {
+                if (null == timeExtractor) {
+                    timeExtractor = new TimeExtractor(gitPathStr, commitID);
+                }
+            }
+        }
+        return timeExtractor;
+    }
+
+    // filePath 是".git"目录的相对路径，比如".git"目录是${proj}/.git，文件是${proj}/a/b.java， 则relativeFilePath是a/b.java
+    public Date extract(String filePath, int startLineNum, int endLineNum) throws IOException, GitAPIException {
         Date latestDate = null ;
         BlameCommand blameCommand = git.blame() ;
         blameCommand.setFilePath(filePath) ;
-        ObjectId commitID = repo.resolve(this.commitID) ;
-        blameCommand.setStartCommit(commitID);
+//        ObjectId commitID = repo.resolve(this.commitID) ;
+        blameCommand.setStartCommit(this.commitId);
         BlameResult blameResult = blameCommand.call();
         if (blameResult == null) {
-            System.out.println(this.filePath + " - time is null");
+            System.out.println(filePath + " - time is null");
             return null;
         }
 //        RawText rawText = blameResult.getResultContents();
@@ -57,7 +59,7 @@ public class TimeExtractor {
             try {
                 revCommit = blameResult.getSourceCommit(i) ;
             } catch (ArrayIndexOutOfBoundsException e) { // 处理开始/结束行数计算错误的异常情况
-                System.out.println(filePath + " 行数非法 :" + i);
+                System.out.println(filePath + " 行数非法:" + i);
                 break;
             }
             PersonIdent personIdent = revCommit.getAuthorIdent() ;
