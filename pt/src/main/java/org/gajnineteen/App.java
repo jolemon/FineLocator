@@ -43,7 +43,6 @@ public class App {
                     tasks.add(task);
                 });
             } else if (type.equals(Common.extract) || type.equals(Common.code)) {
-
                 Files.walk(Paths.get(s_CommandLineValues.source_dir)).filter(Files::isRegularFile)
                         .filter(p -> p.toString().endsWith(".java")).forEach(f -> {
                     PreprocessTask task = new PreprocessTask(s_CommandLineValues, f);

@@ -136,9 +136,9 @@ public class PreprocessTask implements Callable<Void> {
         toSaveCorrespondPath = createSavePath(this.sourceDir, this.correspondDir);
 
         extractOut = new BufferedWriter(new OutputStreamWriter
-                (new FileOutputStream(toSaveExtractPath.toString()), StandardCharsets.UTF_8));    //"utf-8"
+                (new FileOutputStream(toSaveExtractPath.toString()), StandardCharsets.UTF_8));
         correspondOut = new BufferedWriter(new OutputStreamWriter
-                (new FileOutputStream(toSaveCorrespondPath.toString()), StandardCharsets.UTF_8)); //"utf-8"
+                (new FileOutputStream(toSaveCorrespondPath.toString()), StandardCharsets.UTF_8));
 
         for (Method method : methods) {
             extractOut.write(method.methodStr);
@@ -148,7 +148,7 @@ public class PreprocessTask implements Callable<Void> {
             Date latestModifyTime = null ;
             try {
                 latestModifyTime = TimeExtractor.getInstance(this.gitDir, this.commitID)
-                        .extract(this.filePath.toString(), method.startLineNum, method.endLineNum);
+                        .extract(this.filePath.toString().substring(this.sourceDir.length()+1), method.startLineNum, method.endLineNum);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println(this.filePath.toString());

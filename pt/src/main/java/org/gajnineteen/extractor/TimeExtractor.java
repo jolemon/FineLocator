@@ -10,7 +10,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import java.io.IOException;
 import java.util.Date;
 
 public class TimeExtractor {
@@ -42,15 +41,14 @@ public class TimeExtractor {
     }
 
     // filePath 是".git"目录的相对路径，比如".git"目录是${proj}/.git，文件是${proj}/a/b.java， 则relativeFilePath是a/b.java
-    public Date extract(String filePath, int startLineNum, int endLineNum) throws IOException, GitAPIException {
+    public Date extract(String filePath, int startLineNum, int endLineNum) throws GitAPIException {
         Date latestDate = null ;
         BlameCommand blameCommand = git.blame() ;
         blameCommand.setFilePath(filePath) ;
-//        ObjectId commitID = repo.resolve(this.commitID) ;
         blameCommand.setStartCommit(this.commitId);
         BlameResult blameResult = blameCommand.call();
         if (blameResult == null) {
-            System.out.println(filePath + " - time is null");
+            System.out.println("time null - " + filePath + "是相对路径吗?");
             return null;
         }
 //        RawText rawText = blameResult.getResultContents();
