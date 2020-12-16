@@ -14,13 +14,15 @@ pt_output_preprocessedCodeDir=$9
 buggy_version_file=${10}
 buggy_version_commitID=0
 proj=${11}
+threads=${12}
 
 function runPT(){
     rm -rf ${pt_output_preprocessedBRDir}/${proj_id}
     java -cp preprocessor.jar org.gajnineteen.App \
          -source ${ori_BRDir}/${proj_id} \
          -target ${pt_output_preprocessedBRDir}/${proj_id} \
-         -type br
+         -type br \
+         --num_threads ${threads}
 
     # 避免Windows提交导致的"^M"问题，应该先在linux下对allMethods执行
     # 以下指令 : find . -type f -name "*.java" -print0 | xargs -0 sed -i 's/^M//g'
@@ -33,7 +35,8 @@ function runPT(){
          -correspond ${pt_output_correspondDir}/${proj_id}/${proj} \
          -type extract \
          -commitID ${buggy_version_commitID} \
-         -git ${gitDir}/.git
+         -git ${gitDir}/.git \
+         --num_threads ${threads}
 
 # for Defects4J
 #     java -cp preprocessor.jar org.gajnineteen.App  
@@ -48,7 +51,8 @@ function runPT(){
     java -cp preprocessor.jar org.gajnineteen.App \
          -source ${pt_output_extractMethodDir}/${proj_id}/${proj} \
          -target ${pt_output_preprocessedCodeDir}/${proj_id}/${proj} \
-         -type code    
+         -type code \
+         --num_threads ${threads}
 }
 
 # for Defects4J

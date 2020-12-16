@@ -10,6 +10,7 @@ word2vec_model_epochs=10
 alpha=0.8
 beta=0.1
 gamma=0.1
+threads=4
 
 source activate FineLocator
 for proj_name in "zookeeper" # "org.aspectj" "openjpa" "tomcat" "lucene-solr" "hibernate-orm"
@@ -35,24 +36,25 @@ do
                     ${correspondAfterPTDir}/${proj_name} \
                     ${codeAfterPTDir}/${proj_name} \
                     ${buggy_version_file} \
-                    ${proj_name}
+                    ${proj_name} \
+                    ${threads}
         cd ${scriptRootDir}
 
-        echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
-        ./run_word2vec.sh ${deeplearning4jDir} \
-                          ${queryExpansionDir} \
-                          ${PYTHON} \
-                          ${proj_id}\
-                          ${brAfterPTDir}/${proj_name} \
-                          ${codeAfterPTDir}/${proj_name} \
-                          ${correspondAfterPTDir}/${proj_name} \
-                          ${brTfidfDir}/${proj_name} \
-                          ${codeTfidfDir}/${proj_name} \
-                          ${brVecRootDir}/${proj_name} \
-                          ${codeVecRootDir}/${proj_name} \
-                          ${word2vec_model_dimension} \
-                          ${word2vec_model_epochs}
-        cd ${scriptRootDir}
+        # echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
+        # ./run_word2vec.sh ${deeplearning4jDir} \
+        #                   ${queryExpansionDir} \
+        #                   ${PYTHON} \
+        #                   ${proj_id}\
+        #                   ${brAfterPTDir}/${proj_name} \
+        #                   ${codeAfterPTDir}/${proj_name} \
+        #                   ${correspondAfterPTDir}/${proj_name} \
+        #                   ${brTfidfDir}/${proj_name} \
+        #                   ${codeTfidfDir}/${proj_name} \
+        #                   ${brVecRootDir}/${proj_name} \
+        #                   ${codeVecRootDir}/${proj_name} \
+        #                   ${word2vec_model_dimension} \
+        #                   ${word2vec_model_epochs}
+        # cd ${scriptRootDir}
 
         #echo "step 3 : Calculate semantic similarity for all methods"
         #./ss.sh ${queryExpansionDir} ${codeVecRootDir}/${proj_name}  \
