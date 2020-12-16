@@ -10,6 +10,7 @@ word2vec_model_epochs=10
 alpha=0.8
 beta=0.1
 gamma=0.1
+threads=4
 
 source activate FineLocator
 for proj_name in "openjpa" # "org.aspectj" # "tomcat" "lucene-solr" "hibernate-orm" # "zookeeper"
@@ -35,7 +36,8 @@ do
                     ${correspondAfterPTDir}/${proj_name} \
                     ${codeAfterPTDir}/${proj_name} \
                     ${buggy_version_file} \
-                    ${proj_name}
+                    ${proj_name} \
+                    ${threads}
         cd ${scriptRootDir}
 
         # echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
