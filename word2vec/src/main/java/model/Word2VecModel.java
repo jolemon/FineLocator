@@ -17,52 +17,45 @@ import java.io.File;
 
 public class Word2VecModel {
 
-    private static Logger log = LoggerFactory.getLogger(Word2VecModel.class);
+    private static final Logger log = LoggerFactory.getLogger(Word2VecModel.class);
 
     public static Word2Vec initModel(CommandLineValues commandLineValues){
         String dataDir = commandLineValues.source_dir ;
 
         log.info("Load & Vectorize Sentences....");
         SentenceIterator iter = new FileSentenceIterator(new File(dataDir));
-        iter.setPreProcessor(new SentencePreProcessor() {
-            @Override
-            public String preProcess(String sentence) {
-                sentence = sentence.replace("分","").trim().toLowerCase();
-                return sentence;
-            }
+        iter.setPreProcessor((SentencePreProcessor) sentence -> {
+            sentence = sentence.replace("分","").trim().toLowerCase();
+            return sentence;
         });
 
         // Split on white spaces in the line to get words
-        TokenizerFactory t = new DefaultTokenizerFactory();
-        t.setTokenPreProcessor(new CommonPreprocessor());
+        TokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
+        tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
 
         log.info("Building model....");
-
         //using 'Skip-gram' model
         Word2Vec vec = new Word2Vec.Builder()
                 .elementsLearningAlgorithm(new SkipGram<>())  // CBOW : new CBOW<>()
                 .minWordFrequency(1)
                 .epochs(commandLineValues.epochs)       // num of epochs over whole training corpus
-                .iterations(1)   // num of iterations done for each mini-batch during training
-                .layerSize(commandLineValues.dim)  // 200-500 is acceptable
+                .iterations(1)                          // num of iterations done for each mini-batch during training
+                .layerSize(commandLineValues.dim)       // 200-500 is acceptable
                 .windowSize(5)
                 .iterate(iter)
-                .tokenizerFactory(t)
+                .tokenizerFactory(tokenizerFactory)
                 .build();
-
 
         log.info("Fitting Word2Vec model....");
         vec.fit();
 
-        log.info("Writing word vectors to text file....");
-
-        // The normal way to save models in Deeplearning4j is via the serialization utils
-        // (Java serialization is akin to Python pickling, converting an object into a series of bytes).
-//        WordVectorSerializer.writeWord2VecModel(vec, modelSavePath);
         return vec ;
     }
 
     public static void saveModel(Word2Vec vec, String modelSavePath) {
+        // The normal way to save models in Deeplearning4j is via the serialization utils
+        // (Java serialization is akin to Python pickling, converting an object into a series of bytes).
+        log.info("Writing word vectors to text file....");
         WordVectorSerializer.writeWord2VecModel(vec, modelSavePath);
     }
 
@@ -70,12 +63,11 @@ public class Word2VecModel {
         return WordVectorSerializer.readWord2VecModel(modelSavePath) ;
     }
 
-
     /*
         PLEASE NOTE:
             after model is restored,
             it's still required to set SentenceIterator and TokenizerFactory,
-            if you're going to train this model
+            if you're going to train this model.
     */
     public static void continueFit(Word2Vec word2Vec, String dataDir) {
         SentenceIterator iter = new FileSentenceIterator(new File(dataDir));
