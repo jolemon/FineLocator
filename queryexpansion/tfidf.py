@@ -28,8 +28,8 @@ def load_code(proj_path: str, correspond_path: str):
             cf.close()
             if len(lines) != len(clines):
                 print('wrong in correspond file. please check!')
-                print('code path:', file_path)
-                print('correspond path:', correspond_file_path)
+                print('code path: %s' % file_path)
+                print('correspond path: %s' % correspond_file_path)
                 return
             for line, cline in zip(lines, clines):
                 line = line.strip(common.afterPT_code_text_splitor).strip()
@@ -41,12 +41,10 @@ def load_code(proj_path: str, correspond_path: str):
     return
 
 
-# function to calculate tfidf
 # count可以通过countlist得到， word可以通过count得到
 # count[word]可以得到每个单词的词频， sum(count.values())得到整个doc的单词总数
 def tf(word, count):
     return math.log(count[word]) + 1
-    # return math.log(count[word] / sum(count.values()) ) + 1
 
 
 # 统计的是含有该单词的句子数
@@ -56,7 +54,7 @@ def n_containing(word, count_list):
 
 # len(count_list)是指句子的总数，n_containing(word, count_list)是指含有该单词的句子的总数，加1是为了防止分母为0
 def idf(word, count_list):
-    return math.log(len(count_list) / n_containing(word, count_list) )
+    return math.log(len(count_list) / n_containing(word, count_list))
 
 
 # 将tf和idf相乘
@@ -87,13 +85,15 @@ if __name__ == "__main__":
     counter_list = list(corpus_dic.values())
 
     # save br
-    if bug_report_path in corpus_dic:
-        counter = corpus_dic[bug_report_path]
-        pair = ['{}${}'.format(word, tfidf(word, counter, counter_list)) for word in counter]
-        with open(br_save_path, 'w') as f:
-            f.write('\n'.join(pair))
-        print('finished calculate tfidf for br.')
-        del corpus_dic[bug_report_path]
+    if bug_report_path not in corpus_dic:
+        print('bug report not found!')
+        exit(1)
+    counter = corpus_dic[bug_report_path]
+    pair = ['{}{}{}'.format(word, common.tfidfvalue_internal_splitor, tfidf(word, counter, counter_list)) for word in counter]
+    with open(br_save_path, 'w') as f:
+        f.write(common.linesep.join(pair))
+    print('finished calculate tf-idf for br.')
+    del corpus_dic[bug_report_path]
 
     # save method
     for doc in corpus_dic:
@@ -107,14 +107,14 @@ if __name__ == "__main__":
         if not os.path.isdir(write_dir):
             os.makedirs(write_dir)
 
+        counter = corpus_dic[doc]
         with open(write_path, 'a') as f:
             f.write(method + common.method_tfidfvalue_splitor)
-            counter = corpus_dic[doc]
-            pair = ['{}${}'.format(word, tfidf(word, counter, counter_list)) for word in counter]
-            f.write(common.tfidfvalue_internal_splitor.join(pair))
+            pair = ['{}{}{}'.format(word, common.tfidfvalue_internal_splitor, tfidf(word, counter, counter_list)) for word in counter]
+            f.write(common.tfidfvalue_external_splitor.join(pair))
             f.write(os.linesep)
 
-    print('finished calculate tfidf for method.')
+    print('finished calculate tf-idf for method.')
 
 
 
