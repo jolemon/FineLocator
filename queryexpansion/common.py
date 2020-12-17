@@ -21,3 +21,6 @@ ss_key_splitor = "分"
 
 # tp
 tp_cache_dic_key_splitor = "#"
+
+# cd
+path_class_splitor = "#"

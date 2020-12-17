@@ -3,6 +3,7 @@ A simple Python graph class, demonstrating the essential
 facts and functionalities of graphs.
 """
 
+
 class Graph(object):
 
     def __init__(self, graph_dict=None):
@@ -79,7 +80,6 @@ class Graph(object):
                 isolated += [vertex]
         return isolated
 
-
     def find_path(self, start_vertex, end_vertex, path=[]):
         """ find a path from start_vertex to end_vertex
             in graph """
@@ -98,9 +98,7 @@ class Graph(object):
                     return extended_path
         return None
 
-
-
-    def find_all_paths(self, start_vertex, end_vertex, path=[]):
+    def find_all_paths(self, start_vertex, end_vertex, path = []):
         """ find all paths from start_vertex to 
             end_vertex in graph """
         graph = self.__graph_dict 
@@ -118,7 +116,6 @@ class Graph(object):
                 for p in extended_paths: 
                     paths.append(p)
         return paths
-
 
     # https://www.python.org/doc/essays/graphs/
     def find_shortest_path(self, start, end, path = []):
@@ -149,7 +146,6 @@ class Graph(object):
     #                 dist[next] = [dist[at], next]
     #                 q.append(str(next))
     #     return dist[end]
-
 
     def is_connected(self, 
                      vertices_encountered = None, 
@@ -197,7 +193,6 @@ class Graph(object):
         """
         # check if the sequence sequence is non-increasing:
         return all( x>=y for x, y in zip(sequence, sequence[1:]))
-  
 
     def delta(self):
         """ the minimum degree of the vertices """
@@ -228,10 +223,10 @@ class Graph(object):
         """ calculates the diameter of the graph """
         
         v = self.vertices() 
-        pairs = [ (v[i],v[j]) for i in range(len(v)-1) for j in range(i+1, len(v))]
+        pairs = [(v[i], v[j]) for i in range(len(v)-1) for j in range(i+1, len(v))]
         smallest_paths = []
-        for (s,e) in pairs:
-            paths = self.find_all_paths(s,e)
+        for (s, e) in pairs:
+            paths = self.find_all_paths(s, e)
             smallest = sorted(paths, key=len)[0]
             smallest_paths.append(smallest)
 
@@ -260,8 +255,6 @@ class Graph(object):
             # sequence is increasing
             return False
         return True
-
-   
 
 
 # if __name__ == "__main__":
