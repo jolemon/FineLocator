@@ -9,4 +9,8 @@ path_sig_splitor = "#"
 class_sig_splitor = "#"
 
 method_tfidfvalue_splitor = "分"
-tfidfvalue_internal_splitor = "内"
+
+tfidfvalue_external_splitor = "内"
+tfidfvalue_internal_splitor = "$"
+
+linesep = '\n'
