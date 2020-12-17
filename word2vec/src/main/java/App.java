@@ -25,6 +25,7 @@ public class App {
         }
 
         Common.dimension = s_CommandLineValues.dim > 0 ? s_CommandLineValues.dim : Common.dimension ;
+
         if (s_CommandLineValues.fit == 1) {
             Word2Vec model = Word2VecModel.initModel(s_CommandLineValues);
             Word2VecModel.saveModel(model, s_CommandLineValues.model_name);
@@ -36,7 +37,6 @@ public class App {
                 Word2VecTask task = new Word2VecTask(s_CommandLineValues, path);
                 task.call();
             }
-
         }
     }
 
@@ -44,12 +44,13 @@ public class App {
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(s_CommandLineValues.NumThreads);
         LinkedList<Word2VecTask> tasks = new LinkedList<>();
         try {
-            Files.walk(Paths.get(s_CommandLineValues.source_dir)).filter(Files::isRegularFile)
-                    .filter(p -> !p.toString().endsWith(".DS_Store")).forEach(f -> {
+            Files.walk(Paths.get(s_CommandLineValues.source_dir))
+                    .filter(Files::isRegularFile)
+                    .filter(p -> !p.toString().endsWith(".DS_Store"))
+                    .forEach(f -> {
                         Word2VecTask task = new Word2VecTask(s_CommandLineValues, f);
-                    tasks.add(task);
-                });
-
+                        tasks.add(task);
+                    });
         } catch (IOException e) {
             e.printStackTrace();
             return;

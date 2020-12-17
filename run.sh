@@ -53,7 +53,8 @@ do
         #                   ${brVecRootDir}/${proj_name} \
         #                   ${codeVecRootDir}/${proj_name} \
         #                   ${word2vec_model_dimension} \
-        #                   ${word2vec_model_epochs}
+        #                   ${word2vec_model_epochs} \
+        #                   ${threads}
         # cd ${scriptRootDir}
 
         #echo "step 3 : Calculate semantic similarity for all methods"

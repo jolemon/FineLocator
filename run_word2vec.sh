@@ -12,6 +12,7 @@ brVecDir=${10}
 codeVecDir=${11}
 dim=${12}
 epochs=${13}
+threads=${14}
 
 function tfidf(){
     rm -f ${brTfidfDir}/${proj_id}
@@ -40,20 +41,39 @@ function runWord2Vec(){
     # after training, bug reports must be deleted, or will be exported as vector when running next step.
     
     copyBrBeforeFit 
-    java -cp word2vec.jar App -name ${model_name} -source ${codeAfterPTDir}/${proj_id} -fit 1 -dim ${dim} -epochs ${epochs} -type type   # whatever type
+    java -cp word2vec.jar App \
+         -name ${model_name} \
+         -source ${codeAfterPTDir}/${proj_id} \
+         -fit 1 \
+         -dim ${dim} \
+         -epochs ${epochs} \
+         -type type \
+         --num_threads ${threads}
     clearTmpDir
     echo "train word2vec model finished."
     
 
     echo "export br vector..."
-    java -cp word2vec.jar App -name ${model_name} -source ${brAfterPTDir}/${proj_id}  -dim ${dim} \
-         -target ${brVecDir}/${proj_id}  -tfidf ${brTfidfDir}/${proj_id}  -type br
+    java -cp word2vec.jar App \
+         -name ${model_name} \
+         -source ${brAfterPTDir}/${proj_id} \
+         -dim ${dim} \
+         -target ${brVecDir}/${proj_id} \
+         -tfidf ${brTfidfDir}/${proj_id} \
+         -type br \
+         --num_threads ${threads}
     echo "export br vector finished."
 
     echo "export code vector..."
-    java -cp word2vec.jar App -name ${model_name} -source ${codeAfterPTDir}/${proj_id} \
-         -correspond ${correspondAfterPTDir}/${proj_id} -dim ${dim} \
-         -target ${codeVecDir}/${proj_id} -tfidf ${codeTfidfDir}/${proj_id} -type code
+    java -cp word2vec.jar App \
+         -name ${model_name} \
+         -source ${codeAfterPTDir}/${proj_id} \
+         -correspond ${correspondAfterPTDir}/${proj_id} \
+         -dim ${dim} \
+         -target ${codeVecDir}/${proj_id} \
+         -tfidf ${codeTfidfDir}/${proj_id} \
+         -type code \
+         --num_threads ${threads}
     echo "export code vector finished."
 } 
 
