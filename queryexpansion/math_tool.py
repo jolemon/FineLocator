@@ -1,8 +1,12 @@
 import numpy as np
 
+
 # calculate average number in list
-def average(list, size):
-    return sum(list)/size
+def average(a):
+    if not a:
+        print('division 0 exception')
+        exit(1)
+    return float(sum(a)) / float(len(a))
 
 
 # sigmoid

@@ -10,7 +10,6 @@ word2vec_model_epochs=10
 alpha=0.8
 beta=0.1
 gamma=0.1
-threads=8
 
 source activate FineLocator
 for proj_name in "openjpa" # "org.aspectj" # "tomcat" "lucene-solr" "hibernate-orm" # "zookeeper"
