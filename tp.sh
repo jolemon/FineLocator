@@ -10,4 +10,6 @@ PYTHON=$6           # python3.7
 rm -f ${tp_dir}/${proj_id}
 mkdir -p ${tp_dir}      
 cd ${tp_script_dir}
-${PYTHON} tp.py -c ${correspond_dir}/${proj_id} -s ${tp_dir}/${proj_id} --ss_dic_path ${ss_dir}/${proj_id}.dic
+${PYTHON} tp.py --correspond_path ${correspond_dir}/${proj_id} \
+                --save_path ${tp_dir}/${proj_id} \
+                --ss_dic_path ${ss_dir}/${proj_id}.dic

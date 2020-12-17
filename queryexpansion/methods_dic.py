@@ -1,33 +1,27 @@
 import json
 
-# use :
+
+# dictionary 'id_methods_dic' and 'vec_dic':
 #      id_methods_dic = {id : method}
 #             vec_dic = {id : vec}
-# to record methods,
-# so that reduce the cost of disk storage and memory use.
-def build_methods_dic(method, value, id_method_dic, id_value_dic):
-    if method not in id_method_dic.values():
-        new_id = len(id_method_dic)+1
+# reduce the cost of disk storage and memory use.
+def update_methods_dic(method, value, id_method_dic, id_value_dic):
+    if method in id_method_dic.values():
+        print(method, 'already in id_method_dic.')
+    else:
+        new_id = len(id_method_dic) + 1
         id_method_dic[new_id] = method
         id_value_dic[new_id] = value
-    else:
-        print(method, 'already in id_method_dic.')
-    return
 
 
 def update_id_method_dic(id_method_dic, method_id_dic, method):
-    if method not in method_id_dic:
+    if method in method_id_dic:
+        return method_id_dic[method]
+    else:
         new_id = len(id_method_dic) + 1
         id_method_dic[new_id] = method
         method_id_dic[method] = new_id
         return new_id
-    # if method not in id_method_dic.values():
-    #     new_id = len(id_method_dic)+1
-    #     id_method_dic[new_id] = method
-    #     return new_id
-    else:
-        return method_id_dic[method]
-        # return find_k_by_v(id_method_dic, method)
 
 
 def load_dic(path):
@@ -64,7 +58,7 @@ def compare_dic(dic1, dic2):
             else:
                 v1 = dic1[key]
                 v2 = dic2[key]
-                if  v1 != v2:
+                if v1 != v2:
                     print('key =', key, 'v1 =', v1, 'v2 =', v2)
                     return False
                 continue
