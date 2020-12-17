@@ -10,7 +10,7 @@ word2vec_model_epochs=10
 alpha=0.8
 beta=0.1
 gamma=0.1
-threads=4
+threads=8
 
 source activate FineLocator
 for proj_name in "openjpa" # "org.aspectj" # "tomcat" "lucene-solr" "hibernate-orm" # "zookeeper"
@@ -19,7 +19,7 @@ do
     echo "handle project "${proj_name}"..."
     gitDir=${gitRootDir}/${proj_name}
     buggy_version_file=${buggyVersionDir}/${proj_name} 
-    for proj_id in `ls ${allMethodsDir}/${proj_name}` 
+    for proj_id in `ls ${allMethodsDir}/${proj_name} -v` 
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")
