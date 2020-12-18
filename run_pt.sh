@@ -38,14 +38,6 @@ function runPT(){
          -git ${gitDir}/.git \
          --num_threads ${threads}
 
-# for Defects4J
-#     java -cp preprocessor.jar org.gajnineteen.App  
-#          -source ${ori_codeDir}/${proj_id}  
-#          -target ${pt_output_extractMethodDir}/${proj_id} \
-#          -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
-#          -commitID ${buggy_version_commitID} \
-#          -git ${gitDir}/${proj_id}/.git 
-
     rm -rf ${pt_output_preprocessedCodeDir}/${proj_id}
     mkdir -p ${pt_output_preprocessedCodeDir}/${proj_id}
     java -cp preprocessor.jar org.gajnineteen.App \
@@ -55,11 +47,7 @@ function runPT(){
          --num_threads ${threads}
 }
 
-# for Defects4J
-#     java -cp preprocessor.jar org.gajnineteen.App \
-#          -source ${pt_output_extractMethodDir}/${proj_id} \
-#          -target ${pt_output_preprocessedCodeDir}/${proj_id} \
-#          -type code
+
 
 function getBuggyVersionCommitID(){
     for l in $(cat ${buggy_version_file})
@@ -76,8 +64,22 @@ function getBuggyVersionCommitID(){
 getBuggyVersionCommitID
 echo ${proj_id}' buggyCommitSHA: '${buggy_version_commitID}
 cd ${ptdir}
-runPT
+if [[ ! -e ${pt_output_preprocessedBRDir}/${proj_id} ]]; then
+    runPT
+else
+    echo "skip ${proj_id}"
+fi
+# runPT
   
 
-# java -cp preprocessor.jar org.gajnineteen.App -source /Users/lienming/Downloads/final_defects4j/allMethods/Time/Time_3 -target /Users/lienming/FineLocator/expRes/afterPT/extract/Time/Time_3 \
-#      -correspond /Users/lienming/FineLocator/expRes/afterPT/correspond/Time/Time_3 -type extract -git /Users/lienming/Downloads/bugcode/Time_3/.git
+# for Defects4J
+#     java -cp preprocessor.jar org.gajnineteen.App  
+#          -source ${ori_codeDir}/${proj_id}  
+#          -target ${pt_output_extractMethodDir}/${proj_id} \
+#          -correspond ${pt_output_correspondDir}/${proj_id} -type extract \
+#          -commitID ${buggy_version_commitID} \
+#          -git ${gitDir}/${proj_id}/.git 
+#     java -cp preprocessor.jar org.gajnineteen.App \
+#          -source ${pt_output_extractMethodDir}/${proj_id} \
+#          -target ${pt_output_preprocessedCodeDir}/${proj_id} \
+#          -type code
