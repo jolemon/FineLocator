@@ -28,7 +28,7 @@ def load_brv(file_path, dim):
         return vec
 
 
-def _load_single_cv(id_method_dic, id_value_dic, abs_file_path, dim, parent_dir):
+def _load_cv_from_file(id_method_dic, id_value_dic, abs_file_path, dim, parent_dir):
     with open(abs_file_path, 'r') as f:
         lines = f.readlines()
         for k in range(0, len(lines)-1, 2):
@@ -53,29 +53,34 @@ def load_cv(dir_path, dim):
             if not file.endswith(common.java_file_postfix):
                 continue
             file_path = os.path.join(root, file)
-            _load_single_cv(id_method_dic = id_method_dic, id_value_dic = id_value_dic,
+            _load_cv_from_file(id_method_dic = id_method_dic, id_value_dic = id_value_dic,
                             abs_file_path = file_path, dim = dim, parent_dir = dir_path)
     return id_method_dic, id_value_dic
 
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument("-c" , "--code_vector_dir", dest = "code_vector_dir", required = True)
-    parser.add_argument("-d" , "--dim"            , dest = "dim"            , required = True)
-    parser.add_argument("-s" , "--save_path"      , dest = "save_path"      , required = True)
+    parser.add_argument("-c", "--code_vector_dir", dest = "code_vector_dir", required = True)
+    parser.add_argument("-d", "--dim", dest = "dim", required = True)
+    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
 
     args = parser.parse_args()
     code_vector_dir = args.code_vector_dir
     dim = int(args.dim)
     save_path = args.save_path
 
+    # 遍历文件夹读code vector
     id_method_dic, id_value_dic = load_cv(dir_path = code_vector_dir, dim = dim)
 
     keys = id_method_dic.keys()
     print("Calculate methods of size : %d " % len(keys))
+    comb_start_time = time.process_time()
     comb = combinations(keys, 2)
-    start = time.process_time()
+    comb_elapsed = round(time.process_time() - comb_start_time, 2)
+    print("Combination time used : %.2f seconds" % comb_elapsed)
+
     print("Start Calculate Semantic Similarity...")
+    cal_start_time = time.process_time()
     ss_dic = dict()
     for ss in comb:
         m1, m2 = ss[0], ss[1]
@@ -84,13 +89,16 @@ if __name__ == '__main__':
         if math.isnan(cs):
             cs = 0.0
         ss_dic['{}{}{}'.format(m1, common.ss_key_splitor, m2)] = cs
+    cal_elapsed = round(time.process_time() - cal_start_time, 2)
+    print("Finished calculate Semantic Similarity. Time used : %.2f seconds" % cal_elapsed)
 
+    write_start_time = time.process_time()
     with open(save_path, 'w') as save_file:
         save_file.write(json.dumps(ss_dic))
 
     with open('{}.dic'.format(save_path), 'w') as dic_file:
         dic_file.write(json.dumps(id_method_dic))
-    elapsed = round(time.process_time() - start, 2)
-    print("Finished Calculate Semantic Similarity. Time used : %.2f seconds" % elapsed)
-    print("Save to File : %s" % save_path)
+    write_elapsed = round(time.process_time() - write_start_time, 2)
+    print("Finished saving file. Time used : %.2f seconds" % write_elapsed)
+    print("Save to file : %s" % save_path)
     print("File size is around : %.2f MB." % round(os.path.getsize(save_path) / (1024 * 1024), 2))
