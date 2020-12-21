@@ -14,7 +14,7 @@ import common
 
 # delete blank space, "[[    " from head and "]]" from tail
 def trim_vec_text(string):
-    string = string.strip().lstrip("[[", "").rstrip("]]", "").strip()
+    string = string.strip().lstrip("[[").rstrip("]]").strip()
     return re.sub(r',(\s*)', ',', string)
 
 
