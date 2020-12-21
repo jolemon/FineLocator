@@ -13,6 +13,7 @@ class_sig_splitor = "#"
 
 # tf-idf
 method_tfidfvalue_splitor = "分"
+tfidfvalue_external_splitor = "内"
 tfidfvalue_internal_splitor = "$"
 code_tfidf_linesep = "分"
 
