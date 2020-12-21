@@ -79,7 +79,10 @@ function runWord2Vec(){
 
 
 function copyBrBeforeFit(){
-	array=($(ls ${brAfterPTDir} | sort -t "_" -k 2n))
+    # For Defects4J
+	# array=($(ls ${brAfterPTDir} | sort -t "_" -k 2n)) 
+    # For JIRA
+    array=($(ls ${brAfterPTDir} | sort -n)) 
 	for ((i=0;i<${#array[*]};i++))
     do
         if [[ "${array[i]}" == "${proj_id}" ]]; then 

@@ -13,8 +13,8 @@ def cal_time_diff_by_second(time1, time2):
     return abs(time1 - time2)
 
 
-# load dic of last modify time for all methods
-def load_dic_lmt(proj_path, ss_dic):
+# load dic of latest modify time for all methods
+def load_lmt_dic(proj_path, ss_dic):
     reversed_ss_dic = dict(zip(ss_dic.values(), ss_dic.keys()))
     id_method_dic, id_value_dic = ss_dic, dict()
     cache_dic = dict()
@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     ss_dic = load_dic(ss_dic_path)
 
-    id_method_dic, id_value_dic = load_dic_lmt(correspond_path, ss_dic)
+    id_method_dic, id_value_dic = load_lmt_dic(correspond_path, ss_dic)
     cal_time_diff_for_dic(id_value_dic = id_value_dic, save_path = save_path)
     elapsed = round(time.process_time() - start, 2)
     print("Finished Calculate Temporal Proximity. Time used : %.2f seconds" % elapsed)
