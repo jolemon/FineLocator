@@ -10,7 +10,7 @@ PYTHON=$7              # python3.7
 
 rm -f ${sstp_dir}/${proj_id}
 mkdir -p ${sstp_dir}      
-cd ${sst[_script_dir} 
+cd ${sstp_script_dir} 
 ${PYTHON} sstp.py --code_vector_dir ${code_vec_dir}/${proj_id} \
 				  --correspond_path ${correspond_dir}/${proj_id} \
                   --dim ${word2vec_dimension} \

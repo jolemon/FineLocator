@@ -58,8 +58,7 @@ do
 
         # echo "step 3 : Calculate semantic similarity for all methods"
         # ./ss.sh ${queryExpansionDir} \
-        #         ${codeVecRootDir}/${proj_name}  \
-        #         ${correspondAfterPTDir}/${proj_name} \
+        #         ${codeVecRootDir}/${proj_name}  \ 
         #         ${ssRootDir}/${proj_name} \
         #         ${proj_id} \
         #         ${word2vec_model_dimension} \
