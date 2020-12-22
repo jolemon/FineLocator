@@ -60,7 +60,7 @@ def load_cv_tp(code_vec_dir, correspond_dir, dim):
                             tp_not_in_ss_list.append(relative_path)
                         continue
                     td = get_td(last_modify_time, tp_cache_dic)
-                    update_methods_dic(signature, (vec, td), id2sig_dic, id2sstp_dic)
+                    update_methods_dic(key, (vec, td), id2sig_dic, id2sstp_dic)
 
     if tp_not_in_ss_list:
         print('calculate tp : ignore %d methods not in ss dic.' % len(tp_not_in_ss_list))

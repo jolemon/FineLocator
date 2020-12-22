@@ -55,7 +55,7 @@ do
                           ${word2vec_model_epochs} \
                           ${threads}
         cd ${scriptRootDir}
-
+ 
         echo "step 3 : Calculate semantic similarity for all methods"
         ./ss.sh ${queryExpansionDir} \
                 ${codeVecRootDir}/${proj_name}  \
@@ -63,7 +63,7 @@ do
                 ${proj_id} \
                 ${word2vec_model_dimension} \
                 ${PYTHON} 
-        cd ${scriptRootDir}
+        cd ${scriptRootDir} 
 
         echo "step 4 : Calculate temporal proximity for all methods"
         ./tp.sh  ${queryExpansionDir} \
