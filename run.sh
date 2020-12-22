@@ -39,40 +39,40 @@ do
                     ${threads}
         cd ${scriptRootDir}
 
-#        echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
-#        ./run_word2vec.sh ${deeplearning4jDir} \
-#                          ${queryExpansionDir} \
-#                          ${PYTHON} \
-#                          ${proj_id}\
-#                          ${brAfterPTDir}/${proj_name} \
-#                          ${codeAfterPTDir}/${proj_name} \
-#                          ${correspondAfterPTDir}/${proj_name} \
-#                          ${brTfidfDir}/${proj_name} \
-#                          ${codeTfidfDir}/${proj_name} \
-#                          ${brVecRootDir}/${proj_name} \
-#                          ${codeVecRootDir}/${proj_name} \
-#                          ${word2vec_model_dimension} \
-#                          ${word2vec_model_epochs} \
-#                          ${threads}
-#        cd ${scriptRootDir}
+        echo "step 2 : use deeplearning4j(word2vec) to get vectors of bug reports and methods"
+        ./run_word2vec.sh ${deeplearning4jDir} \
+                          ${queryExpansionDir} \
+                          ${PYTHON} \
+                          ${proj_id}\
+                          ${brAfterPTDir}/${proj_name} \
+                          ${codeAfterPTDir}/${proj_name} \
+                          ${correspondAfterPTDir}/${proj_name} \
+                          ${brTfidfDir}/${proj_name} \
+                          ${codeTfidfDir}/${proj_name} \
+                          ${brVecRootDir}/${proj_name} \
+                          ${codeVecRootDir}/${proj_name} \
+                          ${word2vec_model_dimension} \
+                          ${word2vec_model_epochs} \
+                          ${threads}
+        cd ${scriptRootDir}
 
-        # echo "step 3 : Calculate semantic similarity for all methods"
-        # ./ss.sh ${queryExpansionDir} \
-        #         ${codeVecRootDir}/${proj_name}  \
-        #         ${ssRootDir}/${proj_name} \
-        #         ${proj_id} \
-        #         ${word2vec_model_dimension} \
-        #         ${PYTHON} 
-        # cd ${scriptRootDir}
+        echo "step 3 : Calculate semantic similarity for all methods"
+        ./ss.sh ${queryExpansionDir} \
+                ${codeVecRootDir}/${proj_name}  \
+                ${ssRootDir}/${proj_name} \
+                ${proj_id} \
+                ${word2vec_model_dimension} \
+                ${PYTHON} 
+        cd ${scriptRootDir}
 
-        # echo "step 4 : Calculate temporal proximity for all methods"
-        # ./tp.sh  ${queryExpansionDir} \
-        #          ${correspondAfterPTDir}/${proj_name} \
-        #          ${tpRootDir}/${proj_name} \
-        #          ${ssRootDir}/${proj_name} \
-        #          ${proj_id} \
-        #          ${PYTHON}
-        # cd ${scriptRootDir}
+        echo "step 4 : Calculate temporal proximity for all methods"
+        ./tp.sh  ${queryExpansionDir} \
+                 ${correspondAfterPTDir}/${proj_name} \
+                 ${tpRootDir}/${proj_name} \
+                 ${ssRootDir}/${proj_name} \
+                 ${proj_id} \
+                 ${PYTHON}
+        cd ${scriptRootDir}
 
         # echo "step 5 : use Java Understand to extract Call Dependency for method"
         # ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id} \
