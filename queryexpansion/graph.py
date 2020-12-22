@@ -134,19 +134,6 @@ class Graph(object):
                         shortest = newpath
         return shortest
 
-    # Code by Eryk Kopczyński
-    # def find_shortest_path_2(self, start, end):
-    #     from collections import deque
-    #     dist = {start: [start]}
-    #     q = deque(str(start))
-    #     while len(q):
-    #         at = int(q.popleft())
-    #         for next in self.__graph_dict[at]:
-    #             if next not in dist:
-    #                 dist[next] = [dist[at], next]
-    #                 q.append(str(next))
-    #     return dist[end]
-
     def is_connected(self, 
                      vertices_encountered = None, 
                      start_vertex=None):

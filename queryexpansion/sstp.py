@@ -21,6 +21,7 @@ def load_cv_tp(code_vec_dir, correspond_dir, dim):
             code_vec_path = os.path.join(root, file)
             correspond_path = code_vec_path.replace(code_vec_dir, correspond_dir)
             if not file.endswith(common.java_file_postfix) or not os.path.exists(correspond_path):
+                print('correspond_path not found - ', correspond_path)
                 continue
             tmp_ss_dic = dict()
             with open(code_vec_path, 'r') as cv_file, open(correspond_path, 'r') as tp_file:
@@ -32,7 +33,7 @@ def load_cv_tp(code_vec_dir, correspond_dir, dim):
                     signature = signature.strip().rstrip(common.code_tfidf_linesep)
                     # remove parent_dir because the path is different with tp_dir and cd_dir.
                     # There is already a "#" ahead of signature in code_tf-idf file, so don't need to append another "#"
-                    relative_path = code_vec_path.lstrip(code_vec_dir)
+                    relative_path = code_vec_path.replace(code_vec_dir, "")
                     signature = relative_path + signature
 
                     # k行: code vector
@@ -53,7 +54,7 @@ def load_cv_tp(code_vec_dir, correspond_dir, dim):
                     if last_modify_time == 'null':
                         continue
                     # use relative path
-                    relative_path = correspond_path.lstrip(correspond_dir)
+                    relative_path = correspond_path.replace(correspond_dir, "")
                     key = '{}{}{}'.format(relative_path, common.path_sig_splitor, signature)
                     if key not in tmp_ss_dic:
                         if relative_path not in tp_not_in_ss_list:

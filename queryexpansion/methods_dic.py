@@ -1,4 +1,5 @@
 import json
+import common
 
 
 # dictionary 'id_methods_dic' and 'vec_dic':
@@ -28,6 +29,16 @@ def load_dic(path):
     with open(path, 'r') as f:
         dic = json.loads(f.read())
     return dic
+
+
+def sstp_iterator(path):
+    with open(path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line: continue
+            sstp_id, value_str = line.split(common.sstp_external_splitor)
+            ss, tp = value_str.split(common.sstp_internal_splitor)
+            yield sstp_id, float(ss), float(tp)
 
 
 def write_dic(path, dic):

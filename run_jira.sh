@@ -56,17 +56,7 @@ do
         #                   ${threads}
         # cd ${scriptRootDir}
 
-        echo "step 3 : Calculate semantic similarity & temporal proximity for all methods"
-        ./sstp.sh ${queryExpansionDir} \
-                  ${codeVecRootDir}/${proj_name}  \
-                  ${correspondAfterPTDir}/${proj_name} \
-                  ${sstpRootDir}/${proj_name} \
-                  ${proj_id} \
-                  ${word2vec_model_dimension} \
-                  ${PYTHON} 
-        cd ${scriptRootDir} 
-
-        # echo "step 4 : use Java Understand to extract Call Dependency for method"
+        # echo "step 3 : use Java Understand to extract Call Dependency for method"
         # ./cd.sh ${allMethodsDir}/${proj_name}/${proj_id} \
         #         ${queryExpansionDir} \
         #         ${udbCreateDir} \
@@ -77,6 +67,16 @@ do
         #         ${undAPIPath} \
         #         ${PYTHON}
         # cd ${scriptRootDir}
+
+        echo "step 4 : Calculate semantic similarity & temporal proximity for all methods"
+        ./sstp.sh ${queryExpansionDir} \
+                  ${codeVecRootDir}/${proj_name}  \
+                  ${correspondAfterPTDir}/${proj_name} \
+                  ${sstpRootDir}/${proj_name} \
+                  ${proj_id} \
+                  ${word2vec_model_dimension} \
+                  ${PYTHON} 
+        cd ${scriptRootDir}  
 
         # echo "step 5 : query expansion, ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
         # ./query_expansion.sh ${queryExpansionDir} \
