@@ -18,7 +18,7 @@ do
     echo "handle project "${proj_name}"..."
     gitDir=${gitRootDir}/${proj_name}
     buggy_version_file=${buggyVersionDir}/${proj_name} 
-    for proj_id in `ls ${allMethodsDir}/${proj_name} -v` 
+    for proj_id in 28974 # `ls ${allMethodsDir}/${proj_name} -v` 
     do
         echo "handle project "${proj_id}"..."
         begin_time=$(date  "+%Y/%m/%d-%H:%M:%S")

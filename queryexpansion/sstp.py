@@ -84,6 +84,8 @@ if __name__ == '__main__':
     id2sig_dic, id2sstp_dic = load_cv_tp(code_vec_dir = code_vec_dir, correspond_dir = correspond_dir, dim = dim)
     keys = id2sig_dic.keys()
     print("Calculate methods of size : %d " % len(keys))
+    if len(keys) == 0:
+        exit(1)
     comb = combinations(keys, 2)
 
     print("Start Calculate Semantic Similarity & Temporal Proximity")
