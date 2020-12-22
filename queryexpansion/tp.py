@@ -39,14 +39,14 @@ def load_lmt_dic(proj_path, ss_dic):
                     key = '{}{}{}'.format(relative_path, common.path_sig_splitor, method_signature)
                     td = get_td(last_modify_time, cache_dic)
 
-                    if key in reversed_ss_dic:
+                    if key not in reversed_ss_dic:
+                        if relative_path not in not_in_list:
+                            not_in_list.append(relative_path)
+                    else:
                         ssid = reversed_ss_dic[key]
                         id_method_dic[ssid] = key
                         id_value_dic[ssid] = td
-                    else:
-                        file_name = key.split(common.path_sig_splitor)[0]
-                        if file_name not in not_in_list:
-                            not_in_list.append(file_name)
+
     if not_in_list:
         print('calculate tp : ignore %d methods not in ss dic.' % len(not_in_list))
         print(not_in_list)

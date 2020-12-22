@@ -12,7 +12,7 @@ import re
 import common
 
 
-# delete blank space, "[[    " from head and "]]" from tail
+# delete blank space, "[[    " from head and "    ]]" from tail
 def trim_vec_text(string):
     string = string.strip().lstrip("[[").rstrip("]]").strip()
     return re.sub(r',(\s*)', ',', string)
@@ -32,12 +32,15 @@ def _load_cv_from_file(id_method_dic, id_value_dic, abs_file_path, dim, parent_d
     with open(abs_file_path, 'r') as f:
         lines = f.readlines()
         for k in range(0, len(lines)-1, 2):
+            # k+1行: 函数签名
             signature = lines[k+1]
             signature = signature.strip().rstrip(common.code_tfidf_linesep)
             # remove parent_dir because the path is different with tp_dir and cd_dir.
             # There is already a "#" ahead of signature in code_tf-idf file, so don't need to append another "#"
             relative_path = abs_file_path.lstrip(parent_dir)
             signature = relative_path + signature
+
+            # k行: code vector
             vec_text = lines[k]
             trim_vec = trim_vec_text(vec_text)
             arr = np.fromstring(string = trim_vec, sep = ',')
@@ -47,14 +50,13 @@ def _load_cv_from_file(id_method_dic, id_value_dic, abs_file_path, dim, parent_d
 
 
 def load_cv(dir_path, dim):
-    id_method_dic, id_value_dic= dict(), dict()
+    id_method_dic, id_value_dic = dict(), dict()
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             if not file.endswith(common.java_file_postfix):
                 continue
-            file_path = os.path.join(root, file)
             _load_cv_from_file(id_method_dic = id_method_dic, id_value_dic = id_value_dic,
-                               abs_file_path = file_path, dim = dim, parent_dir = dir_path)
+                               abs_file_path = os.path.join(root, file), dim = dim, parent_dir = dir_path)
     return id_method_dic, id_value_dic
 
 
@@ -68,11 +70,9 @@ if __name__ == '__main__':
     code_vector_dir = args.code_vector_dir
     dim = int(args.dim)
     save_path = args.save_path
-    print("all arguments: %s" % args)
 
     print("load code vector from directory: %s ..." % code_vector_dir)
     id_method_dic, id_value_dic = load_cv(dir_path = code_vector_dir, dim = dim)
-    print("load code vector finished.")
 
     keys = id_method_dic.keys()
     print("Calculate methods of size : %d " % len(keys))
