@@ -54,7 +54,7 @@ def load_cv(dir_path, dim):
                 continue
             file_path = os.path.join(root, file)
             _load_cv_from_file(id_method_dic = id_method_dic, id_value_dic = id_value_dic,
-                            abs_file_path = file_path, dim = dim, parent_dir = dir_path)
+                               abs_file_path = file_path, dim = dim, parent_dir = dir_path)
     return id_method_dic, id_value_dic
 
 
@@ -68,9 +68,11 @@ if __name__ == '__main__':
     code_vector_dir = args.code_vector_dir
     dim = int(args.dim)
     save_path = args.save_path
+    print("all arguments: %s" % args)
 
-    # 遍历文件夹读code vector
+    print("load code vector from directory: %s ..." % code_vector_dir)
     id_method_dic, id_value_dic = load_cv(dir_path = code_vector_dir, dim = dim)
+    print("load code vector finished.")
 
     keys = id_method_dic.keys()
     print("Calculate methods of size : %d " % len(keys))
