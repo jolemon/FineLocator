@@ -12,4 +12,4 @@ mkdir -p ${ss_dir}
 cd ${ss_script_dir}
 ${PYTHON} ss.py --code_vector_dir ${code_vec_dir}/${proj_id} \
                 --dim ${word2vec_dimension} \
-                --save_path ${ss_dir}/${proj_id}
+                --save_path ${ss_dir}/${proj_id} 
