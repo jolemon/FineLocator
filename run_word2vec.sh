@@ -86,7 +86,7 @@ function copyBrBeforeFit(){
 	for ((i=0;i<${#array[*]};i++))
     do
         if [[ "${array[i]}" == "${proj_id}" ]]; then 
-    	    rm   -rf ${codeAfterPTDir}/${proj_id}/tmp
+    	    rm -rf ${codeAfterPTDir}/${proj_id}/tmp
             mkdir -p ${codeAfterPTDir}/${proj_id}/tmp
             for ((j=0;j<=$i;j++))
             do

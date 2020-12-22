@@ -25,3 +25,11 @@ tp_cache_dic_key_splitor = "#"
 
 # cd
 path_class_splitor = "#"
+
+# ss&tp
+id2sig_splitor = "对"
+sstp_external_splitor = "外"
+sstp_internal_splitor = "内"
+
+# flush write
+flush_size = 10000
