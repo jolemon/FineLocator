@@ -16,6 +16,7 @@ alpha=${13}
 beta=${14}
 gamma=${15}
 
+
 rm -f ${save_dir}/${proj_id}
 # rm -f ${save_dir}/${proj_id}.acdic
 

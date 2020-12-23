@@ -31,14 +31,24 @@ def load_dic(path):
     return dic
 
 
-def sstp_iterator(path):
+def load_csv_as_dic(path):
+    dic = {}
     with open(path, 'r') as f:
         for line in f:
             line = line.strip()
             if not line: continue
-            sstp_id, value_str = line.split(common.sstp_external_splitor)
-            ss, tp = value_str.split(common.sstp_internal_splitor)
-            yield sstp_id, float(ss), float(tp)
+            k, v = line.split(common.csv_splitor)
+            dic[k] = v
+    return dic
+
+
+def file_iterator(path):
+    with open(path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line: continue
+            yield line.split(common.csv_splitor)
+            # yield sstp_id, float(ss), float(tp)
 
 
 def write_dic(path, dic):

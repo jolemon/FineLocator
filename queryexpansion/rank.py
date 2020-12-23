@@ -24,7 +24,7 @@ def cal_rel(brv, dic):
 
 
 def _rank_dic(dic):
-    sorted_dic = sorted(dic.items(), key = lambda x : x[1], reverse = True)
+    sorted_dic = sorted(dic.items(), key = lambda x: x[1], reverse = True)
     return sorted_dic
 
 
@@ -45,7 +45,7 @@ def load_link_dic(path):
                 if len(pm_parts) < 2:
                     print(pm_parts, "in this sentence can not find PATH / METHOD_NAME !")
                     continue
-                path =  '/'+'/'.join((pm_parts[0].split('/'))[2:])
+                path = '/' + '/'.join((pm_parts[0].split('/'))[2:])
                 method = pm_parts[1]
 
                 path_method = path + '#' + trim_method(trim_comma_in_paras(method))
