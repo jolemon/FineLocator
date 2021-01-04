@@ -12,10 +12,11 @@ from tp import get_td, cal_time_diff_by_second, sigmoid
 from ss import trim_vec_text
 
 
-def load_cv_tp(code_vec_dir, correspond_dir, dim):
+def load_cv_tp(code_vec_dir, correspond_dir, dim, ss_save_path):
     id2sig_dic, id2sstp_dic = dict(), dict()
     tp_cache_dic = dict()
     tp_not_in_ss_list = []
+    ss_save_file = open('{}.ss'.format(ss_save_path), 'w')
     for root, dirs, files in os.walk(code_vec_dir):
         for file in files:
             code_vec_path = os.path.join(root, file)
@@ -62,7 +63,9 @@ def load_cv_tp(code_vec_dir, correspond_dir, dim):
                         continue
                     td = get_td(last_modify_time, tp_cache_dic)
                     update_methods_dic(key, (vec, td), id2sig_dic, id2sstp_dic)
-
+                    # write to ss_save_file
+                    ss_save_file.write('{}{}{}{}'.format(key, common.csv_splitor, vec, common.linesep))
+    ss_save_file.close()
     if tp_not_in_ss_list:
         print('calculate tp : ignore %d methods not in ss dic.' % len(tp_not_in_ss_list))
         print(tp_not_in_ss_list)
@@ -74,15 +77,16 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--code_vector_dir", dest = "code_vector_dir", required = True)
     parser.add_argument("-cr", "--correspond_dir", dest = "correspond_dir", required = True)
     parser.add_argument("-d", "--dim", dest = "dim", required = True)
-    parser.add_argument("-s", "--save_path", dest = "save_path", required = True)
+    parser.add_argument("-st", "--sstp_save_path", dest = "sstp_save_path", required = True)
 
     args = parser.parse_args()
     code_vec_dir = args.code_vector_dir
     correspond_dir = args.correspond_dir
     dim = int(args.dim)
-    save_path = args.save_path
+    sstp_save_path = args.sstp_save_path
 
-    id2sig_dic, id2sstp_dic = load_cv_tp(code_vec_dir = code_vec_dir, correspond_dir = correspond_dir, dim = dim)
+    id2sig_dic, id2sstp_dic = load_cv_tp(code_vec_dir = code_vec_dir, correspond_dir = correspond_dir,
+                                         dim = dim, ss_save_path = sstp_save_path)
     keys = id2sig_dic.keys()
     print("Calculate methods of size : %d " % len(keys))
     if len(keys) == 0:
@@ -102,7 +106,7 @@ if __name__ == '__main__':
     print("Temporal Proximity平均值: ", avg_td)
 
     tp_cache_dic, ss_dic, tp_dic = dict(), dict(), dict()
-    save_file = open(save_path, 'w')
+    save_file = open('{}.sstp'.format(sstp_save_path), 'w')
     comb = combinations(keys, 2)
     write_line_count = 0
     for id1, id2 in comb:
@@ -123,20 +127,19 @@ if __name__ == '__main__':
         tp = tp_cache_dic[tp_cache_dic_key]
 
         sstp_key = '{}{}{}'.format(id1, common.ss_key_splitor, id2)
-        save_file.write('{}{}{}{}{}{}'.format(sstp_key, common.sstp_external_splitor,
-                                              cs, common.sstp_internal_splitor, tp, common.linesep))
+        save_file.write('{}{}{}{}{}{}'.format(sstp_key, common.csv_splitor,
+                                              cs, common.csv_splitor, tp, common.linesep))
         write_line_count += 1
         if write_line_count >= common.flush_size:
             save_file.flush()
             write_line_count = 0
-    save_file.flush()
     save_file.close()
     cal_elapsed = round(time.process_time() - cal_start_time, 2)
     print("Finished calculate Semantic Similarity & Temporal Proximity. Time used : %.2f seconds" % cal_elapsed)
 
-    with open('{}.dic'.format(save_path), 'w') as dic_file:
+    with open('{}.dic'.format(sstp_save_path), 'w') as dic_file:
         for sid, sig in id2sig_dic.items():
             dic_file.write('{}{}{}{}'.format(sid, common.id2sig_splitor, sig, common.linesep))
 
-    print("Save to file : %s" % save_path)
-    print("File size is around : %.2f MB." % round(os.path.getsize(save_path) / (1024 * 1024), 2))
+    print("Save to file : %s" % sstp_save_path)
+    print("File size is around : %.2f MB." % round(os.path.getsize('{}.sstp'.format(sstp_save_path))/(1024 * 1024), 2))

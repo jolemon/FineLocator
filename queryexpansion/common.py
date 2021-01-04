@@ -27,9 +27,8 @@ tp_cache_dic_key_splitor = "#"
 path_class_splitor = "#"
 
 # ss&tp
-id2sig_splitor = "对"
-sstp_external_splitor = "外"
-sstp_internal_splitor = "内"
+csv_splitor = "开"
+id2sig_splitor = "分"
 
 # flush write
-flush_size = 10000
+flush_size = 100000

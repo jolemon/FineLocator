@@ -78,20 +78,20 @@ do
        #            ${PYTHON} 
        #  cd ${scriptRootDir}  
 
-        # echo "step 5 : query expansion, ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
-        # ./query_expansion.sh ${queryExpansionDir} \
-        #                      ${codeVecRootDir}/${proj_name} \
-        #                      ${brVecRootDir}/${proj_name} \
-        #                      ${finalRootDir}/${proj_name} \
-        #                      ${proj_id} \
-        #                      ${word2vec_model_dimension} \
-        #                      ${word2vec_model_epochs} \
-        #                      ${PYTHON} \
-        #                      ${ssRootDir}/${proj_name} \
-        #                      ${tpRootDir}/${proj_name} \
-        #                      ${cdRootDir}/${proj_name} \
-        #                      ${linkedBugMethodsDir}/${proj_name}_bugId_buggyMethodsName \
-        #                      ${alpha}  ${beta}  ${gamma}
+        echo "step 5 : query expansion, ranking on bug reports and augmented methods. alpha=${alpha}, beta=${beta}, gamma=${gamma}"
+        ./query_expansion_jira.sh ${queryExpansionDir} \
+                                  ${codeVecRootDir}/${proj_name} \
+                                  ${brVecRootDir}/${proj_name} \
+                                  ${finalRootDir}/${proj_name} \
+                                  ${proj_id} \
+                                  ${word2vec_model_dimension} \
+                                  ${word2vec_model_epochs} \
+                                  ${PYTHON} \
+                                  ${sstpRootDir}/${proj_name} \
+                                  ${acRootDir}/${proj_name} \
+                                  ${cdRootDir}/${proj_name} \
+                                  ${linkedBugMethodsDir}/${proj_name}_bugId_buggyMethodsName \
+                                  ${alpha}  ${beta}  ${gamma}
         cd ${scriptRootDir}
 
         end_time=$(date  "+%Y/%m/%d-%H:%M:%S")
