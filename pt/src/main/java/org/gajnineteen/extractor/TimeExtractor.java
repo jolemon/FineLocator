@@ -13,8 +13,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import java.util.Date;
 
 public class TimeExtractor {
-    private static volatile TimeExtractor timeExtractor;
-
+//    private static volatile TimeExtractor timeExtractor;
+    private static TimeExtractor timeExtractor;
     private Repository repository;
     private final Git git;
     private ObjectId commitId;
@@ -31,11 +31,12 @@ public class TimeExtractor {
 
     public static TimeExtractor getInstance(String gitPathStr, String commitID) {
         if (null == timeExtractor) {
-            synchronized (TimeExtractor.class) {
-                if (null == timeExtractor) {
-                    timeExtractor = new TimeExtractor(gitPathStr, commitID);
-                }
-            }
+//            synchronized (TimeExtractor.class) {
+//                if (null == timeExtractor) {
+//                    timeExtractor = new TimeExtractor(gitPathStr, commitID);
+//                }
+//            }
+            timeExtractor = new TimeExtractor(gitPathStr, commitID);
         }
         return timeExtractor;
     }
