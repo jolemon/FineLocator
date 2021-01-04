@@ -64,12 +64,12 @@ function getBuggyVersionCommitID(){
 getBuggyVersionCommitID
 echo ${proj_id}' buggyCommitSHA: '${buggy_version_commitID}
 cd ${ptdir}
-# if [[ ! -e ${pt_output_preprocessedBRDir}/${proj_id} ]]; then
-#     runPT
-# else
-#     echo "skip ${proj_id}"
-# fi
-runPT
+if [[ ! -e ${pt_output_preprocessedBRDir}/${proj_id} ]]; then
+    runPT
+else
+    echo "skip ${proj_id}"
+fi
+# runPT
   
 
 # for Defects4J

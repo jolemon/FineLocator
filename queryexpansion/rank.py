@@ -38,7 +38,7 @@ def load_link_dic(path):
         if len(line) > 0:
             parts = line.split('\t')
             br_id = parts[0]
-            pm_lists_str = parts[1].rstrip('\n')
+            pm_lists_str = parts[1].rstrip()
             pm_lists = pm_lists_str.split('外')
             for pm_list in pm_lists:
                 pm_parts = pm_list.split('内')

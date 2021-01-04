@@ -1,5 +1,4 @@
 from argparse import ArgumentParser
-import json
 import time
 from handle_cd_method import trim_template_T, trim_method, trim_ss_signature
 from ss import load_cv, load_brv
@@ -33,7 +32,7 @@ def find_v_by_sharp_k(sharp_key_pair, key_id_dic, cd_dic, cd_sig2id_dic, used_cd
         return 0
 
 
-def calculate_ac(ss_path, tp_path, cd_path, save_path):
+def calculate_ac(ss_path, tp_path, cd_path):
     ac_dic = dict()
     ss_dic, tp_dic, cd_dic = load_dic(ss_path), load_dic(tp_path), load_dic(cd_path)
     ss_id_dic, cd_id2sig_dic = load_dic('{}.dic'.format(ss_path)), load_dic('{}.dic'.format(cd_path))
@@ -122,7 +121,7 @@ if __name__ == '__main__':
 
     start = time.process_time()
     print("Start to Calculate Query Expansion...")
-    ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path, save_path = save_path)
+    ac_dic = calculate_ac(ss_path = ss_path, tp_path = tp_path, cd_path = cd_path)
     if not ac_dic:
         exit(1)
 

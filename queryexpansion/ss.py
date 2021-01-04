@@ -37,7 +37,7 @@ def _load_cv_from_file(id_method_dic, id_value_dic, abs_file_path, dim, parent_d
             signature = signature.strip().rstrip(common.code_tfidf_linesep)
             # remove parent_dir because the path is different with tp_dir and cd_dir.
             # There is already a "#" ahead of signature in code_tf-idf file, so don't need to append another "#"
-            relative_path = abs_file_path.lstrip(parent_dir)
+            relative_path = abs_file_path.replace(parent_dir, "")
             signature = relative_path + signature
 
             # k行: code vector

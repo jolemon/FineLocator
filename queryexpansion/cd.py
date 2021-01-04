@@ -22,12 +22,12 @@ def get_cd(udb, parent_dir, filter_file_type = ".java", filter_ref_type = "Call"
 
     for file in udb.ents("File"):
         # get abs path
-        from_file_name = file.longname(True).lstrip(parent_dir)  # .replace(parent_dir, "").
+        from_file_name = file.longname(True).replace(parent_dir, "")
         if not from_file_name.endswith(filter_file_type):
             continue
         dic = file.depends() if filter_ref_type == "Call" else file.dependsby()
         for ent_key, ref_list in dic.items():
-            to_file_name = ent_key.longname(True).lstrip(parent_dir)  # .replace(parent_dir, "")
+            to_file_name = ent_key.longname(True).replace(parent_dir, "")
             for ref in ref_list:
                 kind_name = ref.kindname()
                 if kind_name != "Call":  # no need to consider "CallBy"
@@ -84,10 +84,8 @@ def form_method_name_and_class(ent):
 
 def add_to_dic(dic, key, value):
     if key not in dic:
-        dic[key] = [value]
-    else:
-        if value not in dic[key]:
-            dic[key].append(value)
+        dic[key] = set()
+    dic[key].add(value)
 
 
 def build_graph(dic):
@@ -99,11 +97,11 @@ def build_cd_dic(graph, id_method_dic, save_path):
     print("Calculate path for methods of size : %d" % len(vertices))
     cd_length_dic, sigmoid_cd_dic = dict(), dict()
     vertices_permutations = permutations(vertices, 2)
-    for cd_pair in vertices_permutations:
-        start_vertice, end_vertice = cd_pair[0], cd_pair[1]
+    for start_vertice, end_vertice in vertices_permutations:
         path = graph.find_shortest_path(start = start_vertice, end = end_vertice)
-        if path:
-            cd_length_dic[cd_pair] = len(path)
+        if not path:
+            continue
+        cd_length_dic[(start_vertice, end_vertice)] = len(path)
     avg_shortest_length = average(cd_length_dic.values())
 
     for cd_pair in cd_length_dic:
