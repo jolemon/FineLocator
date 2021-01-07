@@ -11,21 +11,25 @@ und_dir=$7        # /Applications/Understand.app/Contents/MacOS
 und_api_path=$8   # /Applications/Understand.app/Contents/MacOS/Python
 PYTHON=$9         # python3.7
 
+function makeUDB(){
+    # mkdir -p ${udb_dir}   # udb_dir must exist!
+    # cd ${und_dir}
+    # ./und create -db ${udb_create_dir}/${proj_id} -languages Java add ${ori_code_dir} analyze -all > ${udb_dir}/${proj_id}.log
+    # mv ${udb_create_dir}/${proj_id}.udb  ${udb_dir}
 
-echo "There exists license expiration problem in Scitool.Understand"
-echo "So batch_run_und.sh for all project and get all *.udb files."
-rm -f ${udb_dir}/${proj_id}
-mkdir -p ${udb_dir}   # udb_dir must exist!
-cd ${und_dir}
-./und create -db ${udb_create_dir}/${proj_id} -languages Java add ${ori_code_dir} analyze -all > ${udb_dir}/${proj_id}.log
-mv ${udb_create_dir}/${proj_id}.udb  ${udb_dir}
+    rm -f ${cd_dir}/${proj_id}
+    mkdir -p ${cd_dir}
+    cd ${cd_script_dir}
+    ${PYTHON} cd.py --udb_path ${udb_dir}/${proj_id}.udb \
+                    --save_path ${cd_dir}/${proj_id} \
+                    --parent_dir ${ori_code_dir} \
+                    --api_path ${und_api_path}
+}
 
-
-rm -f ${cd_dir}/${proj_id}
-mkdir -p ${cd_dir}
-cd ${cd_script_dir}
-${PYTHON} cd.py --udb_path ${udb_dir}/${proj_id}.udb \
-                --save_path ${cd_dir}/${proj_id} \
-                --parent_dir ${ori_code_dir} \
-                --api_path ${und_api_path}
-
+# echo "There exists license expiration problem in Scitool.Understand"
+# echo "So batch_run_und.sh for all project and get all *.udb files."
+if [[ ! -e ${cd_dir}/${proj_id} ]]; then
+    makeUDB 
+else
+    echo "skip ${proj_id}"
+fi

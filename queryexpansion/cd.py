@@ -69,7 +69,8 @@ def form_method_name_and_class(ent):
     try:
         class_name, class_method = ent_name_parts[0], ent_name_parts[1]
     except IndexError:
-        print(ent_name_parts)
+        # print(ent_name_parts)
+        return '()', '()'
     method_simple_name = str(ent.simplename())
     # 构造器作特殊处理: 在这里构造器ent与一般方法的ent不一样, 指向的是类实体而非方法实体，没有paras，因此得不到构造器方法的参数，所以不考虑构造器
 
